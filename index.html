@@ -2050,6 +2050,11 @@ async function finishAuthenticatedUser(user, requestedRole=null, options={}){if(
 function authRedirectUrl(){
   const u=new URL(window.location.href);
   u.search='';u.hash='';
+  // Always return OAuth to the published HUNAR site. This also makes
+  // Google sign-in usable when the downloaded app is opened from file://.
+  const productionOrigin='https://hunar-maker.github.io';
+  const productionPath='/hunar/';
+  if(u.protocol==='file:' || u.hostname==='localhost' || u.hostname==='127.0.0.1') return productionOrigin+productionPath+'#auth-callback';
   const path=u.pathname.endsWith('/')?u.pathname:u.pathname+'/';
   return u.origin+path+'#auth-callback';
 }

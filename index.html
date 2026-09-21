@@ -1870,6 +1870,163 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
 }
 
 </style>
+<script>
+/* HUNAR OAuth safety: if an old/local callback is ever returned by the provider,
+   move the browser to the published HUNAR app before rendering the callback. */
+(function(){
+  try{
+    var host=location.hostname;
+    var q=new URLSearchParams(location.search);
+    var h=location.hash||'';
+    var oauth=/access_token=|refresh_token=|code=|type=recovery|auth-callback/i.test((location.search||'')+' '+h);
+    if((host==='localhost'||host==='127.0.0.1'||host==='0.0.0.0') && oauth){
+      var target='https://hunar-maker.github.io/hunar/'+(location.search||'')+(h||'');
+      location.replace(target);
+    }
+  }catch(e){}
+})();
+</script>
+
+<style id="hunar-mobile-final-pass">
+/* HUNAR FINAL PHONE EXPERIENCE — mobile-only presentation layer. */
+@media (max-width: 600px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+  body{font-size:14px;-webkit-text-size-adjust:100%;}
+  #app{width:100%;max-width:100%;overflow-x:hidden}
+  .container,.backBar{width:100%!important;max-width:none!important;padding-left:14px!important;padding-right:14px!important}
+  .section{padding:30px 0!important}
+  .sectionLead{font-size:14px;line-height:1.55}
+  h1{font-size:clamp(28px,9vw,38px)!important;line-height:1.04!important;letter-spacing:-.04em!important}
+  h2{font-size:25px!important;line-height:1.1!important}
+  h3{font-size:17px!important;line-height:1.2!important}
+  p{line-height:1.55}
+
+  /* Header */
+  .nav{height:62px!important;position:sticky!important;top:0;z-index:200}
+  .navin{height:62px!important;padding:0 10px!important;gap:6px!important}
+  .logo{font-size:21px!important}
+  .right{gap:3px!important}
+  .right .headerIcon{width:34px!important;min-width:34px!important;height:34px!important}
+  .right .profileTrigger{width:36px!important;min-width:36px!important;height:36px!important}
+  .menuBtn{width:38px!important;height:38px!important}
+  .links{top:68px!important;left:8px!important;right:8px!important;border-radius:18px!important;padding:8px!important;max-height:calc(100vh - 78px)!important}
+  .links button{min-height:46px!important;border-radius:12px!important;font-size:13px!important}
+
+  /* Auth / signup — full phone screen, never a cropped desktop panel */
+  .authPro{display:block!important;min-height:calc(100svh - 62px)!important;padding:12px 10px 30px!important}
+  .authProShell{display:flex!important;flex-direction:column!important;width:100%!important;min-height:0!important;border-radius:22px!important;overflow:hidden!important}
+  .authVisual{min-height:205px!important;height:auto!important;padding:20px 18px 16px!important}
+  .authVisualCopy{margin-top:20px!important;max-width:100%!important}
+  .authVisualCopy h1{font-size:34px!important;max-width:280px!important;margin:8px 0 9px!important}
+  .authVisualCopy p{font-size:11px!important;line-height:1.45!important;max-width:270px!important}
+  .authScene{width:190px!important;height:125px!important;right:-30px!important;bottom:-38px!important;left:auto!important;transform:none!important}
+  .authSceneCore{width:55px!important;height:55px!important;font-size:22px!important}
+  .authSceneRingA{width:125px!important;height:125px!important}
+  .authSceneRingB{width:92px!important;height:92px!important}
+  .authFloatCard{display:none!important}
+  .authPanel{padding:22px 17px 24px!important;display:block!important}
+  .authPanelHead{margin-bottom:18px!important}
+  .authPanelHead h2{font-size:27px!important}
+  .authChoice{grid-template-columns:40px 1fr auto!important;padding:12px!important;border-radius:14px!important;min-height:68px!important}
+  .authChoiceIcon{width:40px!important;height:40px!important;border-radius:12px!important}
+  .authChoice b{font-size:13px!important}
+  .authChoice small{font-size:10px!important}
+  .authFormPro{gap:10px!important}
+  .authFormPro .field input,.authFormPro .field select,.authFormPro .field textarea{width:100%!important;min-height:44px!important;box-sizing:border-box!important}
+  .authMainBtn,.authGooglePro{width:100%!important;min-height:46px!important}
+  .authModern,.authWrap{min-height:calc(100svh - 62px)!important;padding:14px 10px 30px!important}
+  .authModernCard,.auth{width:100%!important;max-width:none!important}
+  .stepper{width:100%!important;overflow-x:auto!important;display:flex!important;scrollbar-width:none!important;padding-bottom:3px!important}
+  .stepper::-webkit-scrollbar{display:none}
+  .stepper .s{flex:0 0 92px!important;min-width:92px!important;font-size:10px!important}
+
+  /* Generic cards / controls */
+  .card,.stat,.notice,.error,.success{border-radius:16px!important}
+  .card{padding:15px!important}
+  .actions{display:grid!important;grid-template-columns:1fr!important;width:100%!important;gap:8px!important;margin:15px 0!important}
+  .actions .btn,.card .btn,.hero .btn{width:100%!important;min-height:44px!important;box-sizing:border-box!important}
+  .btn{font-size:13px!important;padding:11px 13px!important;white-space:normal!important;text-align:center!important;line-height:1.2!important}
+  .field{margin:10px 0!important}
+  .field label{font-size:12px!important}
+  .field input,.field select,.field textarea,.searchBox input,.toolbar input,.toolbar select{box-sizing:border-box!important;width:100%!important;min-height:44px!important;font-size:14px!important}
+  .two,.grid2,.grid3,.grid4,.roleGrid,.verifyGrid,.portfolioPick{grid-template-columns:1fr!important}
+  .row{align-items:stretch!important;flex-direction:column!important}
+  .row>*{width:100%;min-width:0}
+
+  /* Dashboard */
+  .dash{display:block!important;width:100%!important}
+  .dash .side{position:relative!important;top:auto!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:8px!important;gap:6px!important;border-radius:0!important;box-shadow:0 5px 18px rgba(20,34,27,.05)!important}
+  .dash .side a,.dash .side button{min-height:43px!important;padding:9px 8px!important;font-size:11px!important;white-space:normal!important;line-height:1.15!important;text-align:center!important}
+  .dashMain{padding:16px 12px 32px!important}
+  .welcome{padding:17px!important;border-radius:18px!important}
+  .welcome .row{gap:12px!important}
+  .clientDashStats,.dashMain>.grid4{grid-template-columns:1fr 1fr!important;gap:8px!important}
+  .dash .stat{min-height:88px!important;padding:13px!important}
+  .dash .stat h2{font-size:23px!important}
+  .dashDiscovery{padding:13px!important}
+  .activeWorkPro{padding:15px!important;border-radius:18px!important}
+  .activeWorkHead{gap:10px!important}
+
+  /* Lists, projects, freelancers, services */
+  .projectGrid,.applicationGrid,.activeWorkGrid,.simpleJobGrid,.myServicesGrid{grid-template-columns:1fr!important}
+  .projectCard,.jobCard,.serviceCard,.devCard,.applicationCard,.simpleJobCard{width:100%!important;min-width:0!important;box-sizing:border-box!important;border-radius:17px!important;overflow:hidden!important}
+  .projectCard{padding:15px!important}
+  .projectCard h3,.jobCard h3,.serviceCard h3,.devCard h3,.applicationCard h3{overflow-wrap:anywhere!important;word-break:break-word!important}
+  .projectCard p,.jobCard p,.serviceCard p,.devCard p,.applicationCard p{overflow-wrap:anywhere!important;word-break:break-word!important}
+  .freelancerTools{display:grid!important;grid-template-columns:1fr!important;width:100%!important;gap:8px!important}
+  .freelancerTools>*{width:100%!important;min-width:0!important}
+  .freelancerFilterGrid{grid-template-columns:1fr!important}
+  .filterPanel{width:100%!important;box-sizing:border-box!important}
+  .serviceProCard .thumb{height:130px!important;flex-basis:130px!important}
+  .myServicesHero{padding:20px!important;border-radius:20px!important}
+  .myServicesHero .btn{width:100%!important}
+
+  /* Contracts */
+  .contractsSummary{grid-template-columns:1fr 1fr!important;gap:8px!important}
+  .contractsList{display:grid!important;gap:10px!important}
+  .contractsList .contractCard{padding:14px!important;border-radius:17px!important;min-width:0!important;overflow:hidden!important}
+  .contractMeta{grid-template-columns:1fr!important;gap:7px!important}
+  .contractActions{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
+  .contractActions .btn{width:100%!important}
+  .contractPill,.tag,.badge,.chip{max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.2!important}
+
+  /* Messages / support */
+  .messageShell{display:flex!important;flex-direction:column!important;gap:8px!important}
+  .messageList{max-height:190px!important;overflow:auto!important}
+  .messageCompose{min-height:0!important;max-height:none!important}
+  .messageComposer{padding-top:10px!important}
+  .messageMediaBar{grid-template-columns:1fr 1fr!important;gap:7px!important}
+  .messageMediaBar textarea{grid-column:1/-1!important;grid-row:auto!important;min-height:90px!important}
+  .messageMediaBar .btn{width:100%!important}
+  .threadBubble,.supportBubble{max-width:88%!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+  .conversationHeader{align-items:stretch!important;flex-direction:column!important;gap:9px!important}
+  .conversationHeaderActions{width:100%!important;display:grid!important;grid-template-columns:1fr 1fr!important}
+  .conversationHeaderActions .btn{width:100%!important}
+  .supportProHero{padding:20px!important;border-radius:20px!important}
+
+  /* Wallet / tables */
+  .walletStats{grid-template-columns:1fr!important}
+  .walletBalanceCard{grid-column:auto!important}
+  .walletHero,.walletActionCard{flex-direction:column!important;align-items:stretch!important}
+  .walletTxMain{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:5px!important}
+  .walletTxAmount{min-width:0!important}
+  .walletTxMeta{justify-content:flex-start!important;flex-wrap:wrap!important}
+  .withdrawGrid{grid-template-columns:1fr!important}
+  table{display:block!important;width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+
+  /* Identity / uploads / forms */
+  .identityHero,.identityLower,.identityUploadGrid,.identityPreviewGrid{grid-template-columns:1fr!important}
+  .identityHero{padding:18px!important}
+  .identitySubmit{flex-direction:column!important;align-items:stretch!important}
+  .identitySubmit .actions{display:grid!important;grid-template-columns:1fr!important}
+  .postProjectHero{grid-template-columns:1fr!important}
+  .postProjectForm{padding:16px!important}
+
+  /* Never let media or decorative layers create a horizontal page */
+  .heroVisual,.scene,.authScene,.h3d-orb,.h3d-ring,.float{max-width:100%;}
+  img,video,iframe,svg{max-width:100%!important}
+}
+</style>
 </head>
 <body><a class="skipLink" href="#app">Skip to main content</a><style id="hunar-toast-styles">
 .hunarToastHost{position:fixed;right:22px;bottom:22px;z-index:999999;display:flex;flex-direction:column;gap:12px;pointer-events:none;max-width:min(420px,calc(100vw - 32px))}
@@ -2126,7 +2283,7 @@ function authRedirectUrl(){
   // Never send OAuth back to localhost, file://, or a temporary dev server.
   return 'https://hunar-maker.github.io/hunar/';
 }
-async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}const redirectTo=authRedirectUrl();console.info('HUNAR Google OAuth redirect:',redirectTo);const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'}}});if(error){console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}}
+async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}const redirectTo=authRedirectUrl();console.info('HUNAR Google OAuth redirect:',redirectTo);const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'},skipBrowserRedirect:false}});if(error){console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}}
 async function handleAuthCallback(){
   if(!supabaseClient)return false;
   try{

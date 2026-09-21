@@ -1795,6 +1795,80 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
 .btn{white-space:nowrap!important;max-width:100%}
 @media(max-width:1100px){.applicationGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.freelancerFilterGrid{grid-template-columns:1fr 1fr}.projectGrid{grid-template-columns:1fr 1fr!important}}
 @media(max-width:760px){.freelancerTools{flex-wrap:wrap}.freelancerTools .grow{flex:1 1 100%}.freelancerFilterGrid{grid-template-columns:1fr}.applicationGrid{grid-template-columns:1fr!important}.myServicesHero{align-items:flex-start;flex-direction:column;padding:24px}.projectGrid{grid-template-columns:1fr!important}.activeWorkHead{align-items:flex-start!important;flex-direction:column}.activeWorkGrid{grid-template-columns:1fr!important}}
+/* ================================================================
+   HUNAR PHONE-FIRST FUNCTIONAL LAYOUT
+   UI/responsive layer only. Desktop layout remains unchanged.
+   ================================================================ */
+@media(max-width:900px){
+  .nav{height:64px}
+  .navin{height:64px;padding:0 12px;gap:8px}
+  .logo{font-size:22px;flex:0 0 auto}
+  .right{margin-left:auto;gap:4px;min-width:0;overflow:visible}
+  .navSearch{display:none!important}
+  .right .langButton,.right .headerIcon,.right .profileMenuWrap,.right .btn{display:inline-flex!important}
+  .right>button{display:inline-flex!important;align-items:center;justify-content:center;min-width:38px;min-height:38px;padding:8px!important}
+  .right .headerIcon{position:relative}
+  .right .headerIcon em{position:absolute;top:1px;right:0}
+  .menuBtn{display:inline-flex!important;align-items:center;justify-content:center;width:40px;height:40px;padding:0!important;flex:0 0 40px;z-index:120}
+  .links{display:none;position:fixed;left:10px;right:10px;top:70px;z-index:110;flex-direction:column!important;align-items:stretch!important;gap:5px!important;padding:10px;background:rgba(255,255,255,.98);border:1px solid var(--line);border-radius:18px;box-shadow:0 24px 60px rgba(20,34,27,.18);max-height:calc(100vh - 84px);overflow:auto}
+  .links.mobileOpen{display:flex!important}
+  .links button{width:100%;min-height:46px;text-align:left;padding:11px 13px!important;font-weight:800;background:#fff}
+  .links button:hover{background:var(--soft)}
+  body.mobileNavOpen{overflow:hidden}
+  .container{width:100%;max-width:none;padding-left:14px;padding-right:14px}
+  .dash{display:block;min-height:0}
+  .side{position:sticky!important;top:64px!important;z-index:15;width:100%;height:auto!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px!important;padding:10px!important;overflow:visible!important;background:rgba(255,255,255,.97);backdrop-filter:blur(12px);border-right:0!important;border-bottom:1px solid var(--line)!important;box-shadow:0 8px 22px rgba(20,34,27,.06)}
+  .side a,.side button{width:100%!important;min-width:0!important;min-height:44px!important;margin:0!important;padding:10px 11px!important;border-radius:12px!important;font-size:13px!important;line-height:1.2!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  .side .active{font-weight:850}
+  .dashMain{padding:18px 14px 36px!important;max-width:none!important}
+  .welcome{padding:18px!important;border-radius:18px!important}
+  .row{flex-wrap:wrap}
+  .row>*{min-width:0}
+  .grid2,.grid3,.grid4,.projectGrid,.portfolioGrid,.verifyGrid,.helpSimple{grid-template-columns:1fr!important}
+  .two,.roleGrid,.pathGrid{grid-template-columns:1fr!important}
+  .projectCard,.jobCard,.serviceCard,.devCard,.card{width:100%;min-width:0;overflow:hidden}
+  .projectCard p,.jobCard p,.serviceCard p,.devCard p,.card p,.muted{overflow-wrap:anywhere;word-break:normal}
+  .projectCard h3,.jobCard h3,.serviceCard h3,.devCard h3,.card h3{overflow-wrap:anywhere;line-height:1.25}
+  .chips{max-width:100%;overflow:hidden}
+  .chip,.tag,.badge{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+  .actions{width:100%}
+  .actions .btn{flex:1 1 150px;min-height:42px}
+  .toolbar{display:grid!important;grid-template-columns:1fr!important;gap:9px!important}
+  .toolbar>*{width:100%!important;min-width:0!important}
+  .searchBox{display:flex;flex-direction:column;gap:8px}
+  .searchBox input,.searchBox .btn{width:100%!important}
+  .messageShell{grid-template-columns:1fr!important;gap:10px!important}
+  .messageList{max-height:260px!important;overflow:auto}
+  .messageCompose{min-height:430px!important}
+  .messageComposer textarea{min-height:90px}
+  .applicationPreview{overflow-wrap:anywhere}
+  table{display:block;width:100%;overflow-x:auto;white-space:nowrap}
+  img,video,iframe{max-width:100%;height:auto}
+  .footerGrid{grid-template-columns:1fr!important;gap:20px}
+  .footerBottom{display:flex;flex-direction:column;gap:6px}
+  .authWrap{min-height:calc(100vh - 64px);padding:24px 14px}
+  .auth{width:100%}
+  .stepper{gap:5px;padding-bottom:4px}
+  .stepper .s{min-width:82px;font-size:11px;padding:9px 6px}
+  input,select,textarea{max-width:100%;min-width:0}
+}
+@media(max-width:520px){
+  .right .langButton{display:none!important}
+  .right .headerIcon{min-width:34px!important;width:34px!important;padding:6px!important}
+  .profileTrigger{min-width:36px!important;width:36px!important;padding:5px!important}
+  .navin{padding:0 9px}
+  .side{grid-template-columns:1fr 1fr!important}
+  .side a,.side button{font-size:12px!important;min-height:42px!important}
+  .section{padding:32px 0!important}
+  .section h2{font-size:27px!important}
+  h1{font-size:clamp(28px,9vw,38px)!important}
+  .btn{width:100%;min-height:42px}
+  .row>.btn,.row .btn{width:auto}
+  .profileMenu{position:fixed;right:9px;top:58px;min-width:210px;max-width:calc(100vw - 18px)}
+  .heroGrid,.heroVisual{min-width:0}
+  .scene{inset:8px 0!important}
+}
+
 </style>
 </head>
 <body><a class="skipLink" href="#app">Skip to main content</a><style id="hunar-toast-styles">
@@ -2048,15 +2122,9 @@ async function markAuthSignupStatus(status,role=null){
 }
 async function finishAuthenticatedUser(user, requestedRole=null, options={}){if(!user?.id)throw new Error('No authenticated Supabase user was returned.');productionUser=user;window.productionUser=user;const a=await ensureHunarAccount(requestedRole);if(requestedRole&&a.role!==requestedRole){console.info('HUNAR existing account role respected:',a.role);}me={id:a.id,role:a.role,email:a.email||user.email,phone:a.phone,emailVerified:!!(a.email_verified||user.email_confirmed_at),phoneVerified:a.phone_verified};let synced=null;if(options.sync!==false){synced=await syncProductionData();}if(options.requireFreelancerProfile!==false&&a.role==='freelancer'&&!synced?.profile?.account_id){throw new Error('Freelancer profile is missing for this account. Complete freelancer onboarding before entering the dashboard.');}if(window.HunarData?.realtime)HunarData.realtime.subscribe(()=>syncProductionData());return a;}
 function authRedirectUrl(){
-  const u=new URL(window.location.href);
-  u.search='';u.hash='';
-  // Always return OAuth to the published HUNAR site. This also makes
-  // Google sign-in usable when the downloaded app is opened from file://.
-  const productionOrigin='https://hunar-maker.github.io';
-  const productionPath='/hunar/';
-  if(u.protocol==='file:' || u.hostname==='localhost' || u.hostname==='127.0.0.1') return productionOrigin+productionPath+'#auth-callback';
-  const path=u.pathname.endsWith('/')?u.pathname:u.pathname+'/';
-  return u.origin+path+'#auth-callback';
+  // Google OAuth must always return to the published HUNAR website.
+  // Never send OAuth back to localhost, file://, or a temporary dev server.
+  return 'https://hunar-maker.github.io/hunar/';
 }
 async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}const redirectTo=authRedirectUrl();console.info('HUNAR Google OAuth redirect:',redirectTo);const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'}}});if(error){console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}}
 async function handleAuthCallback(){
@@ -2065,6 +2133,15 @@ async function handleAuthCallback(){
     let {data,error}=await supabaseClient.auth.getSession();
     if(error)throw error;
     const params=new URLSearchParams(location.search);
+    // Supabase can return OAuth tokens in the URL when the provider uses
+    // the implicit flow. Handle both query-string tokens and PKCE code flow.
+    const accessToken=params.get('access_token');
+    const refreshToken=params.get('refresh_token');
+    if(!data.session&&accessToken&&refreshToken){
+      const set=await supabaseClient.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
+      if(set.error)throw set.error;
+      data=set.data;
+    }
     if(!data.session&&params.get('code')){
       const ex=await supabaseClient.auth.exchangeCodeForSession(params.get('code'));
       if(ex.error)throw ex.error;
@@ -2122,7 +2199,8 @@ async function bootProductionSession(){
     const params=new URLSearchParams(location.search);
     const raw=location.hash.slice(1)||'home';
     const current=(raw.split('?')[0]||'home');
-    const isOAuthCallback=!!params.get('code')||current==='auth-callback';
+    const hashRaw=String(location.hash||'');
+    const isOAuthCallback=!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||current==='auth-callback';
     if(isOAuthCallback){
       render('auth-callback');
       if(await handleAuthCallback())return;
@@ -2179,7 +2257,7 @@ function setHunarLanguage(next){
   render(location.hash.slice(1)||'home');
 }
 function langToggle(){setHunarLanguage(lang==='en'?'am':'en')}
-function toggleMenu(){mobileOpen=!mobileOpen;document.getElementById('links').style.display=mobileOpen?'flex':''}
+function toggleMenu(){mobileOpen=!mobileOpen;const links=document.getElementById('links');if(links){links.classList.toggle('mobileOpen',mobileOpen);links.style.display=mobileOpen?'flex':''}document.body.classList.toggle('mobileNavOpen',mobileOpen)}
 function notify(to,type,text){S.notifications.push({id:'n'+Date.now()+Math.random(),to,type,text,at:new Date().toLocaleString()})}
 function currentProfile(){const p=S.profiles.find(p=>p.id===me?.id);return p||null}
 function devData(id){return S.profiles.find(p=>p.id===id)||{id,n:'Freelancer',profession:'Freelancer',cats:[],skills:[]}}

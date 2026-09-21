@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HUNAR Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#f4f7fb;color:#172033}
+:root{--ink:#172033;--muted:#6b7280;--line:#e5eaf1;--card:#fff;--accent:#16724f;--accent2:#2f8f57}
+.app{display:flex;min-height:100vh}.side{width:250px;background:#111827;color:#fff;padding:22px 16px;position:fixed;inset:0 auto 0 0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}.brand{font-size:24px;font-weight:800;padding:8px 12px 25px}.brand span{color:#6fb28e}.adminMenuSearch{padding:0 4px 12px}.adminMenuSearch input{width:100%;box-sizing:border-box;background:#1b2433;border:1px solid #334155;color:#fff;border-radius:9px;padding:10px 11px;outline:none}.adminMenuSearch input::placeholder{color:#94a3b8}.adminMenuSearch input:focus{border-color:#2f8f57}.nav button{width:100%;border:0;background:transparent;color:#cbd5e1;text-align:left;padding:12px;border-radius:10px;margin:3px 0;font-size:14px;cursor:pointer}.nav button:hover,.nav button.active{background:#252d3d;color:#fff}.main{margin-left:250px;width:calc(100% - 250px);padding:28px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.top h1{margin:0;font-size:27px}.top p{margin:5px 0 0;color:var(--muted)}.user{display:flex;gap:10px;align-items:center}.logout{border:1px solid var(--line);background:#fff;padding:9px 14px;border-radius:9px;cursor:pointer}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:19px;box-shadow:0 5px 18px #17203308}.label{font-size:13px;color:var(--muted)}.num{font-size:29px;font-weight:800;margin-top:8px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;margin-top:20px;overflow:hidden}.panelhead{padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.panelhead h2{font-size:17px;margin:0}.tablewrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:700px}.table th,.table td{padding:13px 15px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px}.table th{color:var(--muted);font-weight:600;background:#fafbfc}.btn{border:0;border-radius:8px;padding:8px 11px;cursor:pointer;font-weight:600}.primary{background:var(--accent);color:white}.danger{background:#fee2e2;color:#991b1b}.ghost{background:#eef2ff;color:#236342}.search{padding:9px 12px;border:1px solid var(--line);border-radius:9px;width:230px}.status{padding:5px 8px;border-radius:20px;background:#f1f5f9;font-size:12px}.login{min-height:100vh;display:grid;place-items:center;padding:20px}.loginbox{background:#fff;border:1px solid var(--line);width:min(420px,100%);padding:30px;border-radius:18px;box-shadow:0 18px 50px #17203312}.loginbox h1{margin:0 0 7px}.loginbox p{color:var(--muted)}.notice{padding:12px;border-radius:10px;background:#fef3c7;color:#92400e;margin:15px 0;font-size:13px}.modal{position:fixed;inset:0;background:#11182780;display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:16px;width:min(650px,100%);max-height:90vh;overflow:auto;padding:22px}.modalbox textarea{width:100%;min-height:220px;border:1px solid var(--line);border-radius:10px;padding:12px;font-family:monospace}.modalactions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.hidden{display:none!important}.error{color:#b91c1c;background:#fef2f2;padding:12px;border-radius:10px;margin-top:12px}.empty{padding:30px;text-align:center;color:var(--muted)}.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:12px;font-weight:800;color:#475569}.field input,.field select,.field textarea{width:100%;border:1px solid #dbe2ea;border-radius:9px;padding:10px 11px;font:inherit;background:#fff}.field textarea{min-height:70px;resize:vertical}.field small{color:#94a3b8;font-size:11px}.detailList{display:grid;gap:8px;max-height:52vh;overflow:auto}.detailRow{display:grid;grid-template-columns:180px 1fr;gap:14px;padding:10px 12px;border:1px solid #edf0f4;border-radius:9px;background:#fafbfc}.detailRow span{text-transform:capitalize;color:#64748b;font-size:12px}.detailRow b{font-size:12px;word-break:break-word;white-space:pre-wrap}.sectionTitle{font-weight:850;margin:14px 0 8px}.docRow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid #e5eaf1;border-radius:10px;margin:7px 0}.actionsCell{white-space:nowrap}.reviewActions{display:flex;gap:8px;margin-top:14px}.success{background:#dcfce7;color:#166534}@media(max-width:900px){.side{width:76px}.brand{font-size:0}.brand span{font-size:20px}.nav button{font-size:0;text-align:center}.main{margin-left:76px;width:calc(100% - 76px)}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.main{padding:16px}.cards{grid-template-columns:1fr}.top{align-items:flex-start;gap:10px;flex-direction:column}.search{width:100%}}
+
+/* HUNAR Admin modern template - visual layer only */
+body{background:linear-gradient(135deg,#f6f8fc 0%,#eef2f8 100%);color:#111827}
+.side{width:276px;background:linear-gradient(180deg,#111827 0%,#172033 55%,#111827 100%);padding:18px 14px;box-shadow:14px 0 40px rgba(15,23,42,.10);border-right:1px solid rgba(255,255,255,.06)}
+.brand{font-size:25px;letter-spacing:-.6px;padding:9px 12px 18px}.brand span{color:#6fb28e}
+.adminMenuSearch{padding:0 4px 14px}.adminMenuSearch input{height:42px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);font-size:13px;transition:.2s}.adminMenuSearch input:focus{background:rgba(255,255,255,.11);box-shadow:0 0 0 3px rgba(22,114,79,.16)}
+.nav button{padding:10px 12px;margin:2px 0;border-radius:11px;font-size:13px;transition:transform .16s,background .16s,color .16s}.nav button:hover{transform:translateX(2px);background:rgba(255,255,255,.08)}.nav button.active{background:linear-gradient(90deg,rgba(22,114,79,.18),rgba(47,143,87,.12));box-shadow:inset 3px 0 #2f8f57}
+.main{margin-left:276px;width:calc(100% - 276px);padding:30px 34px 48px}.top{margin-bottom:28px}.top h1{font-size:31px;letter-spacing:-.8px}.top p{font-size:14px}.user{background:rgba(255,255,255,.7);border:1px solid rgba(229,234,241,.9);padding:8px 9px 8px 14px;border-radius:14px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+.logout{border-radius:10px;font-weight:700}.cards{gap:18px}.card{border:1px solid #e6ebf2;border-radius:18px;padding:21px;box-shadow:0 10px 30px rgba(15,23,42,.055);transition:transform .18s,box-shadow .18s}.card:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(15,23,42,.09)}.label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.num{font-size:32px}
+.panel{border-radius:18px;box-shadow:0 10px 30px rgba(15,23,42,.055);border-color:#e6ebf2}.panelhead{padding:18px 20px;background:linear-gradient(180deg,#fff,#fbfcfe)}.panelhead h2{font-size:16px}.table th{background:#f8fafc;text-transform:none;font-size:12px}.table td{padding:14px 15px}.table tbody tr:hover{background:#fafbff}.status{font-weight:700;border:1px solid #e2e8f0;background:#f8fafc}.btn{border-radius:10px;padding:9px 12px;transition:transform .15s,box-shadow .15s,filter .15s}.btn:hover{transform:translateY(-1px);filter:brightness(.99);box-shadow:0 5px 14px rgba(15,23,42,.08)}.primary{box-shadow:0 6px 16px rgba(22,114,79,.18)}.search{height:40px;border-radius:11px;background:#fff}.notice{border:1px solid #f1df9a;box-shadow:0 6px 18px rgba(146,64,14,.05)}
+.modal{backdrop-filter:blur(5px);background:rgba(15,23,42,.52)}.modalbox{width:min(760px,100%);border-radius:20px;padding:24px;box-shadow:0 30px 90px rgba(15,23,42,.24);border:1px solid #e5eaf1}.detailRow{grid-template-columns:190px 1fr;border-radius:11px;background:#fbfcfe}.field input,.field select,.field textarea{border-radius:11px;background:#fbfcfe}.docRow{border-radius:12px;background:#fbfcfe}.sectionTitle{font-size:14px}
+@media(max-width:900px){.side{width:78px}.main{margin-left:78px;width:calc(100% - 78px);padding:22px}.adminMenuSearch{display:none}.brand{font-size:0}.brand span{font-size:20px}.nav button{font-size:0}.nav button::first-letter{font-size:16px}}
+
+/* V10 MODERN PRO UI - presentation only. Existing Admin logic and database calls are unchanged. */
+:root{--pro-bg:#f5f7fb;--pro-card:#ffffff;--pro-text:#172033;--pro-muted:#6b7280;--pro-line:#e8ecf3;--pro-accent:#5b5bd6;--pro-accent2:#7c5cff}
+body{background:linear-gradient(180deg,#f8f9fc 0%,#f3f5fa 100%);color:var(--pro-text)}
+.app{background:transparent}
+.side{box-shadow:18px 0 45px rgba(17,24,39,.10);border-right:1px solid rgba(255,255,255,.08)}
+.brand{letter-spacing:.2px}.brand span{font-weight:900}
+.nav button{transition:background .18s ease,transform .18s ease,box-shadow .18s ease;color:#cbd5e1;border-radius:11px;margin:3px 0}
+.nav button:hover{background:rgba(255,255,255,.08);transform:translateX(2px)}
+.nav button.active{background:linear-gradient(90deg,rgba(124,92,255,.23),rgba(91,91,214,.12));box-shadow:inset 3px 0 0 #8b7cff;color:#fff}
+.main{padding:30px 34px 48px}
+.top{background:rgba(255,255,255,.72);border:1px solid rgba(226,232,240,.9);border-radius:20px;padding:20px 22px;box-shadow:0 12px 35px rgba(15,23,42,.05);backdrop-filter:blur(12px);margin-bottom:22px}
+.top h1{font-size:27px;letter-spacing:-.5px}.top p{margin-top:5px}
+.card,.panel{border:1px solid var(--pro-line);box-shadow:0 10px 30px rgba(15,23,42,.055);border-radius:18px;transition:transform .18s ease,box-shadow .18s ease}
+.card:hover,.panel:hover{box-shadow:0 16px 40px rgba(15,23,42,.08)}
+.card{background:rgba(255,255,255,.94)}
+.panelhead{padding:20px 22px;border-bottom:1px solid #edf0f5;background:linear-gradient(180deg,#fff,#fbfcfe)}
+.panelhead h2{font-size:17px;letter-spacing:-.2px}
+.btn{border-radius:10px;border:1px solid #e1e6ef;background:#fff;font-weight:750;padding:9px 13px;transition:all .16s ease;cursor:pointer}
+.btn:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(15,23,42,.08)}
+.btn.primary{background:linear-gradient(135deg,#5b5bd6,#7c5cff);color:#fff;border-color:transparent;box-shadow:0 8px 20px rgba(91,91,214,.22)}
+.btn.success{box-shadow:0 7px 16px rgba(16,185,129,.12)}.btn.danger{box-shadow:0 7px 16px rgba(239,68,68,.10)}
+.search{border:1px solid #e1e6ef;box-shadow:0 4px 14px rgba(15,23,42,.035)}
+.adminTable{border-radius:14px;overflow:hidden;border:1px solid #edf0f5}.adminTable th{background:#f8fafc;color:#667085;font-size:11px;letter-spacing:.06em;text-transform:uppercase}.adminTable td{border-top:1px solid #f0f2f6}.adminTable tr:hover td{background:#fbfcff}
+/* Modern record/view/edit dialog */
+.modal{z-index:1000;padding:24px;background:rgba(15,23,42,.46);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);animation:modalFade .16s ease}
+.modalbox{width:min(820px,96vw);max-height:min(88vh,900px);padding:0!important;overflow:hidden!important;border:1px solid rgba(255,255,255,.8)!important;border-radius:24px!important;background:#fff!important;box-shadow:0 35px 100px rgba(15,23,42,.25)!important;animation:modalUp .2s ease}
+.modalTop{display:flex;justify-content:space-between;gap:20px;padding:24px 26px 18px;background:linear-gradient(135deg,#fff 0%,#f8f8ff 100%);border-bottom:1px solid #edf0f5}
+.modalKicker{font-size:10px;font-weight:900;letter-spacing:.13em;color:#7167d9;margin-bottom:7px}.modalTop h2{margin:0;font-size:22px;letter-spacing:-.4px;color:#172033}.modalHint{margin:7px 0 0!important;color:#697386!important;font-size:13px;line-height:1.5}.modalClose{width:38px;height:38px;border-radius:11px;border:1px solid #e4e8ef;background:#fff;color:#64748b;font-size:25px;line-height:1;cursor:pointer;flex:0 0 auto}.modalClose:hover{background:#f3f5f9;color:#172033}
+.modalBody{padding:22px 26px;max-height:58vh;overflow:auto}.modalBody::-webkit-scrollbar{width:8px}.modalBody::-webkit-scrollbar-thumb{background:#d8ddea;border-radius:20px}
+.modalactions{display:flex;justify-content:flex-end;gap:9px;margin:0!important}.modalFooter{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:15px 26px 18px;border-top:1px solid #edf0f5;background:#fbfcfe}.modalTip{font-size:11px;color:#8a93a3}.detailList{gap:9px!important;max-height:none!important}.detailRow{grid-template-columns:minmax(150px,210px) 1fr!important;padding:13px 15px!important;border:1px solid #edf0f5!important;background:#fbfcfe!important;border-radius:12px!important}.detailRow span{font-size:11px!important;font-weight:800!important;text-transform:uppercase;letter-spacing:.035em;color:#7b8495}.detailRow b{font-size:13px;color:#253044;word-break:break-word}.editForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px}.editForm .field{margin:7px 0 11px}.editForm .field input,.editForm .field select,.editForm .field textarea{background:#fff;border-color:#dfe5ee;box-shadow:0 2px 7px rgba(15,23,42,.025)}.editForm .field input:focus,.editForm .field select:focus,.editForm .field textarea:focus{outline:none;border-color:#8176e8;box-shadow:0 0 0 3px rgba(129,118,232,.12)}.notice{border-radius:12px!important}.verificationDetail{margin-top:16px}.docRow{border:1px solid #e9edf4!important;background:#fff!important;box-shadow:0 5px 18px rgba(15,23,42,.04)}
+@keyframes modalFade{from{opacity:0}to{opacity:1}}@keyframes modalUp{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+@media(max-width:700px){.main{padding:18px 14px 32px}.top{padding:17px}.modal{padding:10px}.modalTop{padding:19px}.modalBody{padding:17px;max-height:62vh}.modalFooter{padding:13px 17px;align-items:flex-end}.modalTip{display:none}.editForm{grid-template-columns:1fr}.detailRow{grid-template-columns:1fr!important;gap:5px}.modalbox{border-radius:18px!important}}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+ <div class="loginbox">
+  <div style="width:46px;height:46px;border-radius:12px;background:#111827;color:#fff;display:grid;place-items:center;font-weight:800;margin-bottom:18px">H</div>
+  <h1 style="margin:0 0 7px">Admin Login</h1>
+  <p style="margin-top:0">Sign in to manage the HUNAR marketplace.</p>
+  <form onsubmit="adminLogin(event)">
+   <label style="display:block;font-size:13px;font-weight:600;margin:18px 0 7px">Email</label>
+   <input id="adminEmailInput" type="email" autocomplete="username" required placeholder="admin@hunar.et" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;font-size:14px">
+   <label style="display:block;font-size:13px;font-weight:600;margin:18px 0 7px">Password</label>
+   <div style="position:relative">
+    <input id="adminPasswordInput" type="password" autocomplete="current-password" required placeholder="Enter your admin password" style="width:100%;padding:12px 42px 12px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px">
+    <button type="button" onclick="togglePassword()" aria-label="Show password" style="position:absolute;right:8px;top:7px;border:0;background:transparent;padding:7px;cursor:pointer">◉</button>
+   </div>
+   <button id="loginButton" class="btn primary" type="submit" style="width:100%;padding:12px;margin-top:20px">Sign In</button>
+  </form>
+  <div id="loginMsg"></div>
+  <div style="margin-top:18px;padding-top:15px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)">Private HUNAR owner/admin area. Only an account with HUNAR admin permission can enter.</div>
+ </div>
+</div>
+<div id="app" class="app hidden">
+<aside class="side">
+ <div class="brand">HUNAR <span>ADMIN</span></div><div class="adminMenuSearch"><input id="adminMenuSearch" placeholder="Find control..." oninput="filterAdminMenu(this.value)"></div>
+ <div class="nav"><button class="active" data-page="dashboard" onclick="showPage('dashboard')">▦ &nbsp; Dashboard</button></div>
+ <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">People</div><div class="nav">
+  <button data-page="users" onclick="showPage('users')">♙ &nbsp; Users</button><button data-page="freelancer_profiles" onclick="showPage('freelancer_profiles')">★ &nbsp; Freelancer Profiles</button><button data-page="admin_roles" onclick="showPage('admin_roles')">♛ &nbsp; Admin Roles</button><button data-page="admin_permissions" onclick="showPage('admin_permissions')">⚙ &nbsp; Admin Permissions</button><button data-page="profiles" onclick="showPage('profiles')">◎ &nbsp; Profiles</button><button data-page="public_accounts" onclick="showPage('public_accounts')">◉ &nbsp; Public Accounts</button>
+ </div>
+ <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">Marketplace</div><div class="nav">
+  <button data-page="projects" onclick="showPage('projects')">▤ &nbsp; Projects</button><button data-page="applications" onclick="showPage('applications')">✓ &nbsp; Applications</button><button data-page="application_portfolios" onclick="showPage('application_portfolios')">▧ &nbsp; Application Portfolios</button><button data-page="services" onclick="showPage('services')">◇ &nbsp; Services</button><button data-page="portfolios" onclick="showPage('portfolios')">▧ &nbsp; Portfolios</button><button data-page="reviews" onclick="showPage('reviews')">★ &nbsp; Reviews</button><button data-page="review_responses" onclick="showPage('review_responses')">↪ &nbsp; Review Responses</button><button data-page="saved_freelancers" onclick="showPage('saved_freelancers')">♡ &nbsp; Saved Freelancers</button>
+ </div>
+ <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">Work & Contracts</div><div class="nav">
+  <button data-page="contracts" onclick="showPage('contracts')">◈ &nbsp; Contracts</button><button data-page="contract_milestones" onclick="showPage('contract_milestones')">◉ &nbsp; Milestones</button><button data-page="contract_submissions" onclick="showPage('contract_submissions')">⇧ &nbsp; Submissions</button><button data-page="contract_submission_files" onclick="showPage('contract_submission_files')">▣ &nbsp; Submission Files</button><button data-page="contract_transactions" onclick="showPage('contract_transactions')">⇄ &nbsp; Contract Transactions</button><button data-page="milestones" onclick="showPage('milestones')">◉ &nbsp; Milestones (Legacy)</button>
+ </div>
+ <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">Money</div><div class="nav">
+  <button data-page="wallet_ledger_entries" onclick="showPage('wallet_ledger_entries')">▣ &nbsp; Wallet Ledger</button><button data-page="wallet_withdrawals" onclick="showPage('wallet_withdrawals')">↗ &nbsp; Wallet Withdrawals</button><button data-page="payment_orders" onclick="showPage('payment_orders')">₿ &nbsp; Payment Orders</button><button data-page="payment_transactions" onclick="showPage('payment_transactions')">⇄ &nbsp; Payment Transactions</button><button data-page="escrow_transactions" onclick="showPage('escrow_transactions')">▣ &nbsp; Escrow</button><button data-page="platform_fees" onclick="showPage('platform_fees')">% &nbsp; Platform Fees</button><button data-page="payouts" onclick="showPage('payouts')">↗ &nbsp; Payouts</button><button data-page="refunds" onclick="showPage('refunds')">↩ &nbsp; Refunds</button><button data-page="payment_webhooks" onclick="showPage('payment_webhooks')">⚡ &nbsp; Payment Webhooks</button>
+ </div>
+ <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">Trust & Safety</div><div class="nav">
+  <button data-page="verification_requests" onclick="showPage('verification_requests')">✓ &nbsp; Identity Verification</button><button data-page="verification_documents" onclick="showPage('verification_documents')">▤ &nbsp; Verification Documents</button><button data-page="verification_events" onclick="showPage('verification_events')">◷ &nbsp; Verification History</button><button data-page="reports" onclick="showPage('reports')">⚠ &nbsp; Reports</button><button data-page="moderation_actions" onclick="showPage('moderation_actions')">♢ &nbsp; Moderation</button>
+ </div>
+ <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">Communication</div><div class="nav">
+  <button data-page="conversations" onclick="showPage('conversations')">☷ &nbsp; Conversations</button><button data-page="messages" onclick="showPage('messages')">✉ &nbsp; Messages</button><button data-page="message_attachments" onclick="showPage('message_attachments')">▣ &nbsp; Message Attachments</button><button data-page="notifications" onclick="showPage('notifications')">● &nbsp; Notifications</button>
+ </div>
+ <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">More Control</div><div class="nav">
+  <button data-page="analytics" onclick="showPage('analytics')">▥ &nbsp; Analytics</button>
+  <button data-page="finance_overview" onclick="showPage('finance_overview')">◉ &nbsp; Finance Overview</button>
+  <button data-page="contract_control" onclick="showPage('contract_control')">◈ &nbsp; Contract Control Center</button>
+  <button data-page="verification_queue" onclick="showPage('verification_queue')">✓ &nbsp; Verification Queue</button>
+  <button data-page="dispute_center" onclick="showPage('dispute_center')">⚖ &nbsp; Dispute Center</button>
+  <button data-page="user_support" onclick="showPage('user_support')">♧ &nbsp; User Support</button>
+  <button data-page="admin_activity" onclick="showPage('admin_activity')">◷ &nbsp; Admin Activity</button>
+  <button data-page="system_health" onclick="showPage('system_health')">♥ &nbsp; System Health</button>
+  <button data-page="site_settings" onclick="showPage('site_settings')">⚙ &nbsp; Site Settings</button>
+  <button data-page="feature_flags" onclick="showPage('feature_flags')">⚑ &nbsp; Feature Controls</button>
+  <button data-page="data_tools" onclick="showPage('data_tools')">⇩ &nbsp; Data Tools</button>
+  <button data-page="admin_guide" onclick="showPage('admin_guide')">? &nbsp; Admin Guide</button>
+  <button data-page="user_control_center" onclick="showPage('user_control_center')">♙ &nbsp; User Control Center</button>
+  <button data-page="marketplace_control" onclick="showPage('marketplace_control')">▦ &nbsp; Marketplace Control</button>
+  <button data-page="service_control" onclick="showPage('service_control')">✦ &nbsp; Service Control</button>
+  <button data-page="review_center" onclick="showPage('review_center')">★ &nbsp; Review Center</button>
+  <button data-page="payment_control" onclick="showPage('payment_control')">◉ &nbsp; Payment Control</button>
+  <button data-page="payout_review" onclick="showPage('payout_review')">↗ &nbsp; Payout Review</button>
+  <button data-page="refund_center" onclick="showPage('refund_center')">↩ &nbsp; Refund Center</button>
+  <button data-page="identity_review_center" onclick="showPage('identity_review_center')">✓ &nbsp; Identity Review Center</button>
+  <button data-page="report_center" onclick="showPage('report_center')">⚠ &nbsp; Report Center</button>
+  <button data-page="notification_center" onclick="showPage('notification_center')">● &nbsp; Notification Center</button>
+  <button data-page="messaging_center" onclick="showPage('messaging_center')">✉ &nbsp; Messaging Center</button>
+  <button data-page="security_center" onclick="showPage('security_center')">⌁ &nbsp; Security Center</button>
+  <button data-page="data_export_center" onclick="showPage('data_export_center')">⇩ &nbsp; Data Export Center</button>
+  <button data-page="activity_monitor" onclick="showPage('activity_monitor')">◷ &nbsp; Activity Monitor</button>
+  <button data-page="system_configuration" onclick="showPage('system_configuration')">⚙ &nbsp; System Configuration</button>
+ </div>
+ <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">System</div><div class="nav">
+  <button data-page="audit_logs" onclick="showPage('audit_logs')">☰ &nbsp; Audit Logs</button><button data-page="project_activity" onclick="showPage('project_activity')">◌ &nbsp; Project Activity</button><button data-page="project_files" onclick="showPage('project_files')">▤ &nbsp; Project Files</button><button data-page="project_members" onclick="showPage('project_members')">♙ &nbsp; Project Members</button><button data-page="user_app_state" onclick="showPage('user_app_state')">◌ &nbsp; User App State</button>
+ </div>
+</aside>
+<main class="main">
+ <div class="top"><div><h1 id="title">Dashboard</h1><p id="subtitle">HUNAR platform overview</p></div><div class="user"><span id="adminEmail"></span><button class="logout" onclick="logout()">Sign out</button></div></div>
+ <section id="content"></section>
+</main>
+</div>
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="modalbox">
+<div class="modalTop"><div><div class="modalKicker">HUNAR ADMIN • CONTROL CENTER</div><h2 id="modalTitle">Edit</h2><p id="modalHint" class="modalHint"></p></div><button class="modalClose" type="button" aria-label="Close" onclick="closeModal()">×</button></div>
+<div class="modalBody"><textarea id="modalJson"></textarea><div id="modalMsg"></div></div>
+<div class="modalFooter"><span class="modalTip">Review carefully before saving changes.</span><div class="modalactions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveModal()">Save</button></div></div>
+</div></div>
+<script>
+const SUPABASE_URL="https://enuqrzaavxadtduyqwqv.supabase.co";
+const SUPABASE_KEY="sb_publishable_XZwFIJv6IajO9kWCe7wvVw_97GIv05D";
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const tables={
+ users:{table:"accounts",title:"Users",id:"id",search:["full_name","email","role","city","region"]},
+ freelancer_profiles:{table:"freelancer_profiles",title:"Freelancer Profiles",id:"account_id",search:["professional_title","profession","experience","availability"]},
+ admin_roles:{table:"admin_roles",title:"Admin Roles",id:"account_id",search:["role"]},
+ projects:{table:"projects",title:"Projects",id:"id",search:["title","status","description","category"]},
+ applications:{table:"applications",title:"Applications",id:"id",search:["title","status","cover_letter"]},
+ services:{table:"services",title:"Services",id:"id",search:["title","category","description"]},
+ portfolios:{table:"portfolios",title:"Portfolios",id:"id",search:["title","category","description"]},
+ reviews:{table:"reviews",title:"Reviews",id:"id",search:["text","overall"]},
+ saved_freelancers:{table:"saved_freelancers",title:"Saved Freelancers",keys:["client_id","freelancer_id"],search:["client_id","freelancer_id"]},
+ contracts:{table:"contracts",title:"Contracts",id:"id",search:["title","status","contract_type"]},
+ contract_milestones:{table:"contract_milestones",title:"Milestones",id:"id",search:["title","status"]},
+ contract_submissions:{table:"contract_submissions",title:"Submissions",id:"id",search:["note"]},
+ contract_submission_files:{table:"contract_submission_files",title:"Submission Files",id:"id",search:["file_name","mime_type"]},
+ wallet_accounts:{table:"wallet_accounts",title:"Wallet Accounts",id:"user_id",search:["user_id","currency"]},
+ wallet_ledger_entries:{table:"wallet_ledger_entries",title:"Wallet Ledger",id:"id",search:["user_id","contract_id","transaction_type","status","provider_transaction_id"]},
+ wallet_withdrawals:{table:"wallet_withdrawals",title:"Wallet Withdrawals",id:"id",search:["user_id","status","method","provider","provider_payout_id"]},
+ payment_orders:{table:"payment_orders",title:"Payment Orders",id:"id",search:["status","provider","currency","provider_tx_ref"]},
+ payment_transactions:{table:"payment_transactions",title:"Payment Transactions",id:"id",search:["status","transaction_type"]},
+ escrow_transactions:{table:"escrow_transactions",title:"Escrow Transactions",id:"id",search:["status","transaction_type"]},
+ platform_fees:{table:"platform_fees",title:"Platform Fees",id:"id",search:["fee_type"]},
+ payouts:{table:"payouts",title:"Payouts",id:"id",search:["status","provider"]},
+ refunds:{table:"refunds",title:"Refunds",id:"id",search:["status","reason"]},
+ verification_requests:{table:"verification_requests",title:"Identity Verification",id:"id",search:["legal_name","id_type","status"]},
+ verification_documents:{table:"verification_documents",title:"Verification Documents",id:"id",search:["document_type","mime_type","storage_path"]},
+ verification_events:{table:"verification_events",title:"Verification History",id:"id",search:["from_status","to_status","reason"]},
+ reports:{table:"reports",title:"Reports",id:"id",search:["status","reason","target_type"]},
+ moderation_actions:{table:"moderation_actions",title:"Moderation",id:"id",search:["action","target_type","reason"]},
+ conversations:{table:"conversations",title:"Conversations",id:"id",search:["project_id","created_by"]},
+ messages:{table:"messages",title:"Messages",id:"id",search:["body","message_type"]},
+ notifications:{table:"notifications",title:"Notifications",id:"id",search:["title","body","type"]},
+ audit_logs:{table:"audit_logs",title:"Audit Logs",id:"id",search:["action","entity_type"]},
+ project_activity:{table:"project_activity",title:"Project Activity",id:"id",search:["action","activity_type"]},
+ project_files:{table:"project_files",title:"Project Files",id:"id",search:["file_name","mime_type"]},
+ project_members:{table:"project_members",title:"Project Members",keys:["project_id","account_id"],search:["account_id","role"]},
+ contract_transactions:{table:"contract_transactions",title:"Contract Transactions",id:"id",search:["contract_id","type","status","amount"]},
+ milestones:{table:"milestones",title:"Milestones",id:"id",search:["title","status"]},
+ admin_permissions:{table:"admin_permissions",title:"Admin Permissions",keys:["role","permission"],search:["permission","key","name"]},
+ application_portfolios:{table:"application_portfolios",title:"Application Portfolios",keys:["application_id","portfolio_id"],search:["application_id","portfolio_id"]},
+ review_responses:{table:"review_responses",title:"Review Responses",id:"id",search:["review_id","response"]},
+ message_attachments:{table:"message_attachments",title:"Message Attachments",id:"id",search:["message_id","file_name","mime_type"]},
+ payment_webhooks:{table:"payment_webhooks",title:"Payment Webhooks",id:"id",search:["provider","provider_event_id","event_type"]},
+ profiles:{table:"profiles",title:"Profiles",keys:["user_id"],search:["full_name","display_name","username","bio"]},
+ public_accounts:{table:"public_accounts",title:"Public Accounts",id:"id",search:["full_name","email","role"]},
+ user_app_state:{table:"user_app_state",title:"User App State",keys:["user_id"],search:["account_id"]}
+};
+const readonlyPages = new Set(["audit_logs","verification_events","wallet_accounts","wallet_ledger_entries","wallet_withdrawals","payment_orders","payment_transactions","escrow_transactions","platform_fees","payouts","refunds","payment_webhooks","contract_transactions"]);
+let currentPage="dashboard", currentTable=null,currentRow=null,cache=[];
+function openHunar(){location.href="../index.html#signin"}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function pretty(v){if(v===null||v===undefined)return "";if(typeof v==="object")return JSON.stringify(v);return String(v)}
+const accountNameCache={};
+const friendlyLabels={id:"Reference",user_id:"User",account_id:"User",client_id:"Client",freelancer_id:"Freelancer",payer_id:"Payer",payee_id:"Recipient",reporter_id:"Reported by",reviewer_id:"Reviewer",reviewee_id:"Reviewed user",responder_id:"Responder",requested_by:"Requested by",uploaded_by:"Uploaded by",actor_id:"Person",admin_id:"Admin",hired_freelancer_id:"Hired freelancer",project_id:"Project",contract_id:"Contract",milestone_id:"Milestone",application_id:"Application",portfolio_id:"Portfolio",verification_request_id:"Verification request",storage_path:"Secure file",provider_event_id:"Payment event",mime_type:"File type",transaction_type:"Money action",review_reason:"Review note",status:"Status",role:"Role",full_name:"Name",legal_name:"Legal name",id_type:"ID type",id_reference:"ID reference",created_at:"Created",updated_at:"Last updated",reviewed_at:"Reviewed",reviewed_by:"Reviewed by",consent_at:"Consent given"};
+const accountFields=new Set(["user_id","account_id","client_id","freelancer_id","payer_id","payee_id","reporter_id","reviewer_id","reviewee_id","responder_id","requested_by","uploaded_by","actor_id","admin_id","hired_freelancer_id"]);
+function friendlyLabel(k){if(friendlyLabels[k])return friendlyLabels[k];return k.replace(/_/g,' ').replace(/\b\w/g,m=>m.toUpperCase())}
+async function loadAccountNames(rows){const ids=[...new Set(rows.flatMap(r=>[...accountFields].map(k=>r[k]).filter(v=>typeof v==='string'&&/^[0-9a-f-]{36}$/i.test(v))))];const missing=ids.filter(id=>!accountNameCache[id]);if(!missing.length)return;if(missing.length){const {data}=await sb.from('accounts').select('id,full_name,email').in('id',missing);(data||[]).forEach(a=>accountNameCache[a.id]=a.full_name||a.email||'User')}
+}
+function friendlyValue(k,v){if(v===null||v===undefined||v==='')return '-';if(accountFields.has(k)&&accountNameCache[v])return accountNameCache[v];return pretty(v)}
+function primaryKeys(t){return t.keys||[t.id||'id']}
+function rowFilter(q,r){return !q||currentTable.search.some(k=>friendlyValue(k,r[k]).toLowerCase().includes(q))}
+function tableColumns(rows){const preferred=['full_name','legal_name','title','email','role','status','profession','category','client_id','freelancer_id','project_id','contract_id','amount_etb','total_amount_etb','price_etb','overall','deadline','created_at'];const available=new Set(rows.flatMap(r=>Object.keys(r)));const keys=preferred.filter(k=>available.has(k)&&!['created_at'].includes(k));if(keys.length<4)for(const k of available){if(keys.length>=6)break;if(!keys.includes(k)&&!['id','updated_at','__has_contract'].includes(k))keys.push(k)}return keys.slice(0,6)}
+
+let adminIdleTimer=null,adminLastActivity=Date.now();
+const ADMIN_IDLE_MS=30*60*1000;
+function touchAdminActivity(){adminLastActivity=Date.now()}
+async function adminIdleCheck(){if(!document.getElementById("app")?.classList.contains("hidden") && Date.now()-adminLastActivity>ADMIN_IDLE_MS){await sb.auth.signOut();location.reload()}}
+function startAdminIdleProtection(){["click","keydown","mousemove","scroll","touchstart"].forEach(e=>window.addEventListener(e,touchAdminActivity,{passive:true}));touchAdminActivity();clearInterval(adminIdleTimer);adminIdleTimer=setInterval(adminIdleCheck,60000)}
+function qrSource(qr){if(!qr)return '';if(/^data:image\//i.test(qr))return qr;if(/^<svg/i.test(String(qr).trim()))return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(qr);return qr}
+function mfaModal(title,hint,html,verifyHandler){return new Promise(resolve=>{
+ const modal=document.getElementById('modal');
+ document.getElementById('modalTitle').textContent=title;
+ document.getElementById('modalHint').textContent=hint||'';
+ document.getElementById('modalJson').style.display='none';
+ document.getElementById('modalMsg').innerHTML=html;
+ const a=document.querySelector('.modalactions');
+ a.innerHTML='<button class="btn" id="mfaCancel">Sign out</button><button class="btn primary" id="mfaVerify">Verify code</button>';
+ document.getElementById('mfaCancel').onclick=async()=>{closeModal();await sb.auth.signOut();resolve(false)};
+ document.getElementById('mfaVerify').onclick=async()=>{const b=document.getElementById('mfaVerify');b.disabled=true;b.textContent='Checking...';try{const ok=await verifyHandler();if(ok){closeModal();resolve(true)}else{b.disabled=false;b.textContent='Verify code'}}catch(e){const box=document.getElementById('modalMsg');box.insertAdjacentHTML('afterbegin',`<div class="error">${esc(e?.message||'The security code could not be verified.')}</div>`);b.disabled=false;b.textContent='Verify code'}};
+ modal.classList.add('show');
+})}
+async function requireAdminMfa(){
+ const {data:aal,error:aalError}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+ if(aalError)throw aalError;
+ if(aal?.currentLevel==='aal2')return true;
+ const {data:factors,error:fError}=await sb.auth.mfa.listFactors();
+ if(fError)throw fError;
+ const verified=(factors?.totp||[]).find(f=>f.status==='verified');
+ if(verified){
+   const {data:challenge,error}=await sb.auth.mfa.challenge({factorId:verified.id});
+   if(error)throw error;
+   return mfaModal('Admin security check','Enter the 6-digit code from your authenticator app.','<div class="notice"><b>Extra security required.</b><br>Your HUNAR Admin account has two-factor authentication enabled.</div><div class="field"><label>Authenticator code</label><input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" minlength="6" placeholder="000000" style="font-size:22px;letter-spacing:.25em;text-align:center"></div>',async()=>{
+     const code=String(document.getElementById('mfaCode')?.value||'').replace(/\D/g,'');
+     if(code.length!==6){throw new Error('Enter the 6-digit authenticator code.')}
+     const {error}=await sb.auth.mfa.verify({factorId:verified.id,challengeId:challenge.id,code});
+     if(error)throw error;
+     await sb.auth.refreshSession();return true;
+   });
+ }
+ const {data:enroll,error:enrollError}=await sb.auth.mfa.enroll({factorType:'totp',friendlyName:'HUNAR Admin'});
+ if(enrollError)throw enrollError;
+ const qr=qrSource(enroll?.totp?.qr_code);
+ return mfaModal('Set up Admin 2FA','Scan the QR code with Google Authenticator, Microsoft Authenticator, Authy, or another TOTP app, then enter the 6-digit code.','<div class="notice"><b>One-time setup.</b><br>HUNAR requires two-factor authentication for Admin access.</div><div style="text-align:center;margin:12px 0"><img src="'+esc(qr)+'" alt="Admin MFA QR code" style="width:220px;height:220px;max-width:100%;border:1px solid #e5e7eb;border-radius:12px;padding:8px;background:#fff"></div><div class="field"><label>Setup key (if you cannot scan)</label><input value="'+esc(enroll?.totp?.secret||'')+'" readonly></div><div class="field"><label>6-digit authenticator code</label><input id="mfaCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" minlength="6" placeholder="000000" style="font-size:22px;letter-spacing:.25em;text-align:center"></div>',async()=>{
+   const code=String(document.getElementById('mfaCode')?.value||'').replace(/\D/g,'');
+   if(code.length!==6)throw new Error('Enter the 6-digit authenticator code.');
+   const {data:challenge,error:challengeError}=await sb.auth.mfa.challenge({factorId:enroll.id});
+   if(challengeError)throw challengeError;
+   const {error}=await sb.auth.mfa.verify({factorId:enroll.id,challengeId:challenge.id,code});
+   if(error)throw error;
+   await sb.auth.refreshSession();return true;
+ });
+}
+async function init(){
+ const {data:{session}}=await sb.auth.getSession();
+ if(session){ try{const mfaOk=await requireAdminMfa(); if(mfaOk){const {data:{session:liveSession}}=await sb.auth.getSession();const ok=await enterAdmin(liveSession||session);if(!ok)await sb.auth.signOut();}else await sb.auth.signOut();}catch(e){await sb.auth.signOut();document.getElementById("loginMsg").innerHTML=`<div class="error">${esc(e?.message||'Admin security verification is required.')}</div>`;} }
+}
+async function adminLogin(event){
+ event.preventDefault();
+ const email=document.getElementById("adminEmailInput").value.trim();
+ const password=document.getElementById("adminPasswordInput").value;
+ const button=document.getElementById("loginButton");
+ const msg=document.getElementById("loginMsg");
+ button.disabled=true;button.textContent="Signing in...";msg.innerHTML="";
+ const {data,error}=await sb.auth.signInWithPassword({email,password});
+ if(error){msg.innerHTML='<div class="error">The sign-in details could not be verified.</div>';button.disabled=false;button.textContent="Sign In";return;}
+ try{const mfaOk=await requireAdminMfa();if(!mfaOk)return;const {data:{session}}=await sb.auth.getSession();const ok=await enterAdmin(session);if(!ok)await sb.auth.signOut();}
+ catch(e){msg.innerHTML=`<div class="error">${esc(e?.message||'Admin security verification could not be completed.')}</div>`;await sb.auth.signOut();}
+ button.disabled=false;button.textContent="Sign In";
+}
+async function enterAdmin(session){
+ const {data,isError}=await sb.rpc("hunar_is_admin");
+ if(isError || data!==true){document.getElementById("loginMsg").innerHTML='<div class="error">This account is not authorized for HUNAR Admin access.</div>';return false;}
+ document.getElementById("login").classList.add("hidden");document.getElementById("app").classList.remove("hidden");document.getElementById("adminEmail").textContent=session.user.email||"Admin";startAdminIdleProtection();showPage("dashboard");return true;
+}
+function togglePassword(){
+ const i=document.getElementById("adminPasswordInput");
+ i.type=i.type==="password"?"text":"password";
+}
+async function count(table){const {count,error}=await sb.from(table).select("*",{count:"exact",head:true});return error?null:count}
+async function dashboard(){
+ const names=["accounts","projects","services","applications","contracts","payment_orders","verification_requests","reports"];
+ const vals=await Promise.all(names.map(count));
+ const labels=["Users","Projects","Services","Applications","Contracts","Payments","Verification","Reports"];
+ let cards=vals.map((v,i)=>`<div class="card"><div class="label">${labels[i]}</div><div class="num">${v===null?"-":v}</div></div>`).join("");
+ document.getElementById("content").innerHTML=`<div class="cards">${cards}</div>
+ <div class="panel"><div class="panelhead"><h2>Admin Control Center</h2></div><div style="padding:20px;color:#6b7280">Use the left menu to manage HUNAR data. Changes made here affect the production HUNAR database.</div></div>`;
+}
+
+function filterAdminMenu(query){
+ const q=String(query||"").trim().toLowerCase();
+ document.querySelectorAll(".side .nav button").forEach(btn=>btn.style.display=(!q||btn.textContent.toLowerCase().includes(q))?"":"none");
+ document.querySelectorAll(".side .nav").forEach(group=>{const visible=[...group.querySelectorAll("button")].some(b=>b.style.display!=="none");const label=group.previousElementSibling;if(label&&label.tagName==="DIV")label.style.display=(!q||visible)?"":"none";});
+}
+const virtualPages = new Set([
+  "analytics","finance_overview","contract_control","verification_queue",
+  "dispute_center","user_support","admin_activity","system_health",
+  "site_settings","feature_flags","data_tools","admin_guide","user_control_center","marketplace_control","service_control","review_center","payment_control","payout_review","refund_center","identity_review_center","report_center","notification_center","messaging_center","security_center","data_export_center","activity_monitor","system_configuration"
+]);
+
+async function extraControlPage(page){
+ const c=document.getElementById("content");
+ const map={
+  user_control_center:["User Control Center","Manage people from one place",[["users","Users"],["freelancer_profiles","Freelancer Profiles"],["profiles","Profiles"],["public_accounts","Public Accounts"],["admin_roles","Admin Roles"]]],
+  marketplace_control:["Marketplace Control","Projects, applications and services",[["projects","Projects"],["applications","Applications"],["services","Services"],["portfolios","Portfolios"],["reviews","Reviews"]]],
+  service_control:["Service Control","Manage freelancer services",[["services","Services"],["portfolios","Portfolios"],["reviews","Reviews"]]],
+  review_center:["Review Center","Reviews and responses",[["reviews","Reviews"],["review_responses","Review Responses"]]],
+  payment_control:["Payment Center","Verified payments, wallet ledger, fees and withdrawals",[["wallet_ledger_entries","Wallet Ledger"],["wallet_withdrawals","Wallet Withdrawals"],["payment_orders","Payment Orders"],["payment_transactions","Payment Transactions"],["escrow_transactions","Escrow"],["platform_fees","Platform Fees"]]],
+  payout_review:["Payout Review","Review payout records",[["payouts","Payouts"],["payment_transactions","Payment Transactions"]]],
+  refund_center:["Refund Center","Review refund records",[["refunds","Refunds"],["payment_orders","Payment Orders"]]],
+  identity_review_center:["Identity Review Center","Identity verification workflow",[["verification_requests","Identity Verification"],["verification_documents","Verification Documents"],["verification_events","Verification History"]]],
+  report_center:["Report Center","Reports and moderation",[["reports","Reports"],["moderation_actions","Moderation"]]],
+  notification_center:["Notification Center","Monitor HUNAR notifications",[["notifications","Notifications"]]],
+  messaging_center:["Messaging Center","Monitor communication",[["conversations","Conversations"],["messages","Messages"],["message_attachments","Message Attachments"]]],
+  security_center:["Security Center","Administrative security and history",[["admin_roles","Admin Roles"],["admin_permissions","Admin Permissions"],["audit_logs","Audit Logs"]]],
+  data_export_center:["Data Export Center","Choose a data area to inspect",[["users","Users"],["projects","Projects"],["contracts","Contracts"],["payment_transactions","Payment Transactions"]]],
+  activity_monitor:["Activity Monitor","Operational history",[["audit_logs","Audit Logs"],["project_activity","Project Activity"],["notifications","Notifications"]]],
+  system_configuration:["System Configuration","System administration",[["admin_permissions","Admin Permissions"],["admin_roles","Admin Roles"],["user_app_state","User App State"]]]
+ };
+ if(page==='payment_control'){
+   document.getElementById("title").textContent="Payment Center";document.getElementById("subtitle").textContent="Verified money records and payout status";
+   const [orders,fees,payouts,walletTx,walletWd]=await Promise.all(["payment_orders","platform_fees","payouts","wallet_ledger_entries","wallet_withdrawals"].map(count));
+   const {data:pendingWd}=await sb.from("wallet_withdrawals").select("id,amount_etb,user_id,status,provider_reference,created_at").eq("status","processing").order("created_at",{ascending:false}).limit(20);
+   c.innerHTML=`<div class="cards">${[["Payment Orders",orders??"-","Provider payment records"],["HUNAR Fees",fees??"-","10% platform fee records"],["Payouts",payouts??"-","Provider payout records"],["Wallet Ledger",walletTx??"-","Append-only financial entries"],["Wallet Withdrawals",walletWd??"-","User withdrawal requests"]].map(x=>`<div class="card"><div class="label">${esc(x[0])}</div><div class="num">${esc(x[1])}</div><div style="color:#6b7280;font-size:12px;margin-top:5px">${esc(x[2])}</div></div>`).join("")}</div>
+   <div class="panel" style="margin-top:18px"><div class="panelhead"><h2>Pending withdrawals</h2></div>${(pendingWd||[]).length?`<div style="padding:10px 18px">${pendingWd.map(w=>`<div style="display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #eef1ee"><div><b>${esc(String(w.id).slice(0,10).toUpperCase())}</b><div style="font-size:12px;color:#6b7280">${esc(w.provider_reference||"Provider reference pending")} · ${esc(w.status)}</div></div><b>${esc(Number(w.amount_etb||0).toLocaleString())} ETB</b></div>`).join("")}</div>`:`<div style="padding:18px;color:#6b7280">No processing withdrawals.</div>`}</div>
+   <div class="notice" style="margin-top:18px"><b>Provider confirmation rule</b><br>Admins can inspect provider status and audit records, but the normal admin UI does not provide a free-form wallet-balance editor or a manual payout-complete button. Provider-confirmed webhooks finalize payouts.</div>`;return true;
+ }
+ if(page==='security_center'){
+   document.getElementById("title").textContent="Security Center";document.getElementById("subtitle").textContent="Admin protection and security history";
+   let aal='Unknown',factorCount=0;try{const a=await sb.auth.mfa.getAuthenticatorAssuranceLevel();aal=a?.data?.currentLevel||a?.currentLevel||'Unknown';const f=await sb.auth.mfa.listFactors();factorCount=(f?.data?.totp||[]).filter(x=>x.status==='verified').length}catch(e){}
+   c.innerHTML=`<div class="cards"><div class="card"><div class="label">Admin 2FA</div><div class="num">${factorCount?'Enabled':'Required'}</div><div style="color:#6b7280;font-size:12px;margin-top:5px">TOTP authenticator protection</div></div><div class="card"><div class="label">Current session</div><div class="num">${esc(aal)}</div><div style="color:#6b7280;font-size:12px;margin-top:5px">AAL2 is required for admin operations</div></div></div><div class="panel"><div class="panelhead"><h2>Security controls</h2></div><div style="padding:18px;display:grid;gap:12px"><div class="notice"><b>Protected Admin access</b><br>Admin database actions are checked by Supabase authorization and require an MFA-protected session.</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="showPage('admin_roles')">Admin Roles</button><button class="btn" onclick="showPage('admin_permissions')">Admin Permissions</button><button class="btn" onclick="showPage('audit_logs')">Audit Logs</button></div></div></div>`;return true;
+ }
+ const d=map[page]; if(!d)return false;
+ document.getElementById("title").textContent=d[0];document.getElementById("subtitle").textContent=d[1];
+ c.innerHTML='<div class="panel"><div class="panelhead"><h2>'+esc(d[0])+'</h2></div><div style="padding:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px">'+d[2].map(x=>'<button class="btn" style="text-align:left;padding:16px" onclick="showPage(\''+x[0]+'\')"><b>'+esc(x[1])+'</b><br><span style="font-size:12px;color:#6b7280">Open management page →</span></button>').join("")+'</div></div>';
+ return true;
+}
+async function virtualPage(page){
+  const c=document.getElementById("content");
+  const cards=(items)=>items.map(x=>`<div class="card"><div class="label">${esc(x[0])}</div><div class="num">${esc(x[1])}</div><div style="color:#6b7280;font-size:12px;margin-top:5px">${esc(x[2]||"")}</div></div>`).join("");
+  if(page==="analytics"){
+    document.getElementById("title").textContent="Analytics"; document.getElementById("subtitle").textContent="Understand HUNAR activity";
+    const [u,pj,s,a,cx]=await Promise.all(["accounts","projects","services","applications","contracts"].map(count));
+    c.innerHTML=`<div class="cards">${cards([["Users",u??"-","Total accounts"],["Projects",pj??"-","Marketplace projects"],["Services",s??"-","Published services"],["Applications",a??"-","Applications"],["Contracts",cx??"-","Contract records"]])}</div>
+    <div class="panel"><div class="panelhead"><h2>Simple platform overview</h2></div><div style="padding:20px;color:#6b7280">Use the database sections on the left to inspect individual records. This page is read-only.</div></div>`; return;
+  }
+  if(page==="finance_overview"){
+    document.getElementById("title").textContent="Finance Overview"; document.getElementById("subtitle").textContent="Payments, escrow, fees, payouts and refunds";
+    const [o,t,e,f,po,r]=await Promise.all(["payment_orders","payment_transactions","escrow_transactions","platform_fees","payouts","refunds"].map(count));
+    c.innerHTML=`<div class="cards">${cards([["Payment Orders",o??"-","Orders"],["Transactions",t??"-","Payment transactions"],["Escrow",e??"-","Escrow records"],["Platform Fees",f??"-","HUNAR fee records"],["Payouts",po??"-","Payout records"],["Refunds",r??"-","Refund records"]])}</div>
+    <div class="notice" style="margin-top:18px"><b>HUNAR platform fee: 10%</b><br>Use Platform Fees and Payment Transactions for the detailed records.</div>`; return;
+  }
+  if(page==="contract_control"){
+    document.getElementById("title").textContent="Contract Control Center"; document.getElementById("subtitle").textContent="One simple place to monitor contract work";
+    const [contractCount,m,sub,tx]=await Promise.all(["contracts","contract_milestones","contract_submissions","contract_transactions"].map(count));
+    c.innerHTML=`<div class="cards">${cards([["Contracts",contractCount??"-","All contract records"],["Milestones",m??"-","Contract milestones"],["Submissions",sub??"-","Freelancer submissions"],["Transactions",tx??"-","Contract money records"]])}</div>
+    <div class="panel"><div class="panelhead"><h2>Quick control</h2></div><div style="padding:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="showPage('contracts')">Manage Contracts</button><button class="btn" onclick="showPage('contract_milestones')">Manage Milestones</button><button class="btn" onclick="showPage('contract_submissions')">Review Submissions</button><button class="btn" onclick="showPage('contract_transactions')">View Transactions</button></div></div>`; return;
+  }
+  if(page==="verification_queue"){
+    document.getElementById("title").textContent="Verification Queue"; document.getElementById("subtitle").textContent="Simple identity-review workflow";
+    const n=await count("verification_requests");
+    c.innerHTML=`<div class="cards">${cards([["Verification Requests",n??"-","Open the full verification section to review records"],["Documents",await count("verification_documents")??"-","Uploaded identity documents"],["History",await count("verification_events")??"-","Verification status history"]])}</div>
+    <div class="panel"><div class="panelhead"><h2>Review actions</h2></div><div style="padding:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="showPage('verification_requests')">Open Requests</button><button class="btn" onclick="showPage('verification_documents')">View Documents</button><button class="btn" onclick="showPage('verification_events')">View History</button></div></div>`; return;
+  }
+  if(page==="dispute_center"){
+    document.getElementById("title").textContent="Dispute Center"; document.getElementById("subtitle").textContent="Review reports and moderation records";
+    const [r,m]=await Promise.all(["reports","moderation_actions"].map(count));
+    c.innerHTML=`<div class="cards">${cards([["Reports",r??"-","User/content reports"],["Moderation Actions",m??"-","Admin moderation records"]])}</div>
+    <div class="panel"><div class="panelhead"><h2>Simple workflow</h2></div><div style="padding:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="showPage('reports')">Review Reports</button><button class="btn" onclick="showPage('moderation_actions')">Review Moderation</button></div></div>`; return;
+  }
+  if(page==="user_support"){
+    document.getElementById("title").textContent="User Support"; document.getElementById("subtitle").textContent="Find users and inspect communication";
+    c.innerHTML=`<div class="panel"><div class="panelhead"><h2>Support shortcuts</h2></div><div style="padding:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="showPage('users')">Find User</button><button class="btn" onclick="showPage('conversations')">Conversations</button><button class="btn" onclick="showPage('messages')">Messages</button><button class="btn" onclick="showPage('notifications')">Notifications</button><button class="btn" onclick="showPage('reports')">Reports</button></div></div>`; return;
+  }
+  if(page==="admin_activity"){
+    document.getElementById("title").textContent="Admin Activity"; document.getElementById("subtitle").textContent="Review administrative history";
+    c.innerHTML=`<div class="panel"><div class="panelhead"><h2>Audit history</h2></div><div style="padding:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="showPage('audit_logs')">Open Audit Logs</button><button class="btn" onclick="showPage('moderation_actions')">Moderation Actions</button><button class="btn" onclick="showPage('project_activity')">Project History</button></div></div>`; return;
+  }
+  if(page==="system_health"){
+    document.getElementById("title").textContent="System Health"; document.getElementById("subtitle").textContent="Quick database connection checks";
+    const checks=["accounts","projects","contracts","verification_requests","payment_orders","messages"];
+    const vals=await Promise.all(checks.map(async t=>[t,await count(t)]));
+    c.innerHTML=`<div class="panel"><div class="panelhead"><h2>HUNAR data services</h2><button class="btn light" onclick="showPage('system_health')">Run Check Again</button></div><div class="metricList">${vals.map(x=>`<div class="metric"><span>${esc(x[0])}</span><b>${x[1]===null?"Check failed":"Connected · "+x[1]+" records"}</b></div>`).join("")}</div></div>`; return;
+  }
+  if(page==="site_settings"){
+    document.getElementById("title").textContent="Site Settings"; document.getElementById("subtitle").textContent="Administrative configuration";
+    c.innerHTML=`<div class="panel"><div class="panelhead"><h2>Important HUNAR settings</h2></div><div style="padding:18px;display:grid;gap:12px"><div class="metric"><span>Marketplace</span><b>Active</b></div><div class="metric"><span>Admin protection</span><b>Enabled</b></div><div class="metric"><span>Platform fee</span><b>10%</b></div><div class="notice">This version does not write arbitrary settings into the database. Existing HUNAR settings remain unchanged.</div></div></div>`; return;
+  }
+  if(page==="feature_flags"){
+    document.getElementById("title").textContent="Feature Controls"; document.getElementById("subtitle").textContent="See important HUNAR feature areas";
+    c.innerHTML=`<div class="panel"><div class="panelhead"><h2>Feature map</h2></div><div class="metricList">${["Marketplace","Contracts","Payments","Identity Verification","Messaging","Notifications","Reports & Moderation"].map(x=>`<div class="metric"><span>${esc(x)}</span><b>Available</b></div>`).join("")}</div></div>`; return;
+  }
+  if(page==="data_tools"){
+    document.getElementById("title").textContent="Data Tools"; document.getElementById("subtitle").textContent="Safe navigation for data management";
+    c.innerHTML=`<div class="panel"><div class="panelhead"><h2>Data management</h2></div><div style="padding:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn primary" onclick="showPage('users')">Users</button><button class="btn" onclick="showPage('projects')">Projects</button><button class="btn" onclick="showPage('contracts')">Contracts</button><button class="btn" onclick="showPage('payment_transactions')">Payments</button><button class="btn" onclick="showPage('verification_requests')">Verification</button></div><div class="notice">Use View before editing. Delete actions require confirmation.</div></div>`; return;
+  }
+  if(page==="admin_guide"){
+    document.getElementById("title").textContent="Admin Guide"; document.getElementById("subtitle").textContent="Simple instructions for controlling HUNAR";
+    c.innerHTML=`<div class="panel"><div class="panelhead"><h2>How to use HUNAR Admin</h2></div><div style="padding:20px;line-height:1.8;color:#4b5563"><b>1. Find</b> - choose a section from the left menu.<br><b>2. Search</b> - use the search box to find a record.<br><b>3. View</b> - inspect the complete record before changing it.<br><b>4. Edit</b> - change permitted fields and save.<br><b>5. Review</b> - Identity Verification, Reports and Moderation have dedicated review actions.<br><b>6. Money</b> - use Payment Orders, Transactions, Escrow, Fees, Payouts and Refunds to follow money records.<br><b>7. Contracts</b> - use the Contract Control Center for a simple overview.</div></div>`; return;
+  }
+}
+
+async function showPage(page){
+ currentPage=page;
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ if(virtualPages.has(page)){
+   if(await extraControlPage(page)) return;
+   await virtualPage(page); return;
+ }
+ if(page==="dashboard"){document.getElementById("title").textContent="Dashboard";document.getElementById("subtitle").textContent="HUNAR platform overview";await dashboard();return}
+ const t=tables[page];
+ if(!t){document.getElementById("content").innerHTML='<div class="error">This Admin section is not configured.</div>';return}
+ document.getElementById("title").textContent=t.title;document.getElementById("subtitle").textContent=`Manage ${t.title.toLowerCase()}`;
+ let helper='';
+ if(page==='verification_requests') helper="<div class=\"notice\"><b>Identity Verification</b><br>1. Open <b>View</b>. 2. Check the person name and ID documents. 3. Choose <b>Approve</b> or <b>Reject</b>.</div>";
+ if(page==='contracts') helper='<div class="notice"><b>Contract Control</b><br>View the complete contract before making changes. Contract records are connected to the real HUNAR database.</div>';
+ if(page==='reports') helper='<div class="notice"><b>Report Control</b><br>Open a report to inspect it. Use Resolve after the issue has been handled.</div>';
+ document.getElementById("content").innerHTML=`${helper}<div class="panel"><div class="panelhead"><h2>${esc(t.title)}</h2><div style="display:flex;gap:8px"><input id="search" class="search" placeholder="Search..." oninput="renderRows()"><button class="btn light" onclick="loadRows()">Refresh</button></div></div><div id="tableArea"><div class="empty">Loading...</div></div></div>`;
+ currentTable=t;await loadRows();
+}
+async function loadRows(){
+ const area=document.getElementById("tableArea");if(!area)return;area.innerHTML='<div class="empty">Loading...</div>';
+ try{const {data,error}=await sb.from(currentTable.table).select("*").limit(100);if(error){area.innerHTML=`<div class="error"><b>Could not load ${esc(currentTable.title)}</b><br>${esc(error.message)}<br><br><button class="btn light" onclick="loadRows()">Try Again</button></div>`;cache=[];return}cache=data||[];
+ if(currentPage==='projects' && cache.length){
+   const ids=cache.map(r=>r.id).filter(Boolean);
+   const {data:contracts}=await sb.from('contracts').select('project_id').in('project_id',ids);
+   const linked=new Set((contracts||[]).map(c=>c.project_id));
+   cache.forEach(r=>{r.__has_contract=linked.has(r.id)});
+ }
+ await loadAccountNames(cache);renderRows();}
+ catch(e){area.innerHTML=`<div class="error"><b>Admin page error</b><br>${esc(e?.message||e)}<br><br><button class="btn light" onclick="loadRows()">Try Again</button></div>`;cache=[];}
+}
+function actionButtons(i,r){
+ let html=`<button class="btn ghost" onclick="viewRowByIndex(${i})">View</button>`;
+ const keys=primaryKeys(currentTable); const canEdit=!readonlyPages.has(currentPage) && currentPage!=='verification_events';
+ if(canEdit) html+=` <button class="btn" onclick="editRowByIndex(${i})">Edit</button>`;
+ if(currentPage==='verification_requests' && String(r.status||'').toLowerCase()==='pending') html+=` <button class="btn success" onclick="approveVerificationByIndex(${i})">Approve</button> <button class="btn danger" onclick="rejectVerificationByIndex(${i})">Reject</button>`;
+ if(currentPage==='reports' && String(r.status||'').toLowerCase()!=='resolved') html+=` <button class="btn success" onclick="resolveReportByIndex(${i})">Resolve</button>`;
+ if(canEdit && keys.length===1 && !['verification_requests','reports'].includes(currentPage)){
+   if(currentPage==='projects' && r.__has_contract) html+=` <button class="btn danger" onclick="archiveProjectByIndex(${i})">Archive</button>`;
+   else html+=` <button class="btn danger" onclick="deleteRowByIndex(${i})">Delete</button>`;
+ }
+ return html;
+}
+function renderRows(){
+ const q=(document.getElementById("search")?.value||"").trim().toLowerCase();const rows=cache.filter(r=>rowFilter(q,r));
+ if(!rows.length){document.getElementById("tableArea").innerHTML='<div class="empty">No records found.</div>';return}
+ const keys=tableColumns(rows);const head=keys.map(k=>`<th>${esc(friendlyLabel(k))}</th>`).join("")+"<th>Actions</th>";
+ const body=rows.map(r=>{const i=cache.indexOf(r);return `<tr>${keys.map(k=>`<td>${k==="status"||k==="role"?`<span class="status">${esc(friendlyValue(k,r[k]))}</span>`:esc(friendlyValue(k,r[k]).slice(0,90))}</td>`).join("")}<td class="actionsCell">${actionButtons(i,r)}</td></tr>`}).join("");
+ document.getElementById("tableArea").innerHTML=`<div class="tablewrap"><table class="table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+}
+function openModal(title,hint,html,buttonText,handler){
+ document.getElementById("modalTitle").textContent=title;document.getElementById("modalHint").innerHTML=hint||"";document.getElementById("modalJson").style.display="none";document.getElementById("modalJson").value="";
+ document.getElementById("modalMsg").innerHTML=html||"";const a=document.querySelector(".modalactions");a.innerHTML=`<button class="btn primary" id="modalPrimary">${esc(buttonText||"Close")}</button>`;document.getElementById("modalPrimary").onclick=handler||closeModal;document.getElementById("modal").classList.add("show");
+}
+function viewRowByIndex(i){
+ const r=cache[i];if(!r)return;const details=Object.entries(r).filter(([k])=>!['id','user_id','account_id','created_at','updated_at','__has_contract'].includes(k)).map(([k,v])=>`<div class="detailRow"><span>${esc(friendlyLabel(k))}</span><b>${esc(friendlyValue(k,v))}</b></div>`).join('');
+ let extra=currentPage==='verification_requests'?'<div id="verificationDetail" class="verificationDetail"><div class="empty">Loading identity documents…</div></div>':'';
+ openModal(`${esc(currentTable.title)} · Details`,`Review the information here. Nothing changes until you choose Edit or an action.`,`<div class="detailList">${details||'<div class="empty">No details available.</div>'}</div>${extra}`,'Close');if(currentPage==='verification_requests')loadVerificationDetail(r);
+}
+function editRowByIndex(i){
+ const r=cache[i];if(!r)return;currentRow=r;const pk=primaryKeys(currentTable);const fields=Object.keys(r).filter(k=>!['created_at','updated_at'].includes(k)).map(k=>{const v=r[k],label=friendlyLabel(k);if(pk.includes(k))return `<div class="field"><label>${esc(label)}</label><input value="${esc(friendlyValue(k,v))}" disabled><small>This field is used to find the record and cannot be changed here.</small></div>`;if(typeof v==='boolean')return `<div class="field"><label>${esc(label)}</label><select data-field="${esc(k)}"><option value="true" ${v?'selected':''}>Yes</option><option value="false" ${!v?'selected':''}>No</option></select></div>`;if(v&&typeof v==='object')return `<div class="field"><label>${esc(label)}</label><textarea data-field="${esc(k)}" class="jsonField">${esc(JSON.stringify(v,null,2))}</textarea></div>`;return `<div class="field"><label>${esc(label)}</label><textarea data-field="${esc(k)}">${esc(v??'')}</textarea></div>`;}).join('');
+ openModal(`Edit ${esc(currentTable.title)}`,`Change only the information you need, then choose Save changes.`,`<div class="editForm">${fields}</div><div class="notice">HUNAR will save these changes to this selected item.</div>`,'Save changes',saveFieldEditor);
+}
+async function saveFieldEditor(){
+ const patch={};
+ const changed=[];
+ for(const el of document.querySelectorAll('#modalMsg [data-field]')){
+   let v=el.value,k=el.dataset.field;
+   if(el.tagName==='SELECT')v=v==='true';
+   else if(el.classList.contains('jsonField')){
+     try{v=JSON.parse(v)}catch(e){document.getElementById('modalMsg').insertAdjacentHTML('afterbegin',`<div class="error">Please fix the information in ${esc(friendlyLabel(k))}.</div>`);return}
+   }else if(v==='')v=null;
+   const old=currentRow?.[k];
+   const same=(typeof old==='object' && old!==null)?JSON.stringify(old)===JSON.stringify(v):String(old??'')===String(v??'');
+   if(!same){patch[k]=v;changed.push(k)}
+ }
+ const pk=primaryKeys(currentTable);
+ if(!pk.every(k=>currentRow&&currentRow[k]!==undefined&&currentRow[k]!==null)){
+   document.getElementById('modalMsg').insertAdjacentHTML('afterbegin','<div class="error">The selected item could not be identified.</div>');return
+ }
+ if(!changed.length){closeModal();return}
+ const {data,error}=await sb.rpc('hunar_admin_update_record',{p_table:currentTable.table,p_key_column:pk[0],p_key_value:String(currentRow[pk[0]]),p_patch:patch});
+ if(error){document.getElementById('modalMsg').insertAdjacentHTML('afterbegin',`<div class="error">Could not save: ${esc(error.message)}</div>`);return}
+ if(data!==true && data!==null){document.getElementById('modalMsg').insertAdjacentHTML('afterbegin','<div class="error">The change was not saved.</div>');return}
+ closeModal();await loadRows();
+}
+function closeModal(){document.getElementById("modal").classList.remove("show");document.getElementById("modalMsg").innerHTML='';document.getElementById("modalHint").textContent='';document.getElementById("modalJson").value='';}
+async function archiveProjectByIndex(i){
+ const r=cache[i];if(!r)return;
+ if(!confirm('This project is connected to a contract, so it cannot be deleted safely. Archive it instead?'))return;
+ const {error}=await sb.rpc('hunar_admin_update_record',{p_table:'projects',p_key_column:'id',p_key_value:String(r.id),p_patch:{status:'cancelled'}});
+ if(error){alert('Could not archive the project: '+error.message);return}
+ await loadRows();
+}
+async function deleteRowByIndex(i){
+ const r=cache[i];if(!r)return;
+ if(!confirm(`Delete this ${currentTable.title.replace(/s$/,'').toLowerCase()}? This cannot be undone.`))return;
+ const pk=primaryKeys(currentTable);
+ if(pk.length!==1){alert('This item uses a protected multi-part key, so it cannot be deleted from this screen.');return}
+ const {data,error}=await sb.rpc('hunar_admin_delete_record',{p_table:currentTable.table,p_key_column:pk[0],p_key_value:String(r[pk[0]])});
+ if(error){alert('Could not delete: '+error.message);return}
+ if(data!==true && data!==null){alert('The delete action did not complete.');return}
+ await loadRows();
+}
+
+async function signedVerificationUrl(path){if(!path)return null;if(/^https?:\/\//i.test(path))return path;const {data,error}=await sb.storage.from('hunar-verification-documents').createSignedUrl(path,600);return error?null:data?.signedUrl||null}
+function verificationStoredPaths(r){
+ const out=[];const add=(label,path)=>{if(path)out.push([label,path])};add('ID front',r.id_front_path);add('ID back',r.id_back_path);add('Selfie',r.selfie_path);add('Document',r.document_path);
+ if(!out.length&&typeof r.review_reason==='string'){const m=r.review_reason.match(/\[HUNAR_EKYC_FILES\]\s*(\{.*\})\s*$/s);if(m){try{const j=JSON.parse(m[1]);add('ID front',j.id_front);add('ID back',j.id_back);add('Selfie',j.selfie);add('Document',j.document)}catch(e){}}}
+ return out;
+}
+async function loadVerificationDetail(r){
+ const box=document.getElementById('verificationDetail');if(!box)return;let html='<div class="sectionTitle">Identity documents</div>';
+ const paths=verificationStoredPaths(r);if(!paths.length)html+='<div class="notice">No identity document was saved with this request.</div>';
+ for(const [label,path] of paths){const url=await signedVerificationUrl(path);html+=url?`<div class="docRow"><b>${esc(label)}</b><a class="btn ghost" href="${esc(url)}" target="_blank" rel="noopener">Open ${esc(label)}</a></div>`:`<div class="docRow"><b>${esc(label)}</b><span>Document unavailable</span></div>`}
+ const {data:docs,error}=await sb.from('verification_documents').select('*').eq('verification_request_id',r.id).order('created_at',{ascending:true});if(!error&&docs?.length){html+='<div class="sectionTitle" style="margin-top:16px">Additional document records</div>';for(const d of docs){const url=await signedVerificationUrl(d.storage_path);html+=`<div class="docRow"><b>${esc(d.document_type||d.file_name||'Document')}</b>${url?`<a class="btn ghost" href="${esc(url)}" target="_blank" rel="noopener">Open document</a>`:'<span>Document unavailable</span>'}</div>`}}
+ if(String(r.status||'').toLowerCase()==='pending')html+=`<div class="reviewActions"><button class="btn success" onclick="approveVerificationFromModal('${esc(r.id)}')">Approve verification</button><button class="btn danger" onclick="rejectVerificationFromModal('${esc(r.id)}')">Reject verification</button></div>`;else html+=`<div class="notice">This verification is already ${esc(friendlyValue('status',r.status))}.</div>`;
+ box.innerHTML=html;
+}
+async function getVerification(id){const {data,error}=await sb.from('verification_requests').select('*').eq('id',id).single();if(error){alert('Could not load identity verification: '+error.message);return null}return data}
+async function reviewVerificationByIndex(i){const r=cache[i];if(r)await reviewVerification(r,'review')}
+async function approveVerificationByIndex(i){const r=cache[i];if(r)await reviewVerification(r,'approved')}
+async function rejectVerificationByIndex(i){const r=cache[i];if(r)await reviewVerification(r,'rejected')}
+async function approveVerificationFromModal(id){const r=await getVerification(id);if(r)await reviewVerification(r,'approved')}
+async function rejectVerificationFromModal(id){const r=await getVerification(id);if(r)await reviewVerification(r,'rejected')}
+async function reviewVerification(r,status){
+ if(status==='review'){viewRowByIndex(cache.indexOf(r));return}
+ const reason=status==='rejected'?(prompt('Why are you rejecting this verification?')||'Rejected by HUNAR admin'):'Approved by HUNAR admin';
+ const {data,error}=await sb.rpc('hunar_admin_review_verification',{p_request_id:r.id,p_status:status,p_reason:reason});
+ if(error){alert('Could not update verification: '+error.message);return}
+ if(data!==true && data!==null){alert('The verification action did not complete.');return}
+ closeModal();await loadRows();
+}
+
+async function resolveReport(r){const {data:{user}}=await sb.auth.getUser();const patch={status:'resolved',resolved_at:new Date().toISOString()};if(user)patch.resolved_by=user.id;const {error}=await sb.rpc('hunar_admin_update_record',{p_table:'reports',p_key_column:'id',p_key_value:String(r.id),p_patch:patch});if(error){alert('Report update failed: '+error.message);return}await loadRows()}
+async function resolveReportByIndex(i){const r=cache[i];if(r)await resolveReport(r)}
+async function logout(){await sb.auth.signOut();location.reload()}
+init();
+</script>
+</body>
+</html>

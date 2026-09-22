@@ -2302,6 +2302,138 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
   .authProShell{max-width:760px!important;margin:0 auto!important;}
 }
 </style>
+
+<style id="hunar-mobile-final-polish">
+/* HUNAR FINAL MOBILE POLISH — layout/UI only; no business/auth/API changes. */
+@media (max-width:900px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+  body{overscroll-behavior-x:none;-webkit-text-size-adjust:100%}
+  .nav{height:60px!important}
+  .navin{height:60px!important;width:100%!important;max-width:none!important;margin:0!important;padding:0 10px!important;gap:8px!important;box-sizing:border-box!important}
+  .menuBtn{display:grid!important;place-items:center!important;order:1!important;width:38px!important;height:38px!important;min-width:38px!important;padding:0!important;border-radius:11px!important;line-height:1!important;font-size:19px!important;flex:0 0 38px!important}
+  .logo{order:2!important;font-size:23px!important;letter-spacing:-1.4px!important;line-height:1!important;white-space:nowrap!important}
+  .right{order:3!important;margin-left:auto!important;gap:4px!important;min-width:0!important;display:flex!important;align-items:center!important}
+  .right .navSearch,.right .langButton,.right .headerIcon{display:none!important}
+  .right .profileMenuWrap{display:flex!important;align-items:center!important}
+  .profileTrigger{width:38px!important;height:38px!important;min-width:38px!important;padding:0!important;display:grid!important;place-items:center!important;border-radius:11px!important;font-size:0!important}
+  .profileTrigger .headerAvatar{display:none!important}
+  .profileTrigger:before{content:'⋮';font-size:23px!important;line-height:1!important;font-weight:900!important}
+  .profileMenu{position:fixed!important;top:68px!important;right:10px!important;left:auto!important;width:min(280px,calc(100vw - 20px))!important;min-width:0!important;max-width:calc(100vw - 20px)!important;max-height:calc(100dvh - 80px)!important;overflow:auto!important;padding:7px!important;border-radius:16px!important;z-index:1300!important;box-shadow:0 18px 50px rgba(18,35,25,.18)!important}
+  .profileMenu button{min-height:42px!important;padding:9px 11px!important;white-space:normal!important;line-height:1.25!important}
+  .profileMenuHead{padding:9px 10px 10px!important}
+  #v3badge{display:none!important}
+
+  .container{width:100%!important;max-width:none!important;margin:0!important;padding-left:12px!important;padding-right:12px!important;box-sizing:border-box!important}
+  .section{padding:34px 0!important}
+  .hero{padding:30px 0 28px!important}
+  .heroGrid{grid-template-columns:1fr!important;gap:22px!important}
+  .hero h1{font-size:clamp(31px,9.4vw,43px)!important;line-height:1.02!important;letter-spacing:-1.8px!important;margin:11px 0 15px!important}
+  .hero p{font-size:15px!important;line-height:1.55!important}
+  .heroVisual{min-height:285px!important;height:285px!important}
+  .scene{inset:10px 0!important;border-radius:20px!important;transform:none!important}
+  .float{padding:10px!important;border-radius:10px!important}
+  .float.a{left:3%!important;top:8%!important;width:min(205px,62%)!important}
+  .float.b{right:3%!important;top:29%!important;width:min(185px,57%)!important}
+  .float.c{left:5%!important;bottom:8%!important;width:min(215px,65%)!important}
+  .float.d{right:5%!important;bottom:8%!important;width:140px!important}
+  .hunar-drag-orb{transform:scale(.82)!important}
+
+  /* Home: use compact paired cards and contained horizontal rails. */
+  .hunarMetricsGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .hunarMetric{min-width:0!important;padding:13px!important}
+  .hunarMetricValue{font-size:23px!important}
+  .pathGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .pathCard{padding:15px!important;border-radius:15px!important}
+  .pathCard h3{font-size:17px!important;line-height:1.2!important}
+  .pathCard p{font-size:12px!important;line-height:1.45!important}
+  .homeSkillStrip{display:flex!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;scroll-snap-type:x proximity!important;gap:8px!important;padding:4px 2px 10px!important;margin-right:-12px!important;padding-right:12px!important}
+  .homeSkillChip{flex:0 0 auto!important;scroll-snap-align:start!important;white-space:nowrap!important}
+  .showcaseStage{height:310px!important}
+  .showcaseCard{min-width:126px!important;padding:9px 10px!important}
+  .showcaseCore{width:112px!important;height:112px!important}
+  .showcaseCore strong{font-size:42px!important}
+  .showcaseRail{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .homeServiceGrid{display:flex!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;scroll-snap-type:x mandatory!important;gap:10px!important;padding:4px 2px 10px!important}
+  .homeServiceCard{flex:0 0 min(78vw,285px)!important;scroll-snap-align:start!important}
+
+  /* Compact controls without forcing every button to full width. */
+  .btn{min-height:40px!important;padding:9px 12px!important;font-size:12.5px!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}
+  .actions{display:flex!important;flex-direction:row!important;flex-wrap:wrap!important;gap:8px!important;margin:16px 0!important}
+  .actions .btn{width:auto!important;flex:0 1 auto!important;min-width:0!important}
+  .actions .btn:only-child{width:auto!important}
+  .searchBox{width:100%!important;box-sizing:border-box!important}
+  .searchBox .btn{flex:0 0 auto!important}
+  .row{gap:8px!important;flex-wrap:wrap!important}
+  .row>*{min-width:0!important}
+
+  /* Paired information cards where content is short. Long forms remain one column. */
+  .grid2,.grid3,.grid4,.timeline,.verifyGrid,.walletStats,.moneyGrid,.performanceStats,.clientDashStats,.contractOverviewGrid,.safetyGrid,.responsibilityGrid,.filterGrid,.roleGrid,.accessGrid,.accountGrid,.settingGridPro,.identityPreviewGrid,.identityUploadGrid,.mkGrid,.mkGrid3{min-width:0!important}
+  .grid3,.grid4,.hunarMetricsGrid,.walletStats,.performanceStats,.clientDashStats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .two,.authWrap .two,.contractCreateGrid,.withdrawGrid,.contractLongGrid,.serviceDetailGrid,.messagesWorkspace,.profileLayout{grid-template-columns:1fr!important}
+  .projectGrid,.applicationGrid,.activeWorkGrid,.revisionProGrid,.submissionGrid,.simpleJobGrid,.myServicesGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .simpleProjectGrid{grid-template-columns:1fr!important}
+  .card,.stat,.jobCard,.projectCard,.applicationCard,.serviceProCard,.contractCard,.workspaceCard,.panel,.box,.tile{min-width:0!important;max-width:100%!important}
+  .card{padding:15px!important;border-radius:15px!important}
+  .thumb{height:118px!important;margin-bottom:11px!important}
+  .card h3,.projectCard h3,.applicationCard h3{font-size:16px!important;line-height:1.25!important}
+  .card p{line-height:1.48!important}
+
+  /* Dashboard and wallet: compact without breaking their existing data/actions. */
+  .dash{border-radius:18px!important}
+  .dash .side{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;padding:9px!important;position:relative!important;top:0!important;overflow:visible!important}
+  .dash .side a,.dash .side button{min-width:0!important;min-height:40px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:normal!important}
+  .dashMain{padding:14px!important}
+  .dash .welcome{padding:17px!important;border-radius:17px!important}
+  .dash .stat{padding:13px!important}
+  .walletBalanceCard{grid-column:1/-1!important;padding:17px!important}
+  .walletStatCard{padding:14px!important}
+  .walletActionCard{padding:15px!important}
+  .walletTxMain{display:grid!important;grid-template-columns:1fr!important;gap:5px!important}
+  .walletTxAmount{min-width:0!important}
+
+  /* Forms: full document scroll, fields never trapped behind viewport height. */
+  .authWrap,.authPro,.authProShell,.authPanel,.authFormPro,.authFormPro form{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important}
+  .authWrap{padding:20px 8px 40px!important}
+  .authWrap>.auth{width:100%!important;max-width:760px!important}
+  .authWrap .field input,.authWrap .field textarea,.authWrap .field select{width:100%!important;min-width:0!important}
+  .authWrap .actions,.authActions,.signupActions{display:flex!important;flex-wrap:wrap!important}
+  .authWrap .actions .btn,.authActions .btn,.signupActions .btn{flex:1 1 100%!important;width:100%!important}
+  .authWrap .stepper{max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important}
+
+  /* Keep tables, rails and long chips inside their own scroll containers. */
+  .tableWrap,.table-responsive,.transactionTable,.chips{max-width:100%!important}
+  .chips{overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important;overscroll-behavior-x:contain!important;padding-bottom:2px!important}
+  .chips .chip{flex:0 0 auto!important;white-space:nowrap!important}
+  .modal,.modalBox,.dialog,.dialogBox,.popup,.popupBox{max-width:calc(100vw - 20px)!important;max-height:calc(100dvh - 76px)!important;overflow:auto!important}
+}
+@media (max-width:389px){
+  .navin{padding-left:7px!important;padding-right:7px!important;gap:6px!important}
+  .logo{font-size:21px!important}
+  .menuBtn,.profileTrigger{width:36px!important;height:36px!important;min-width:36px!important}
+  .profileMenu{right:8px!important;width:calc(100vw - 16px)!important;max-width:calc(100vw - 16px)!important}
+  .pathGrid,.grid3,.grid4,.projectGrid,.applicationGrid,.activeWorkGrid,.revisionProGrid,.submissionGrid,.simpleJobGrid,.myServicesGrid{grid-template-columns:1fr!important}
+  .hunarMetricsGrid,.walletStats,.performanceStats,.clientDashStats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .hunarMetric{padding:11px!important}
+  .hunarMetricLabel{font-size:10px!important}
+  .hunarMetricNote{font-size:9px!important}
+  .section{padding:28px 0!important}
+  .heroVisual{height:255px!important;min-height:255px!important}
+  .float.a{width:61%!important}.float.b{width:55%!important}.float.c{width:63%!important}.float.d{width:120px!important}
+}
+@media (min-width:390px) and (max-width:600px){
+  .grid3,.grid4,.projectGrid,.applicationGrid,.activeWorkGrid,.revisionProGrid,.submissionGrid,.simpleJobGrid,.myServicesGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media (max-width:360px){
+  .container{padding-left:10px!important;padding-right:10px!important}
+  .actions .btn{font-size:12px!important;padding-left:10px!important;padding-right:10px!important}
+  .card{padding:13px!important}
+  .homeServiceCard{flex-basis:82vw!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .homeSkillStrip,.homeServiceGrid{scroll-behavior:auto!important}
+  .showcaseCore,.showcaseCard,.showcaseOrbit,.showcaseVerticalRing,.showcaseDot,.float,.hunar-drag-orb{animation:none!important}
+}
+</style>
 </head>
 <body><a class="skipLink" href="#app">Skip to main content</a><style id="hunar-toast-styles">
 .hunarToastHost{position:fixed;right:22px;bottom:22px;z-index:999999;display:flex;flex-direction:column;gap:12px;pointer-events:none;max-width:min(420px,calc(100vw - 32px))}
@@ -2721,6 +2853,7 @@ function hunarSearchTerms(){return ['Editor','Graphic Designer','SEO','Website D
 function showHunarSearchSuggestions(input){const wrap=input?.closest('.hunarSearchWrap');if(!wrap)return;let box=wrap.querySelector('.hunarSearchSuggestions');if(!box){box=document.createElement('div');box.className='hunarSearchSuggestions';wrap.appendChild(box)}const q=String(input.value||'').trim().toLowerCase();const items=hunarSearchTerms().filter(x=>!q||x.toLowerCase().includes(q)).slice(0,8);box.innerHTML=items.map(x=>`<button type="button" onclick="submitHunarSearch('${x.replace(/'/g,"\\'")}')">${esc(x)}</button>`).join('')||'<div style="padding:10px 12px;color:#999">No common matches</div>';box.style.display='block';}
 function submitHunarSearch(value){const q=String(value||'').trim();if(!q)return;const target=me?.role==='freelancer'?'projects':me?.role==='client'?'developers':'marketplace';go(target+'?q='+encodeURIComponent(q));}
 document.addEventListener('click',e=>{document.querySelectorAll('.hunarSearchSuggestions').forEach(x=>{if(!x.parentElement?.contains(e.target))x.style.display='none'})});
+document.addEventListener('click',e=>{if(profileMenuOpen&&!e.target.closest('.profileMenuWrap')){profileMenuOpen=false;nav()}});
 function nav(){const role=me?.role;let links;if(role==='client')links=[['dashboard','Dashboard'],['developers','Find Freelancers'],['client-applications','Applications'],['messages','Messages'],['contracts','Contracts'],['wallet','Wallet']];else if(role==='freelancer')links=[['dashboard','Dashboard'],['projects','Find Jobs'],['myservices','My Services'],['applications','Applications'],['messages','Messages'],['contracts','Contracts'],['wallet','Wallet']];else links=[['developers','Find Freelancers'],['projects','Find Projects'],['how','How It Works']];document.getElementById('links').innerHTML=links.map(x=>`<button onclick="closeMobileMenu();profileMenuOpen=false;go('${x[0]}')">${t(x[1],x[1])}</button>`).join('');let unread=me?(S.notifications||[]).filter(n=>n.to===me.id&&!n.read).length:0;document.getElementById('right').innerHTML=`<div class="navSearch hunarSearchWrap"><span>⌕</span><input id="globalHunarSearch" aria-label="Search Hunar" placeholder="Search Hunar" autocomplete="off" onfocus="showHunarSearchSuggestions(this)" oninput="showHunarSearchSuggestions(this)" onkeydown="if(event.key==='Enter'){submitHunarSearch(this.value)}"></div><button class="langButton" onclick="langToggle()">${lang==='en'?'አማርኛ':'English'}</button>`+(me?`${headerIcon('notifications','Notifications',unread)}${headerIcon(me.role==='client'?'mine':'projects','Saved')}${headerIcon('messages','Messages',0)}${profileMenuHtml()}`:`<button onclick="go('signin')">Sign In</button><button class="btn primary" onclick="go('signup')">Sign Up</button>`);if(window.innerWidth<=900)document.getElementById('links').style.display=mobileOpen?'flex':''}
 function footer(){document.getElementById('footer').innerHTML=`<div class="container"><div class="footerGrid"><div><div class="logo" onclick="go(me?'dashboard':'home')" title="HUNAR">HUNAR</div><p class="muted">Ethiopian freelance marketplace.</p><p class="muted" style="max-width:280px">A marketplace for clients and freelancers to discover work, communicate, and manage projects.</p><p class="legalMeta">Legal operator details should be completed before public launch.</p></div><div><div class="footerLinksTitle">Discover</div><button type="button" onclick="go('developers')">Find Freelancers</button><button type="button" onclick="go('services')">Services</button><button type="button" onclick="go('projects')">Find Projects</button></div><div><div class="footerLinksTitle">Company & Legal</div><button type="button" onclick="go('about')">About HUNAR</button><button type="button" onclick="go('help')">Help & Support</button><button type="button" onclick="go('privacy')">Privacy Policy</button><button type="button" onclick="go('terms')">Terms of Use</button><button type="button" onclick="go('refunds')">Refund Policy</button><button type="button" onclick="go('cookies')">Cookie Policy</button><button type="button" onclick="go('policy')">Safety & Community Policy</button></div><div><div class="footerLinksTitle">For Clients</div><button type="button" onclick="go('developers')">Hire People</button>${me?.role==='client'?`<button type="button" onclick="go('post')">Post a Project</button>`:''}<button type="button" onclick="go('how')">How It Works</button></div></div><div class="footerBottom"><span>© 2026 HUNAR</span><span>Built for Ethiopia 🇪🇹</span></div></div>`}
 
@@ -4455,18 +4588,18 @@ setTimeout(function(){var a=document.getElementById('app');if(a&&!a.innerHTML.tr
   const visual=scene.closest('.heroVisual');
   let tx=0,ty=0,cx=0,cy=0,raf=0;
   function frame(){
-    cx+=(tx-cx)*0.06; cy+=(ty-cy)*0.06;
+    raf=0; cx+=(tx-cx)*0.12; cy+=(ty-cy)*0.12;
     scene.style.transform='rotateY('+(-7+cx*5)+'deg) rotateX('+(4+cy*4)+'deg)';
-    raf=requestAnimationFrame(frame);
+    if(Math.abs(tx-cx)>.002||Math.abs(ty-cy)>.002) raf=requestAnimationFrame(frame);
   }
+  function requestFrame(){if(!raf)raf=requestAnimationFrame(frame)}
   visual.addEventListener('pointermove',function(e){
     const r=visual.getBoundingClientRect();
     tx=(e.clientX-r.left)/r.width-.5;
     ty=(e.clientY-r.top)/r.height-.5;
-    if(!raf) raf=requestAnimationFrame(frame);
+    requestFrame();
   });
-  visual.addEventListener('pointerleave',function(){tx=0;ty=0});
-  frame();
+  visual.addEventListener('pointerleave',function(){tx=0;ty=0;requestFrame()});
 })();
 </script>
 <script>
@@ -4480,22 +4613,24 @@ setTimeout(function(){var a=document.getElementById('app');if(a&&!a.innerHTML.tr
     document.body.prepend(layer);
 
     let mx=0,my=0,tx=0,ty=0;
+    const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.addEventListener('pointermove',function(e){
+      if(reduce)return;
       tx=(e.clientX/window.innerWidth-.5)*18;
       ty=(e.clientY/window.innerHeight-.5)*18;
+      requestFrame();
     },{passive:true});
+    let fxFrame=0;
     function frame(){
-      mx += (tx-mx)*.055; my += (ty-my)*.055;
+      fxFrame=0;
+      mx += (tx-mx)*.18; my += (ty-my)*.18;
       const a=layer.querySelector('.a'),b=layer.querySelector('.b'),c=layer.querySelector('.c'),r=layer.querySelector('.hunar-fx-ring');
       if(a)a.style.transform='translate3d('+mx*.65+'px,'+my*.65+'px,0) rotateX('+(-my*.45)+'deg) rotateY('+(mx*.5)+'deg)';
       if(b)b.style.transform='translate3d('+mx*.95+'px,'+my*.9+'px,0) rotateX('+(my*.55)+'deg) rotateY('+(-mx*.65)+'deg)';
       if(c)c.style.transform='translate3d('+mx*1.2+'px,'+my*1.15+'px,0) rotateX('+(-my*.8)+'deg) rotateY('+(mx*.9)+'deg)';
       if(r)r.style.marginLeft=(mx*.7)+'px';
-      requestAnimationFrame(frame);
     }
-    frame();
-
-    const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function requestFrame(){if(!fxFrame)fxFrame=requestAnimationFrame(frame)}
     function decorate(){
       const app=document.getElementById('app');
       if(!app)return;

@@ -2302,6 +2302,178 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
   .authProShell{max-width:760px!important;margin:0 auto!important;}
 }
 </style>
+<style id="hunar-mobile-polish-final">
+/* HUNAR FINAL MOBILE POLISH
+   Presentation-only layer. No backend/API/auth/payment/database code is changed here.
+*/
+@media (max-width: 900px){
+  /* Natural phone width: prevent desktop-width islands and accidental page overflow. */
+  .heroGrid,.pathGrid,.homeSkillHead,.homeServiceHeader,.showcaseHead,
+  .pageHeroCompact,.walletHero,.walletActionCard,.jobsModernHero,.projectDetailHeroPro,
+  .clientProjectsHero,.clientAppsHero,.postProjectHero,.simpleProjectHero,.simpleJobsHero{
+    min-width:0!important;
+  }
+  .heroGrid{gap:24px!important}
+  .hero{overflow:clip!important}
+
+  /* Compact homepage action cards: two columns when the phone can support them. */
+  .path{padding:18px 0!important}
+  .pathGrid{gap:10px!important}
+  .pathCard{min-width:0!important;min-height:0!important;padding:17px!important;border-radius:18px!important}
+  .pathCard h3{font-size:17px!important;line-height:1.15!important;margin:7px 0!important}
+  .pathCard p{font-size:12px!important;line-height:1.45!important;margin:7px 0 12px!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+  .pathCard .btn{width:100%!important;min-height:42px!important;font-size:12px!important;padding:9px 8px!important}
+
+  /* Homepage 3D scene: smaller, centered, touch-safe and still visibly animated. */
+  .heroVisual{min-height:300px!important;height:300px!important;perspective:900px!important}
+  .scene{inset:8px 0 8px 0!important;transform:rotateY(-3deg) rotateX(1deg)!important;transform-style:preserve-3d!important;will-change:transform!important}
+  .sceneGrid{background-size:26px 26px!important}
+  .h3d-orb,.h3d-ring,.h3d-cube,.h3d-label{pointer-events:none!important}
+  .h3d-orb{width:76px!important;height:76px!important;right:12%!important;top:17%!important;animation:hunarMobileOrb 5s ease-in-out infinite!important;will-change:transform!important}
+  .h3d-ring{width:145px!important;height:145px!important;right:5%!important;top:7%!important;animation:hunarMobileRing 11s linear infinite!important;will-change:transform!important}
+  .h3d-cube{width:48px!important;height:48px!important;left:13%!important;bottom:16%!important;animation:hunarMobileCube 6s ease-in-out infinite!important;will-change:transform!important}
+  .h3d-label{font-size:8px!important;letter-spacing:.12em!important}
+  .float{backdrop-filter:blur(7px)!important;will-change:transform!important}
+  .float.a{left:5%!important;top:10%!important;width:185px!important;padding:11px!important;animation:hunarFloatPhoneA 6.5s ease-in-out infinite!important}
+  .float.b{right:5%!important;top:43%!important;width:172px!important;padding:11px!important;animation:hunarFloatPhoneB 7s ease-in-out infinite!important}
+  .float.c{left:9%!important;bottom:8%!important;width:205px!important;padding:10px!important;animation:hunarFloatPhoneC 7.5s ease-in-out infinite!important}
+  .float.d{display:none!important}
+  .hunar-drag-orb{width:62px!important;height:62px!important;right:4%!important;top:3%!important;z-index:10!important}
+  .hunar-drag-orb span{font-size:20px!important}
+
+  /* Existing skill strip becomes a real contained touch carousel. */
+  .homeSkillStrip{
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    max-width:100%!important;
+    padding:4px 2px 12px!important;
+    margin-right:-2px!important;
+    gap:9px!important;
+    scroll-snap-type:x mandatory!important;
+    scroll-padding-left:2px!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain!important;
+    scrollbar-width:none!important;
+    touch-action:pan-x!important;
+  }
+  .homeSkillStrip::-webkit-scrollbar{display:none!important}
+  .homeSkillChip{
+    flex:0 0 auto!important;
+    min-width:148px!important;
+    scroll-snap-align:start!important;
+    min-height:44px!important;
+    padding:10px 12px!important;
+    white-space:nowrap!important;
+  }
+  .homeSkillSection{overflow:hidden!important}
+  .homeSkillHead{align-items:flex-start!important;gap:10px!important}
+  .homeSkillMotion{width:76px!important;height:76px!important;transform:scale(.8);transform-origin:top right}
+
+  /* Compact marketplace/profile/service grids on phones; content stays readable. */
+  .hunarMetricsGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .hunarMetric{min-width:0!important;padding:13px!important;border-radius:15px!important}
+  .hunarMetricValue{font-size:22px!important}
+  .hunarMetricNote{font-size:10px!important;line-height:1.35!important}
+  .homeServiceGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .homeServiceGrid .serviceCard{min-width:0!important}
+  .timeline{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .timeline .step:last-child{grid-column:1/-1}
+  .showcaseStage{overflow:hidden!important;touch-action:pan-y!important}
+
+  /* Dashboard/stat blocks: compact first, stack only where necessary. */
+  .statGrid,.statsGrid,.dashboardStats,.dashStats,.summaryGrid,.quickStats,.walletGrid,.walletStats,.moneyGrid,.transactionGrid{
+    min-width:0!important;
+  }
+
+  /* Wallet: two compact cards on normal phones; one column on narrow phones. */
+  .walletStats{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .walletBalanceCard{grid-column:1/-1!important;padding:17px!important}
+  .walletStatCard{padding:14px!important;min-width:0!important}
+  .walletBalanceCard strong,.walletStatCard strong{font-size:21px!important;overflow-wrap:anywhere}
+  .walletBalanceCard small,.walletStatCard small{font-size:11px!important}
+  .walletActionCard{padding:15px!important}
+  .walletTxRow{padding:13px!important}
+  .walletTxMain{gap:9px!important}
+
+  /* Tables remain usable inside their own container, never as page-wide overflow. */
+  .transactionTable, .tableWrap, .table-responsive{max-width:100%!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;-webkit-overflow-scrolling:touch!important}
+
+  /* Footer: compact columns/links without giant empty blocks. */
+  #footer,.footer{overflow:hidden!important}
+  .footerGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px 14px!important}
+  .footerGrid>div:first-child{grid-column:1/-1}
+  .footerGrid button,.footerGrid a{font-size:12px!important;margin:6px 0!important}
+  .footerBottom{flex-direction:row!important;justify-content:space-between!important;flex-wrap:wrap!important;gap:8px!important}
+}
+
+@media (min-width: 370px) and (max-width: 600px){
+  /* 390–600px: use two columns for short, self-contained cards. */
+  .pathGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .walletStats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .walletBalanceCard{grid-column:1/-1!important}
+  .homeServiceGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+@media (max-width: 369px){
+  /* 320–369px: readability wins over density. */
+  .pathGrid,.walletStats,.homeServiceGrid,.hunarMetricsGrid,.timeline{grid-template-columns:1fr!important}
+  .walletBalanceCard{grid-column:auto!important}
+  .pathCard p{-webkit-line-clamp:4!important}
+  .homeSkillChip{min-width:138px!important}
+  .footerGrid{grid-template-columns:1fr!important}
+  .footerGrid>div:first-child{grid-column:auto}
+  .footerBottom{flex-direction:column!important;align-items:flex-start!important}
+}
+
+@media (max-width: 480px){
+  .container{padding-left:12px!important;padding-right:12px!important}
+  .hero{padding:28px 0 30px!important}
+  .heroGrid{gap:18px!important}
+  .hero h1{font-size:clamp(31px,9.4vw,39px)!important;letter-spacing:-.035em!important;max-width:100%!important}
+  .hero p{font-size:15px!important;line-height:1.5!important}
+  .hero .actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+  .hero .actions .btn{width:100%!important;min-height:44px!important;padding:10px 8px!important}
+  .searchBox{gap:7px!important}
+  .searchBox input{min-height:44px!important}
+  .heroVisual{min-height:260px!important;height:260px!important}
+  .float.a{width:170px!important}
+  .float.b{width:158px!important}
+  .float.c{width:185px!important}
+  .pathCard{padding:14px!important}
+  .pathCard h3{font-size:16px!important}
+  .pathCard p{font-size:11.5px!important}
+  .homeServiceGrid .serviceCard{padding:13px!important}
+  .homeServiceGrid .serviceCard h3{font-size:16px!important}
+}
+
+@media (max-width: 360px){
+  .hero .actions{grid-template-columns:1fr!important}
+  .heroVisual{min-height:235px!important;height:235px!important}
+  .float.a{width:155px!important}
+  .float.b{width:145px!important}
+  .float.c{width:160px!important}
+  .h3d-orb{width:62px!important;height:62px!important}
+  .h3d-ring{width:120px!important;height:120px!important}
+}
+
+/* Lightweight mobile motion. Decorative layers never intercept taps. */
+@keyframes hunarMobileOrb{0%,100%{transform:translate3d(0,0,0) rotate(0deg) scale(1)}50%{transform:translate3d(-5px,-9px,0) rotate(8deg) scale(1.04)}}
+@keyframes hunarMobileRing{to{transform:rotate(360deg) rotateX(58deg)}}
+@keyframes hunarMobileCube{0%,100%{transform:translate3d(0,0,0) rotateX(16deg) rotateY(-18deg) rotateZ(0deg)}50%{transform:translate3d(0,-8px,0) rotateX(35deg) rotateY(28deg) rotateZ(8deg)}}
+@keyframes hunarFloatPhoneA{0%,100%{transform:translate3d(0,0,75px) rotateY(-5deg)}50%{transform:translate3d(0,-6px,75px) rotateY(-7deg)}}
+@keyframes hunarFloatPhoneB{0%,100%{transform:translate3d(0,0,105px) rotateY(7deg)}50%{transform:translate3d(0,-8px,105px) rotateY(10deg)}}
+@keyframes hunarFloatPhoneC{0%,100%{transform:translate3d(0,0,55px) rotateY(-4deg)}50%{transform:translate3d(0,-5px,55px) rotateY(-6deg)}}
+
+@media (prefers-reduced-motion: reduce){
+  .h3d-orb,.h3d-ring,.h3d-cube,.float,.homeSkillCore,.homeSkillMotion i,.showcaseCore,.showcaseOrbit,.showcaseVerticalRing,.showcaseDot,.hunar-drag-orb{
+    animation:none!important;
+  }
+  .homeSkillStrip{scroll-behavior:auto!important}
+}
+</style>
+
 </head>
 <body><a class="skipLink" href="#app">Skip to main content</a><style id="hunar-toast-styles">
 .hunarToastHost{position:fixed;right:22px;bottom:22px;z-index:999999;display:flex;flex-direction:column;gap:12px;pointer-events:none;max-width:min(420px,calc(100vw - 32px))}

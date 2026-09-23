@@ -2652,7 +2652,7 @@ async function finishAuthenticatedUser(user, requestedRole=null, options={}){if(
 function authRedirectUrl(){
   // Google OAuth must always return to the published HUNAR website.
   // Never send OAuth back to localhost, file://, or a temporary dev server.
-  return 'https://hunar-maker.github.io/hunarii/#auth-callback';
+  return 'https://hunar-maker.github.io/hunarii/?hunar_oauth=callback';
 }
 async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}const redirectTo=authRedirectUrl();console.info('HUNAR Google OAuth redirect:',redirectTo);const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'},skipBrowserRedirect:false}});if(error){console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}}
 async function handleAuthCallback(){
@@ -2689,13 +2689,13 @@ async function handleAuthCallback(){
         }
         productionUser=user;window.productionUser=user;
         const d=signupDraft(role);d.email=normalizeEmail(user.email);d.emailVerified=!!user.email_confirmed_at;d.authCreated=true;d.authEmail=normalizeEmail(user.email);d.resumedExistingAuth=true;d.name=d.name||user.user_metadata?.full_name||'';saveSignupDraft(role,d);
-        history.replaceState(null,'',authRedirectUrl());
+        history.replaceState(null,'',window.location.pathname+'#home');
         alert('Your HUNAR registration is not finished yet. Complete your profile before you can sign in. We will resume your registration now.');
         go('register?role='+role+'&step='+(d.emailVerified?3:2));
         return true;
       }
       await finishAuthenticatedUser(user,null,{sync:true});
-      history.replaceState(null,'',authRedirectUrl());
+      history.replaceState(null,'',window.location.pathname+'#home');
       render('dashboard');
       return true;
     }
@@ -2707,7 +2707,7 @@ async function handleAuthCallback(){
       await supabaseClient.auth.signOut();productionUser=null;window.productionUser=null;me=null;
       sessionStorage.removeItem('hunar_google_role_intent');window.hunarGoogleRoleIntent=null;
       alert('An account already exists with this email. Please sign in instead.');
-      history.replaceState(null,'',authRedirectUrl());
+      history.replaceState(null,'',window.location.pathname+'#home');
       go('signin?role='+encodeURIComponent(signupState.role||intent));
       return true;
     }
@@ -2715,7 +2715,7 @@ async function handleAuthCallback(){
     const d=signupDraft(intent);d.email=normalizeEmail(user.email);d.emailVerified=true;d.authCreated=true;d.authEmail=normalizeEmail(user.email);d.resumedExistingAuth=true;d.name=d.name||user.user_metadata?.full_name||'';saveSignupDraft(intent,d);
     await markAuthSignupStatus('incomplete',intent);
     sessionStorage.removeItem('hunar_google_role_intent');window.hunarGoogleRoleIntent=null;
-    history.replaceState(null,'',authRedirectUrl());
+    history.replaceState(null,'',window.location.pathname+'#home');
     go('register?role='+intent+'&step=3');
     return true;
   }catch(e){console.error('Hunar auth callback:',e);alert(authMessage(e,'Google sign-in could not be completed. Please try again.'));return false}
@@ -2728,18 +2728,39 @@ async function bootProductionSession(){
     const raw=location.hash.slice(1)||'home';
     const current=(raw.split('?')[0]||'home');
     const hashRaw=String(location.hash||'');
-    const isOAuthCallback=!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||current==='auth-callback';
+    const isOAuthCallback=!!params.get('hunar_oauth')||!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||current==='auth-callback';
     if(isOAuthCallback){
       render('auth-callback');
       if(await handleAuthCallback())return;
-      history.replaceState(null,'',authRedirectUrl());
+      history.replaceState(null,'',window.location.pathname+'#home');
       productionUser=null;window.productionUser=null;me=null;
       render('signin');
       return;
     }
-    // HUNAR intentionally does not auto-sign users in when the website is opened.
-    // Any old Supabase browser session is cleared on a normal fresh website open.
-    try{await supabaseClient.auth.signOut()}catch(e){console.warn('HUNAR startup sign-out:',e)}
+    // Restore an existing Supabase session on normal production page loads.
+    // The previous implementation signed the browser out on every fresh load,
+    // which made successful Google OAuth sessions disappear immediately.
+    const sessionResult=await supabaseClient.auth.getSession();
+    if(sessionResult.error)throw sessionResult.error;
+    const sessionUser=sessionResult.data?.session?.user||null;
+    if(sessionUser){
+      const state=await getHunarOnboardingState(sessionUser,null);
+      if(state.complete){
+        await finishAuthenticatedUser(sessionUser,null,{sync:true});
+        render('dashboard');
+        return;
+      }
+      productionUser=sessionUser;window.productionUser=sessionUser;
+      const role=state.role||sessionUser.user_metadata?.hunar_signup_role||null;
+      if(role){
+        const d=signupDraft(role);
+        d.email=normalizeEmail(sessionUser.email);d.emailVerified=!!sessionUser.email_confirmed_at;
+        d.authCreated=true;d.authEmail=normalizeEmail(sessionUser.email);d.resumedExistingAuth=true;
+        d.name=d.name||sessionUser.user_metadata?.full_name||'';saveSignupDraft(role,d);
+        go('register?role='+role+'&step='+(d.emailVerified?3:2));
+        return;
+      }
+    }
     productionUser=null;window.productionUser=null;me=null;
     render(['home','signup','signin','forgot-password','reset-password'].includes(current)?current:'home');
   }catch(e){

@@ -4732,6 +4732,72 @@ setTimeout(function(){var a=document.getElementById('app');if(a&&!a.innerHTML.tr
   });
 })();
 </script>
+
+<style id="hunar-final-mobile-screen-and-button-correction">
+/* FINAL REQUESTED UI CORRECTIONS — presentation only. */
+:root{--hunar-lime:#c8ff3d;--hunar-black:#111412;}
+/* Green + black button language across HUNAR. Existing actions/handlers are untouched. */
+.btn{border:1px solid var(--hunar-black)!important;border-radius:11px!important;font-weight:850!important;box-shadow:0 4px 0 rgba(17,20,18,.92),0 9px 20px rgba(17,20,18,.08)!important;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,filter .18s ease!important;}
+.btn.primary{background:linear-gradient(135deg,#c8ff3d 0%,#a9e72e 100%)!important;color:#111412!important;border-color:#111412!important;}
+.btn.primary:hover{background:linear-gradient(135deg,#d6ff68 0%,#b6ee3e 100%)!important;color:#111412!important;}
+.btn.outline{background:#111412!important;color:#c8ff3d!important;border-color:#111412!important;}
+.btn.ghost{background:#c8ff3d!important;color:#111412!important;border-color:#111412!important;}
+.btn.danger{background:#111412!important;color:#ffb8b8!important;border-color:#111412!important;}
+.btn:active{transform:translateY(2px)!important;box-shadow:0 2px 0 rgba(17,20,18,.92)!important;}
+/* The service showcase keeps its motion/orbits but removes the requested central box. */
+.hunarServicesRebuild .hsrCore{display:none!important;}
+/* Profile/account menu: compact, complete, and visually consistent. */
+.profileMenu{min-width:220px!important;padding:8px!important;border:1px solid #cfdacf!important;border-radius:16px!important;background:rgba(255,255,255,.98)!important;box-shadow:0 22px 55px rgba(17,20,18,.18)!important;backdrop-filter:blur(16px)!important;}
+.profileMenuHead{padding:11px 12px 13px!important;border-bottom:1px solid #e2e9e3!important;margin-bottom:5px!important;}
+.profileMenuHead b{display:block!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;}
+.profileMenu button{min-height:42px!important;padding:10px 12px!important;border-radius:11px!important;font-size:13px!important;font-weight:800!important;}
+.profileMenu .logoutItem{margin-top:5px!important;border-top:1px solid #e2e9e3!important;padding-top:12px!important;color:#b54747!important;}
+/* Keep the whole application flush to the viewport. */
+html,body,#app{max-width:100%;}
+@media (max-width:900px){
+  html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important;}
+  body{margin:0!important;padding:0!important;}
+  #app{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;overflow:visible!important;}
+  .hunar-fx-layer{display:none!important;}
+  .container,.backBar{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;}
+  .container{padding-left:8px!important;padding-right:8px!important;}
+  .backBar{padding-left:8px!important;padding-right:8px!important;}
+  .section{width:100%!important;max-width:none!important;}
+  .nav{width:100%!important;max-width:none!important;}
+  .navin{width:100%!important;max-width:none!important;}
+  /* Keep important text and labels horizontal. */
+  .btn,.profileMenu button,.freelancerVerify,.searchBox input,.searchBox .btn{word-break:normal!important;overflow-wrap:normal!important;white-space:nowrap!important;}
+  /* Compact mobile home controls. */
+  .hero .actions{display:flex!important;flex-wrap:nowrap!important;gap:7px!important;}
+  .hero .actions .btn{flex:1 1 0!important;width:auto!important;min-width:0!important;padding:9px 8px!important;font-size:12px!important;}
+  .hero .searchBox{display:flex!important;flex-direction:row!important;align-items:center!important;gap:6px!important;padding:5px!important;width:100%!important;max-width:none!important;}
+  .hero .searchBox input{min-width:0!important;flex:1 1 auto!important;width:auto!important;padding:9px 8px!important;font-size:14px!important;}
+  .hero .searchBox .btn{flex:0 0 auto!important;width:auto!important;min-width:70px!important;padding:9px 10px!important;font-size:12px!important;}
+  /* Filter verify control stays compact and horizontal. */
+  .freelancerVerify{width:auto!important;min-width:0!important;min-height:40px!important;padding:8px 10px!important;display:inline-flex!important;flex-direction:row!important;align-items:center!important;gap:7px!important;}
+  .freelancerVerify input{flex:0 0 16px!important;width:16px!important;height:16px!important;}
+  /* Full-width cards without an artificial left/right gutter. */
+  .card,.stat,.notice,.success,.error,.projectCard,.serviceCard,.jobCard,.applicationCard,.contractCard{max-width:100%!important;}
+  /* The service showcase uses the full phone width while retaining its animation. */
+  .hsrShowcase{display:block!important;margin-top:24px!important;}
+  .hsrVisual{min-height:230px!important;width:100%!important;border-radius:22px!important;}
+  .hsrCards{grid-template-columns:1fr!important;margin-top:12px!important;}
+  .hsrCard{min-height:0!important;padding:16px!important;}
+  .hsrCategoryRail{padding-left:0!important;padding-right:0!important;}
+  /* The second screenshot's central H/START box is intentionally removed. */
+  .hsrCore{display:none!important;}
+  /* Profile menu is a compact floating panel, never wider than the phone. */
+  .profileMenu{position:fixed!important;right:8px!important;top:58px!important;min-width:210px!important;width:min(240px,calc(100vw - 16px))!important;max-width:calc(100vw - 16px)!important;max-height:calc(100dvh - 72px)!important;overflow:auto!important;z-index:2005!important;}
+  /* Never let a fixed/sticky child create a fake side gutter. */
+  .dash,.dashMain,.dash .side,.messageShell,.messagesWorkspace{width:100%!important;max-width:100%!important;min-width:0!important;}
+}
+@media (max-width:380px){
+  .container,.backBar{padding-left:6px!important;padding-right:6px!important;}
+  .hero .actions .btn{font-size:11px!important;padding-left:6px!important;padding-right:6px!important;}
+  .hero .searchBox .btn{min-width:64px!important;}
+}
+</style>
+
 </body>
 </html>
 

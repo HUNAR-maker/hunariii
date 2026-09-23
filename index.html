@@ -1880,7 +1880,7 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
     var h=location.hash||'';
     var oauth=/access_token=|refresh_token=|code=|type=recovery|auth-callback/i.test((location.search||'')+' '+h);
     if((host==='localhost'||host==='127.0.0.1'||host==='0.0.0.0') && oauth){
-      var target='https://hunar-maker.github.io/hunar/'+(location.search||'')+(h||'');
+      var target='https://hunar-maker.github.io/hunarii/'+(location.search||'')+(h||'');
       location.replace(target);
     }
   }catch(e){}
@@ -2652,7 +2652,7 @@ async function finishAuthenticatedUser(user, requestedRole=null, options={}){if(
 function authRedirectUrl(){
   // Google OAuth must always return to the published HUNAR website.
   // Never send OAuth back to localhost, file://, or a temporary dev server.
-  return 'https://hunar-maker.github.io/hunar/';
+  return 'https://hunar-maker.github.io/hunarii/#auth-callback';
 }
 async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}const redirectTo=authRedirectUrl();console.info('HUNAR Google OAuth redirect:',redirectTo);const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'},skipBrowserRedirect:false}});if(error){console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}}
 async function handleAuthCallback(){
@@ -2851,7 +2851,7 @@ function home(){return `<section class="hero"><div class="container heroGrid"><d
       <button class="hsrExplore" type="button" onclick="go('services')">Explore all services <b>→</b></button>
     </div>
     <div class="hsrShowcase">
-      <div class="hsrVisual"><div class="hsrHalo"></div><div class="hsrRing r1"></div><div class="hsrRing r2"></div><div class="hsrCore"><strong>H</strong><span>START</span></div><i class="hsrDot d1"></i><i class="hsrDot d2"></i><i class="hsrDot d3"></i></div>
+      <div class="hsrVisual hsrVisualPro" aria-label="HUNAR service connection visual"><div class="hsr3dGrid"></div><div class="hsr3dAura"></div><div class="hsr3dOrbit hso1"></div><div class="hsr3dOrbit hso2"></div><div class="hsr3dOrbit hso3"></div><div class="hsr3dCore"><span>H</span><small>HUNAR</small></div><div class="hsr3dNode hsn1"><b>01</b><span>Talent</span></div><div class="hsr3dNode hsn2"><b>02</b><span>Service</span></div><div class="hsr3dNode hsn3"><b>03</b><span>Work</span></div><div class="hsr3dSpark hspark1"></div><div class="hsr3dSpark hspark2"></div><div class="hsr3dSpark hspark3"></div></div>
       <div class="hsrCards">${S.services.slice(0,3).map((svc,i)=>{const title=svc.title||svc.name||'Professional service';const cat=svc.category||svc.cat||'Service';const price=svc.price!=null?svc.price:'';return `<article class="hsrCard"><div class="hsrCardTop"><span>${esc(cat)}</span><em>0${i+1}</em></div><div class="hsrIcon">${i===0?'✦':i===1?'◆':'◈'}</div><h3>${esc(title)}</h3><p>${esc(svc.description||'A professional service offered through HUNAR.')}</p><div class="hsrCardFoot"><b>${price!==''?esc(String(price))+' ETB':'View service'}</b><button type="button" onclick="go('service/${encodeURIComponent(svc.id||'')}')">Open <span>→</span></button></div></article>`}).join('')}</div>
     </div>
     <div class="hsrCategoryRail">${Object.values(CATS).flat().slice(0,8).map(x=>`<button type="button" onclick="go('services?cat=${encodeURIComponent(x)}')"><span>✦</span>${esc(x)}<b>→</b></button>`).join('')}</div>
@@ -4733,6 +4733,46 @@ setTimeout(function(){var a=document.getElementById('app');if(a&&!a.innerHTML.tr
 })();
 </script>
 
+<style id="hunar-google-service-back-targeted-fix">
+/* Targeted correction only: published Google callback, service visual, and compact mobile back control. */
+.hsrVisualPro{position:relative;min-height:400px;border-radius:28px;background:linear-gradient(145deg,#f7faf7 0%,#e8f1ea 48%,#d8e6dc 100%);border:1px solid #d7e2da;overflow:hidden;display:grid;place-items:center;perspective:1000px;box-shadow:0 24px 55px rgba(24,48,31,.10),inset 0 1px 0 rgba(255,255,255,.8)}
+.hsr3dGrid{position:absolute;inset:0;opacity:.32;background-image:linear-gradient(rgba(34,70,45,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(34,70,45,.08) 1px,transparent 1px);background-size:34px 34px;transform:perspective(700px) rotateX(64deg) scale(1.5) translateY(28%);transform-origin:center bottom}
+.hsr3dAura{position:absolute;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(200,255,61,.34),rgba(200,255,61,.08) 38%,transparent 70%);filter:blur(3px);animation:hsrAura 4.5s ease-in-out infinite}
+.hsr3dOrbit{position:absolute;border:1px solid rgba(34,70,45,.25);border-radius:50%;transform-style:preserve-3d;pointer-events:none}
+.hsr3dOrbit.hso1{width:330px;height:115px;transform:rotateX(66deg) rotateZ(10deg);animation:hsrOrbitA 9s linear infinite}
+.hsr3dOrbit.hso2{width:265px;height:92px;transform:rotateX(66deg) rotateZ(-31deg);animation:hsrOrbitB 7s linear infinite reverse}
+.hsr3dOrbit.hso3{width:205px;height:205px;transform:rotateY(70deg) rotateZ(20deg);border-color:rgba(34,70,45,.14);animation:hsrOrbitC 11s linear infinite}
+.hsr3dCore{position:relative;z-index:3;width:118px;height:118px;border-radius:31px;background:linear-gradient(145deg,#17231b,#0b110d);color:#d9ff78;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:18px 24px 45px rgba(11,25,16,.24),inset 1px 1px 0 rgba(255,255,255,.08);transform:rotateX(8deg) rotateY(-12deg);animation:hsrCoreFloat 4s ease-in-out infinite}
+.hsr3dCore span{font-size:48px;font-weight:900;line-height:1}.hsr3dCore small{margin-top:7px;font-size:8px;letter-spacing:.32em;color:#cfe6ae}
+.hsr3dNode{position:absolute;z-index:4;min-width:92px;padding:10px 12px;border:1px solid rgba(36,66,45,.16);border-radius:15px;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);box-shadow:0 14px 30px rgba(22,44,29,.10);display:flex;align-items:center;gap:8px;color:#18241c;animation:hsrNodeFloat 4.5s ease-in-out infinite}
+.hsr3dNode b{font-size:10px;color:#5c7e5b}.hsr3dNode span{font-size:11px;font-weight:850}.hsn1{left:10%;top:20%}.hsn2{right:8%;top:45%;animation-delay:-1.5s}.hsn3{left:15%;bottom:16%;animation-delay:-2.7s}
+.hsr3dSpark{position:absolute;width:7px;height:7px;border-radius:50%;background:#b9ee38;box-shadow:0 0 0 7px rgba(185,238,56,.10),0 0 22px rgba(185,238,56,.5);animation:hsrSpark 3.2s ease-in-out infinite}.hspark1{left:23%;top:30%}.hspark2{right:20%;top:25%;animation-delay:-1s}.hspark3{right:28%;bottom:22%;animation-delay:-2s}
+@keyframes hsrAura{0%,100%{transform:scale(.92);opacity:.72}50%{transform:scale(1.08);opacity:1}}
+@keyframes hsrOrbitA{to{transform:rotateX(66deg) rotateZ(370deg)}}
+@keyframes hsrOrbitB{to{transform:rotateX(66deg) rotateZ(-391deg)}}
+@keyframes hsrOrbitC{to{transform:rotateY(70deg) rotateZ(380deg)}}
+@keyframes hsrCoreFloat{0%,100%{transform:translateY(0) rotateX(8deg) rotateY(-12deg)}50%{transform:translateY(-9px) rotateX(11deg) rotateY(-8deg)}}
+@keyframes hsrNodeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes hsrSpark{0%,100%{transform:scale(.8);opacity:.65}50%{transform:scale(1.35);opacity:1}}
+@media(max-width:900px){
+  .hsrVisualPro{min-height:250px;border-radius:22px}
+  .hsr3dOrbit.hso1{width:285px;height:96px}.hsr3dOrbit.hso2{width:225px;height:78px}.hsr3dOrbit.hso3{width:170px;height:170px}
+  .hsr3dCore{width:88px;height:88px;border-radius:24px}.hsr3dCore span{font-size:36px}.hsr3dCore small{font-size:7px}
+  .hsr3dNode{min-width:76px;padding:8px 9px;border-radius:12px}.hsr3dNode b{font-size:8px}.hsr3dNode span{font-size:9px}.hsn1{left:5%;top:16%}.hsn2{right:4%;top:44%}.hsn3{left:9%;bottom:12%}
+}
+@media(max-width:600px){
+  .hsrVisualPro{min-height:230px!important;width:100%!important}
+  .hsr3dGrid{background-size:28px 28px}.hsr3dAura{width:165px;height:165px}
+  .hsr3dOrbit.hso1{width:250px;height:84px}.hsr3dOrbit.hso2{width:198px;height:68px}.hsr3dOrbit.hso3{width:145px;height:145px}
+  .hsr3dNode{min-width:70px;padding:7px 8px;gap:5px}.hsr3dNode b{font-size:7px}.hsr3dNode span{font-size:8px}
+  .hsn1{left:2%;top:14%}.hsn2{right:2%;top:44%}.hsn3{left:6%;bottom:9%}
+}
+@media(prefers-reduced-motion:reduce){.hsr3dAura,.hsr3dOrbit,.hsr3dCore,.hsr3dNode,.hsr3dSpark{animation:none!important}}
+@media(max-width:900px){
+  .backBar{padding:8px 8px 0!important;min-height:30px!important}
+  .backBar .btn{width:auto!important;min-width:0!important;max-width:max-content!important;padding:6px 9px!important;font-size:11px!important;line-height:1!important;border-radius:9px!important;box-shadow:0 2px 0 rgba(17,20,18,.92),0 5px 12px rgba(17,20,18,.07)!important}
+}
+</style>
 <style id="hunar-final-mobile-screen-and-button-correction">
 /* FINAL REQUESTED UI CORRECTIONS — presentation only. */
 :root{--hunar-lime:#c8ff3d;--hunar-black:#111412;}

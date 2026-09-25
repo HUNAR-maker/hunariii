@@ -2433,7 +2433,7 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
 <script>
 const HUNAR_SUPABASE_URL="https://enuqrzaavxadtduyqwqv.supabase.co";
 const HUNAR_SUPABASE_KEY="sb_publishable_XZwFIJv6IajO9kWCe7wvVw_97GIv05D";
-const supabaseClient=window.supabase?.createClient(HUNAR_SUPABASE_URL,HUNAR_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const supabaseClient=window.supabase?.createClient(HUNAR_SUPABASE_URL,HUNAR_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'implicit'}});
 window.supabaseClient=supabaseClient;
 let me=null;
 let productionUser=null;
@@ -2651,72 +2651,91 @@ async function markAuthSignupStatus(status,role=null){
 async function finishAuthenticatedUser(user, requestedRole=null, options={}){if(!user?.id)throw new Error('No authenticated Supabase user was returned.');productionUser=user;window.productionUser=user;const a=await ensureHunarAccount(requestedRole);if(requestedRole&&a.role!==requestedRole){console.info('HUNAR existing account role respected:',a.role);}me={id:a.id,role:a.role,email:a.email||user.email,phone:a.phone,emailVerified:!!(a.email_verified||user.email_confirmed_at),phoneVerified:a.phone_verified};let synced=null;if(options.sync!==false){synced=await syncProductionData();}if(options.requireFreelancerProfile!==false&&a.role==='freelancer'&&!synced?.profile?.account_id){throw new Error('Freelancer profile is missing for this account. Complete freelancer onboarding before entering the dashboard.');}if(window.HunarData?.realtime)HunarData.realtime.subscribe(()=>syncProductionData());return a;}
 function authRedirectUrl(){
   // Google OAuth must always return to the published HUNAR website.
-  // Never send OAuth back to localhost, file://, or a temporary dev server.
+  // Keep the callback marker in the query string so Supabase can place its
+  // OAuth session tokens in the URL fragment without creating a double '#'.
   return 'https://hunar-maker.github.io/hunarii/?hunar_oauth=callback';
 }
-async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}const redirectTo=authRedirectUrl();console.info('HUNAR Google OAuth redirect:',redirectTo);const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'},skipBrowserRedirect:false}});if(error){console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}}
+async function startGoogle(role=null){
+  if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}
+  // This button is used from the existing Sign In screen. Remember that the
+  // OAuth flow is a SIGN-IN flow so an existing HUNAR account is never signed
+  // out after Google authentication.
+  sessionStorage.setItem('hunar_google_oauth_mode','signin');
+  if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}
+  else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}
+  const redirectTo=authRedirectUrl();
+  console.info('HUNAR Google OAuth redirect:',redirectTo);
+  const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'},skipBrowserRedirect:false}});
+  if(error){sessionStorage.removeItem('hunar_google_oauth_mode');console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}
+}
 async function handleAuthCallback(){
   if(!supabaseClient)return false;
   try{
+    // supabase-js automatically detects the OAuth session from the URL when
+    // detectSessionInUrl is enabled. getSession() then reads that persisted
+    // session from the browser storage.
     let {data,error}=await supabaseClient.auth.getSession();
     if(error)throw error;
-    const params=new URLSearchParams(location.search);
-    // Supabase can return OAuth tokens in the URL when the provider uses
-    // the implicit flow. Handle both query-string tokens and PKCE code flow.
-    const accessToken=params.get('access_token');
-    const refreshToken=params.get('refresh_token');
-    if(!data.session&&accessToken&&refreshToken){
-      const set=await supabaseClient.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
-      if(set.error)throw set.error;
-      data=set.data;
-    }
-    if(!data.session&&params.get('code')){
-      const ex=await supabaseClient.auth.exchangeCodeForSession(params.get('code'));
-      if(ex.error)throw ex.error;
-      data=ex.data;
-    }
     if(!data.session?.user)return false;
+
     const user=data.session.user;
+    const mode=sessionStorage.getItem('hunar_google_oauth_mode')||'signin';
     const intent=sessionStorage.getItem('hunar_google_role_intent')||null;
-    if(!intent){
-      const state=await getHunarOnboardingState(user,null);
+
+    if(mode==='signin'){
+      // Existing Google user: keep the Supabase session and complete the
+      // normal HUNAR account hydration. NEVER sign out here.
+      const state=await getHunarOnboardingState(user,intent);
       if(!state.complete){
-        const role=state.role||user.user_metadata?.hunar_signup_role||null;
+        const role=state.role||intent||user.user_metadata?.hunar_signup_role||null;
         if(!role){
           history.replaceState(null,'',window.location.pathname+'#google-role');
+          sessionStorage.removeItem('hunar_google_oauth_mode');
           render('google-role');
           return true;
         }
         productionUser=user;window.productionUser=user;
         const d=signupDraft(role);d.email=normalizeEmail(user.email);d.emailVerified=!!user.email_confirmed_at;d.authCreated=true;d.authEmail=normalizeEmail(user.email);d.resumedExistingAuth=true;d.name=d.name||user.user_metadata?.full_name||'';saveSignupDraft(role,d);
-        history.replaceState(null,'',window.location.pathname+'#home');
-        alert('Your HUNAR registration is not finished yet. Complete your profile before you can sign in. We will resume your registration now.');
-        go('register?role='+role+'&step='+(d.emailVerified?3:2));
+        sessionStorage.removeItem('hunar_google_oauth_mode');
+        history.replaceState(null,'',window.location.pathname+'#register?role='+encodeURIComponent(role)+'&step='+(d.emailVerified?3:2));
+        render('register?role='+role+'&step='+(d.emailVerified?3:2));
         return true;
       }
-      await finishAuthenticatedUser(user,null,{sync:true});
-      history.replaceState(null,'',window.location.pathname+'#home');
+      await finishAuthenticatedUser(user,state.role||intent,{sync:true});
+      sessionStorage.removeItem('hunar_google_oauth_mode');
+      sessionStorage.removeItem('hunar_google_role_intent');
+      window.hunarGoogleRoleIntent=null;
+      history.replaceState(null,'',window.location.pathname+'#dashboard');
       render('dashboard');
       return true;
     }
 
-    // Google signup is an authentication step only. Do not create the HUNAR
-    // application account/profile until the final onboarding step.
-    const signupState=await getHunarOnboardingState(user,intent);
+    // Reserved for any future Google signup flow. Keep the existing onboarding
+    // behavior, but never destroy a valid session merely because an account
+    // already exists.
+    const signupRole=intent||user.user_metadata?.hunar_signup_role||null;
+    const signupState=await getHunarOnboardingState(user,signupRole);
     if(signupState.complete){
-      await supabaseClient.auth.signOut();productionUser=null;window.productionUser=null;me=null;
-      sessionStorage.removeItem('hunar_google_role_intent');window.hunarGoogleRoleIntent=null;
-      alert('An account already exists with this email. Please sign in instead.');
-      history.replaceState(null,'',window.location.pathname+'#home');
-      go('signin?role='+encodeURIComponent(signupState.role||intent));
+      await finishAuthenticatedUser(user,signupState.role||signupRole,{sync:true});
+      sessionStorage.removeItem('hunar_google_oauth_mode');
+      sessionStorage.removeItem('hunar_google_role_intent');
+      window.hunarGoogleRoleIntent=null;
+      history.replaceState(null,'',window.location.pathname+'#dashboard');
+      render('dashboard');
+      return true;
+    }
+    if(!signupRole){
+      history.replaceState(null,'',window.location.pathname+'#google-role');
+      sessionStorage.removeItem('hunar_google_oauth_mode');
+      render('google-role');
       return true;
     }
     productionUser=user;window.productionUser=user;
-    const d=signupDraft(intent);d.email=normalizeEmail(user.email);d.emailVerified=true;d.authCreated=true;d.authEmail=normalizeEmail(user.email);d.resumedExistingAuth=true;d.name=d.name||user.user_metadata?.full_name||'';saveSignupDraft(intent,d);
-    await markAuthSignupStatus('incomplete',intent);
-    sessionStorage.removeItem('hunar_google_role_intent');window.hunarGoogleRoleIntent=null;
-    history.replaceState(null,'',window.location.pathname+'#home');
-    go('register?role='+intent+'&step=3');
+    const d=signupDraft(signupRole);d.email=normalizeEmail(user.email);d.emailVerified=true;d.authCreated=true;d.authEmail=normalizeEmail(user.email);d.resumedExistingAuth=true;d.name=d.name||user.user_metadata?.full_name||'';saveSignupDraft(signupRole,d);
+    await markAuthSignupStatus('incomplete',signupRole);
+    sessionStorage.removeItem('hunar_google_oauth_mode');sessionStorage.removeItem('hunar_google_role_intent');window.hunarGoogleRoleIntent=null;
+    history.replaceState(null,'',window.location.pathname+'#register?role='+encodeURIComponent(signupRole)+'&step=3');
+    render('register?role='+signupRole+'&step=3');
     return true;
   }catch(e){console.error('Hunar auth callback:',e);alert(authMessage(e,'Google sign-in could not be completed. Please try again.'));return false}
 }
@@ -2728,46 +2747,45 @@ async function bootProductionSession(){
     const raw=location.hash.slice(1)||'home';
     const current=(raw.split('?')[0]||'home');
     const hashRaw=String(location.hash||'');
-    const isOAuthCallback=!!params.get('hunar_oauth')||!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||current==='auth-callback';
+    const isOAuthCallback=params.get('hunar_oauth')==='callback'||!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||current==='auth-callback';
     if(isOAuthCallback){
       render('auth-callback');
       if(await handleAuthCallback())return;
-      history.replaceState(null,'',window.location.pathname+'#home');
+      history.replaceState(null,'',window.location.pathname+'#signin');
       productionUser=null;window.productionUser=null;me=null;
       render('signin');
       return;
     }
-    // Restore an existing Supabase session on normal production page loads.
-    // The previous implementation signed the browser out on every fresh load,
-    // which made successful Google OAuth sessions disappear immediately.
-    const sessionResult=await supabaseClient.auth.getSession();
-    if(sessionResult.error)throw sessionResult.error;
-    const sessionUser=sessionResult.data?.session?.user||null;
-    if(sessionUser){
-      const state=await getHunarOnboardingState(sessionUser,null);
+
+    // IMPORTANT: never sign users out during normal startup. Supabase persists
+    // the browser session and HUNAR must restore it on refresh/revisit.
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error)throw error;
+    if(data.session?.user){
+      const state=await getHunarOnboardingState(data.session.user,null);
       if(state.complete){
-        await finishAuthenticatedUser(sessionUser,null,{sync:true});
-        render('dashboard');
-        return;
-      }
-      productionUser=sessionUser;window.productionUser=sessionUser;
-      const role=state.role||sessionUser.user_metadata?.hunar_signup_role||null;
-      if(role){
-        const d=signupDraft(role);
-        d.email=normalizeEmail(sessionUser.email);d.emailVerified=!!sessionUser.email_confirmed_at;
-        d.authCreated=true;d.authEmail=normalizeEmail(sessionUser.email);d.resumedExistingAuth=true;
-        d.name=d.name||sessionUser.user_metadata?.full_name||'';saveSignupDraft(role,d);
-        go('register?role='+role+'&step='+(d.emailVerified?3:2));
-        return;
+        await finishAuthenticatedUser(data.session.user,state.role,{sync:true});
+        const publicRoutes=['home','signup','signin','forgot-password','reset-password'];
+        if(publicRoutes.includes(current)){
+          history.replaceState(null,'',window.location.pathname+'#dashboard');
+          render('dashboard');
+          return;
+        }
+      }else if(current==='home'||current==='signin'||current==='signup'){
+        const role=state.role||data.session.user.user_metadata?.hunar_signup_role||null;
+        if(role){
+          productionUser=data.session.user;window.productionUser=data.session.user;
+          history.replaceState(null,'',window.location.pathname+'#register?role='+encodeURIComponent(role)+'&step=3');
+          render('register?role='+role+'&step=3');
+          return;
+        }
       }
     }
-    productionUser=null;window.productionUser=null;me=null;
     render(['home','signup','signin','forgot-password','reset-password'].includes(current)?current:'home');
   }catch(e){
     console.error('Hunar session bootstrap:',e);
     productionUser=null;window.productionUser=null;me=null;
-    history.replaceState(null,'',window.location.pathname+window.location.search+'#home');
-    render('home');
+    render(['home','signup','signin','forgot-password','reset-password'].includes(location.hash.slice(1).split('?')[0])?(location.hash.slice(1).split('?')[0]||'home'):'home');
   }
 }
 

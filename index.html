@@ -2428,8 +2428,8 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
 <main id="app"><section class="hero hunar-static-fallback" aria-label="HUNAR home"><div class="container heroGrid"><div><span class="eyebrow">HUNAR · ETHIOPIA'S FREELANCE MARKETPLACE</span><h1>Great work starts with the right connection.</h1><p>Find Ethiopian freelancers for your next idea - or build your own professional presence and find projects that match your skills.</p><div class="actions"><button class="btn primary" type="button" onclick="if(typeof go==='function'){go('developers')}else{location.hash='developers';location.reload()}">Hire People</button><button class="btn outline" type="button" onclick="if(typeof go==='function'){go('projects')}else{location.hash='projects';location.reload()}">Find Projects</button></div></div><div class="heroVisual"><div class="scene"><div class="sceneGrid"></div><div class="h3d-label">HUNAR / WORKSPACE</div><div class="h3d-orb"></div><div class="h3d-ring"></div></div></div></div></section></main>
 <footer id="footer" class="footer"></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0"></script>
-<script src="hunar-services.js?v=69"></script>
-<script src="hunar-safety.js?v=1"></script>
+<script src="./hunar-services.js?v=70"></script>
+<script src="./hunar-safety.js?v=2"></script>
 <script>
 const HUNAR_SUPABASE_URL="https://enuqrzaavxadtduyqwqv.supabase.co";
 const HUNAR_SUPABASE_KEY="sb_publishable_XZwFIJv6IajO9kWCe7wvVw_97GIv05D";
@@ -2648,7 +2648,28 @@ async function markAuthSignupStatus(status,role=null){
   const {error}=await supabaseClient.auth.updateUser(payload);
   if(error)console.warn('HUNAR auth signup status update skipped:',error.message||error);
 }
-async function finishAuthenticatedUser(user, requestedRole=null, options={}){if(!user?.id)throw new Error('No authenticated Supabase user was returned.');productionUser=user;window.productionUser=user;const a=await ensureHunarAccount(requestedRole);if(requestedRole&&a.role!==requestedRole){console.info('HUNAR existing account role respected:',a.role);}me={id:a.id,role:a.role,email:a.email||user.email,phone:a.phone,emailVerified:!!(a.email_verified||user.email_confirmed_at),phoneVerified:a.phone_verified};let synced=null;if(options.sync!==false){synced=await syncProductionData();}if(options.requireFreelancerProfile!==false&&a.role==='freelancer'&&!synced?.profile?.account_id){throw new Error('Freelancer profile is missing for this account. Complete freelancer onboarding before entering the dashboard.');}if(window.HunarData?.realtime)HunarData.realtime.subscribe(()=>syncProductionData());return a;}
+async function finishAuthenticatedUser(user, requestedRole=null, options={}){
+  if(!user?.id)throw new Error('No authenticated Supabase user was returned.');
+  productionUser=user;window.productionUser=user;
+  const a=await ensureHunarAccount(requestedRole);
+  if(requestedRole&&a.role!==requestedRole)console.info('HUNAR existing account role respected:',a.role);
+  me={id:a.id,role:a.role,email:a.email||user.email,phone:a.phone,emailVerified:!!(a.email_verified||user.email_confirmed_at),phoneVerified:a.phone_verified};
+  let synced=null;
+  if(options.sync!==false){
+    try{
+      synced=await syncProductionData();
+    }catch(syncError){
+      // Authentication must not fail just because an optional frontend data layer
+      // is temporarily unavailable (for example, a GitHub Pages asset returned 404).
+      console.warn('HUNAR post-login data sync skipped; session remains authenticated:',syncError?.message||syncError);
+    }
+  }
+  if(options.requireFreelancerProfile!==false&&a.role==='freelancer'&&synced?.profile===undefined&&options.requireSyncedProfile===true){
+    throw new Error('Freelancer profile could not be loaded. Please refresh and try again.');
+  }
+  if(window.HunarData?.realtime)HunarData.realtime.subscribe(()=>syncProductionData().catch(e=>console.warn('HUNAR realtime sync skipped:',e?.message||e)));
+  return a;
+}
 function authRedirectUrl(){
   // Google OAuth must always return to the published HUNAR website.
   // Keep the callback marker in the query string so Supabase can place its
@@ -2671,12 +2692,18 @@ async function startGoogle(role=null){
 async function handleAuthCallback(){
   if(!supabaseClient)return false;
   try{
-    // supabase-js automatically detects the OAuth session from the URL when
-    // detectSessionInUrl is enabled. getSession() then reads that persisted
-    // session from the browser storage.
-    let {data,error}=await supabaseClient.auth.getSession();
-    if(error)throw error;
-    if(!data.session?.user)return false;
+    // OAuth URL/session initialization can finish a moment after the page script
+    // starts. Wait briefly for Supabase to persist the returned session instead of
+    // treating the first empty getSession() result as a failed Google login.
+    let data=null,error=null;
+    for(let attempt=0;attempt<8;attempt++){
+      const result=await supabaseClient.auth.getSession();
+      data=result.data;error=result.error;
+      if(error)throw error;
+      if(data?.session?.user)break;
+      await new Promise(resolve=>setTimeout(resolve,250));
+    }
+    if(!data?.session?.user)return false;
 
     const user=data.session.user;
     const mode=sessionStorage.getItem('hunar_google_oauth_mode')||'signin';
@@ -2747,9 +2774,10 @@ async function bootProductionSession(){
     const raw=location.hash.slice(1)||'home';
     const current=(raw.split('?')[0]||'home');
     const hashRaw=String(location.hash||'');
-    const isOAuthCallback=params.get('hunar_oauth')==='callback'||!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||current==='auth-callback';
+    const isOAuthCallback=params.get('hunar_oauth')==='callback'||!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||!!params.get('error')||!!params.get('error_code')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||current==='auth-callback';
     if(isOAuthCallback){
       render('auth-callback');
+      if(params.get('error')){throw new Error(params.get('error_description')||params.get('error'));}
       if(await handleAuthCallback())return;
       history.replaceState(null,'',window.location.pathname+'#signin');
       productionUser=null;window.productionUser=null;me=null;

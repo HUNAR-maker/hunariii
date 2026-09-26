@@ -2650,17 +2650,25 @@ async function markAuthSignupStatus(status,role=null){
 }
 async function finishAuthenticatedUser(user, requestedRole=null, options={}){if(!user?.id)throw new Error('No authenticated Supabase user was returned.');productionUser=user;window.productionUser=user;const a=await ensureHunarAccount(requestedRole);if(requestedRole&&a.role!==requestedRole){console.info('HUNAR existing account role respected:',a.role);}me={id:a.id,role:a.role,email:a.email||user.email,phone:a.phone,emailVerified:!!(a.email_verified||user.email_confirmed_at),phoneVerified:a.phone_verified};let synced=null;if(options.sync!==false){synced=await syncProductionData();}if(options.requireFreelancerProfile!==false&&a.role==='freelancer'&&!synced?.profile?.account_id){throw new Error('Freelancer profile is missing for this account. Complete freelancer onboarding before entering the dashboard.');}if(window.HunarData?.realtime)HunarData.realtime.subscribe(()=>syncProductionData());return a;}
 function authRedirectUrl(){
-  // Google OAuth must always return to the published HUNAR website.
-  // Never send OAuth back to localhost, file://, or a temporary dev server.
-  return 'https://hunar-maker.github.io/hunarii/#auth-callback';
+  // Google OAuth must return to the published HUNAR website root.
+  // Do not put a URL fragment in the OAuth redirect URI: OAuth providers
+  // return the authorization response to the URL before the fragment.
+  return 'https://hunar-maker.github.io/hunarii/';
 }
 async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}const redirectTo=authRedirectUrl();console.info('HUNAR Google OAuth redirect:',redirectTo);const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'},skipBrowserRedirect:false}});if(error){console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}}
 async function handleAuthCallback(){
   if(!supabaseClient)return false;
   try{
+    const params=new URLSearchParams(location.search);
     let {data,error}=await supabaseClient.auth.getSession();
     if(error)throw error;
-    const params=new URLSearchParams(location.search);
+    // Finish PKCE explicitly when Google returns ?code=... . This avoids
+    // depending on the browser's automatic URL detection before rendering.
+    if(params.get('code') && !data.session){
+      const ex=await supabaseClient.auth.exchangeCodeForSession(params.get('code'));
+      if(ex.error)throw ex.error;
+      data=ex.data;
+    }
     // Supabase can return OAuth tokens in the URL when the provider uses
     // the implicit flow. Handle both query-string tokens and PKCE code flow.
     const accessToken=params.get('access_token');
@@ -2669,11 +2677,6 @@ async function handleAuthCallback(){
       const set=await supabaseClient.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
       if(set.error)throw set.error;
       data=set.data;
-    }
-    if(!data.session&&params.get('code')){
-      const ex=await supabaseClient.auth.exchangeCodeForSession(params.get('code'));
-      if(ex.error)throw ex.error;
-      data=ex.data;
     }
     if(!data.session?.user)return false;
     const user=data.session.user;

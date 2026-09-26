@@ -2659,20 +2659,29 @@ async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentic
 async function handleAuthCallback(){
   if(!supabaseClient)return false;
   try{
+    // Google/Supabase may return the OAuth response after a second '#', e.g.
+    // #auth-callback#access_token=...&refresh_token=... . URLSearchParams(location.search)
+    // cannot see that second fragment, so explicitly parse both query and callback fragment.
+    const rawHash=String(location.hash||'');
+    const hashParts=rawHash.split('#');
+    const callbackFragment=hashParts.length>2 ? hashParts.slice(2).join('#') : (hashParts.length===2 && hashParts[1] && hashParts[1]!== 'auth-callback' ? hashParts[1] : '');
+    const callbackQuery=callbackFragment || (rawHash.startsWith('#auth-callback?') ? rawHash.slice('#auth-callback?'.length) : '');
     const params=new URLSearchParams(location.search);
+    const fragmentParams=new URLSearchParams(callbackQuery);
+    const param=(name)=>params.get(name)||fragmentParams.get(name);
     let {data,error}=await supabaseClient.auth.getSession();
     if(error)throw error;
     // Finish PKCE explicitly when Google returns ?code=... . This avoids
     // depending on the browser's automatic URL detection before rendering.
-    if(params.get('code') && !data.session){
-      const ex=await supabaseClient.auth.exchangeCodeForSession(params.get('code'));
+    if(param('code') && !data.session){
+      const ex=await supabaseClient.auth.exchangeCodeForSession(param('code'));
       if(ex.error)throw ex.error;
       data=ex.data;
     }
     // Supabase can return OAuth tokens in the URL when the provider uses
     // the implicit flow. Handle both query-string tokens and PKCE code flow.
-    const accessToken=params.get('access_token');
-    const refreshToken=params.get('refresh_token');
+    const accessToken=param('access_token');
+    const refreshToken=param('refresh_token');
     if(!data.session&&accessToken&&refreshToken){
       const set=await supabaseClient.auth.setSession({access_token:accessToken,refresh_token:refreshToken});
       if(set.error)throw set.error;
@@ -2729,9 +2738,11 @@ async function bootProductionSession(){
   try{
     const params=new URLSearchParams(location.search);
     const raw=location.hash.slice(1)||'home';
-    const current=(raw.split('?')[0]||'home');
     const hashRaw=String(location.hash||'');
-    const isOAuthCallback=!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||current==='auth-callback';
+    const hashParts=hashRaw.split('#');
+    const callbackTail=hashParts.length>2 ? hashParts.slice(2).join('#') : (hashParts.length===2 && hashParts[1]!== 'auth-callback' ? hashParts[1] : '');
+    const current=((hashParts[1]||'').split('?')[0]||'home');
+    const isOAuthCallback=!!params.get('code')||!!params.get('access_token')||!!params.get('refresh_token')||/access_token=|refresh_token=|code=|type=recovery/i.test(hashRaw)||/access_token=|refresh_token=|code=|type=recovery/i.test(callbackTail)||current==='auth-callback';
     if(isOAuthCallback){
       render('auth-callback');
       if(await handleAuthCallback())return;
@@ -4615,7 +4626,7 @@ window.go=go;window.render=render;window.openContractFromConversation=openContra
 window.addEventListener('popstate',()=>{const r=location.hash.slice(1)||'home';if(r!=='auth-callback')render(r)});
 window.addEventListener('hashchange',()=>{const r=location.hash.slice(1)||'home';if(r!=='auth-callback')render(r)});
 window.addEventListener('resize',()=>nav());
-const startupRoute=location.hash.slice(1).split('?')[0];if(!startupRoute)history.replaceState(null,'',window.location.pathname+window.location.search+'#home');if(startupRoute!=='auth-callback')render(startupRoute||'home');authBootstrapPromise=bootProductionSession();
+const startupHash=String(location.hash||'');const startupParts=startupHash.split('#');const startupRoute=((startupParts[1]||'').split('?')[0]||'home');if(!startupHash)history.replaceState(null,'',window.location.pathname+window.location.search+'#home');if(startupRoute!=='auth-callback')render(startupRoute||'home');authBootstrapPromise=bootProductionSession();
 setTimeout(function(){var a=document.getElementById('app');if(a&&!a.innerHTML.trim()){try{var rr=location.hash.slice(1)||'home';render(rr)}catch(e){console.error('HUNAR startup recovery:',e);a.innerHTML='<section class="section"><div class="container"><h1>HUNAR</h1><p>HUNAR could not render this page. Please refresh once.</p></div></section>'}}},250);
 </script>
 

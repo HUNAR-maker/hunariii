@@ -2433,7 +2433,7 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
 <script>
 const HUNAR_SUPABASE_URL="https://enuqrzaavxadtduyqwqv.supabase.co";
 const HUNAR_SUPABASE_KEY="sb_publishable_XZwFIJv6IajO9kWCe7wvVw_97GIv05D";
-const supabaseClient=window.supabase?.createClient(HUNAR_SUPABASE_URL,HUNAR_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+const supabaseClient=window.supabase?.createClient(HUNAR_SUPABASE_URL,HUNAR_SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"implicit"}});
 window.supabaseClient=supabaseClient;
 let me=null;
 let productionUser=null;

@@ -71,6 +71,191 @@
         .hunarServicesRebuild .hsrRing{animation-duration:8s!important;}
         .hunarServicesRebuild .hsrDot{animation-duration:2.7s!important;}
       }
+
+      /* CLIENT FIND FREELANCER — force the actual avatar slot to a professional circle.
+         Scoped only to the freelancer result cards. */
+      #devgrid > .card > .row:first-child > .row:first-child > div:first-child{
+        width:76px!important;height:76px!important;min-width:76px!important;max-width:76px!important;
+        min-height:76px!important;max-height:76px!important;flex:0 0 76px!important;
+        aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;
+        display:grid!important;place-items:center!important;
+        border:3px solid #fff!important;
+        box-shadow:0 0 0 1px #dce5de,0 10px 24px rgba(20,34,27,.12)!important;
+        background:linear-gradient(145deg,#edf5e9,#d8e89f)!important;
+      }
+      #devgrid > .card > .row:first-child > .row:first-child > div:first-child img{
+        width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;
+        min-height:100%!important;max-height:none!important;display:block!important;
+        object-fit:cover!important;border-radius:50%!important;
+      }
+
+      /* SERVICES PAGE — visual presentation only. */
+      .serviceProShell{
+        background:linear-gradient(180deg,#f5f8f4 0%,#ffffff 34%,#f5f8f4 100%)!important;
+        padding-top:28px!important;padding-bottom:60px!important;
+      }
+      .serviceProShell .serviceProHero{
+        position:relative!important;overflow:hidden!important;
+        padding:30px 30px 32px!important;
+        border-radius:26px!important;
+        background:
+          radial-gradient(circle at 84% 18%,rgba(199,255,91,.22),transparent 24%),
+          radial-gradient(circle at 8% 120%,rgba(116,169,91,.16),transparent 30%),
+          linear-gradient(135deg,#13261a 0%,#1d3b25 55%,#29482c 100%)!important;
+        color:#fff!important;
+        border:1px solid rgba(255,255,255,.10)!important;
+        box-shadow:0 24px 60px rgba(20,50,28,.16)!important;
+      }
+      .serviceProShell .serviceProHero:before{
+        content:"";position:absolute;right:7%;top:50%;width:145px;height:145px;
+        transform:translateY(-50%);border-radius:50%;
+        border:1px solid rgba(220,255,150,.28);
+        box-shadow:0 0 0 18px rgba(220,255,150,.035),0 0 0 38px rgba(220,255,150,.025);
+        pointer-events:none;
+      }
+      .serviceProShell .serviceProHero:after{
+        content:"H";right:34px;bottom:-55px;font-size:190px;line-height:1;
+        font-weight:950;color:rgba(255,255,255,.055)!important;
+      }
+      .serviceProShell .serviceProHero .tag{
+        position:relative;z-index:2;
+        background:rgba(214,255,104,.15)!important;
+        color:#ddff91!important;
+        border:1px solid rgba(214,255,104,.25)!important;
+      }
+      .serviceProShell .serviceProHero h1{
+        position:relative;z-index:2;
+        color:#fff!important;
+        font-size:clamp(34px,5vw,58px)!important;
+        line-height:1!important;
+        margin:12px 0 8px!important;
+        letter-spacing:-.045em!important;
+      }
+      .serviceProShell .serviceProHero .sectionLead{
+        position:relative;z-index:2;
+        color:rgba(235,244,237,.78)!important;
+        font-size:15px!important;
+        max-width:600px!important;
+      }
+      .serviceProShell .serviceProGrid{
+        display:grid!important;
+        grid-template-columns:minmax(0,1.7fr) minmax(150px,.75fr) minmax(120px,.55fr) auto!important;
+        gap:9px!important;align-items:center!important;
+        padding:10px!important;margin:18px 0!important;
+        border-radius:18px!important;
+        background:rgba(255,255,255,.94)!important;
+        border:1px solid #dce5de!important;
+        box-shadow:0 12px 32px rgba(20,35,26,.055)!important;
+      }
+      .serviceProShell .serviceProGrid input:not([type="checkbox"]),
+      .serviceProShell .serviceProGrid select{
+        min-height:44px!important;
+        border:1px solid #d7e0da!important;
+        border-radius:12px!important;
+        background:#fbfdfb!important;
+        color:#18221b!important;
+        padding:10px 12px!important;
+        box-shadow:none!important;
+      }
+      .serviceProShell .serviceProGrid input:focus,
+      .serviceProShell .serviceProGrid select:focus{
+        border-color:#8ebc62!important;
+        box-shadow:0 0 0 3px rgba(142,188,98,.13)!important;
+        transform:none!important;
+      }
+      .serviceProShell .serviceProGrid .chip{
+        min-height:44px!important;margin:0!important;
+        padding:0 13px!important;border:1px solid #dce6d6!important;
+        background:#f1f8df!important;color:#35452d!important;
+        border-radius:12px!important;font-weight:800!important;
+        display:flex!important;align-items:center!important;justify-content:center!important;
+        gap:8px!important;white-space:nowrap!important;
+      }
+      .serviceProShell .serviceProGrid .chip input[type="checkbox"]{
+        width:18px!important;height:18px!important;margin:0!important;accent-color:#79a94a!important;
+      }
+      .serviceProShell #servicegrid{
+        display:grid!important;
+        grid-template-columns:repeat(3,minmax(0,1fr))!important;
+        gap:15px!important;
+        align-items:stretch!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard{
+        display:flex!important;flex-direction:column!important;
+        min-width:0!important;min-height:390px!important;
+        padding:14px!important;border-radius:20px!important;
+        border:1px solid #dce5de!important;
+        background:linear-gradient(145deg,#fff,#f7faf7)!important;
+        box-shadow:0 10px 28px rgba(20,35,26,.055)!important;
+        overflow:hidden!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard .thumb{
+        height:150px!important;min-height:150px!important;
+        margin:-14px -14px 13px!important;
+        border-radius:20px 20px 12px 12px!important;
+        background:linear-gradient(135deg,#eef5e9,#dce8d9)!important;
+        display:grid!important;place-items:center!important;
+        font-size:42px!important;font-weight:950!important;color:#557347!important;
+        overflow:hidden!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard p.muted{
+        margin:0 0 4px!important;color:#58705d!important;font-size:11px!important;font-weight:800!important;
+        text-transform:uppercase!important;letter-spacing:.07em!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard h3{
+        margin:3px 0 8px!important;font-size:19px!important;line-height:1.25!important;
+        letter-spacing:-.025em!important;color:#17231b!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard > p:not(.muted){
+        color:#5d6962!important;font-size:12px!important;line-height:1.55!important;
+        display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical!important;
+        overflow:hidden!important;min-height:56px!important;margin:0 0 12px!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard .row{
+        margin-top:auto!important;padding-top:11px!important;
+        border-top:1px solid #edf1ed!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard .row b{font-size:13px!important;color:#18231b!important}
+      .serviceProShell #servicegrid .serviceProCard .row span{font-size:11px!important;color:#68756e!important}
+      .serviceProShell #servicegrid .serviceProCard > p:last-of-type{
+        min-height:25px!important;margin:8px 0 0!important;color:#56655d!important;font-size:11px!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard .actions{
+        margin:10px 0 0!important;display:flex!important;gap:8px!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard .actions .btn{
+        width:100%!important;justify-content:center!important;
+      }
+      .serviceProShell #servicegrid .serviceProCard:hover{
+        transform:translateY(-5px)!important;
+        box-shadow:0 20px 42px rgba(20,35,26,.10)!important;
+      }
+      .serviceProShell #servicegrid > .card:not(.serviceProCard){
+        grid-column:1/-1!important;
+        min-height:150px!important;
+        display:grid!important;place-items:center!important;text-align:center!important;
+        border:1px dashed #cbd7cf!important;border-radius:20px!important;
+        background:rgba(255,255,255,.78)!important;color:#506057!important;
+        box-shadow:none!important;
+      }
+      @media(max-width:900px){
+        .serviceProShell .serviceProGrid{grid-template-columns:1fr 1fr!important;}
+        .serviceProShell .serviceProGrid input.grow{grid-column:1/-1!important;}
+        .serviceProShell #servicegrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+      }
+      @media(max-width:600px){
+        .serviceProShell{padding-top:18px!important;padding-bottom:42px!important;}
+        .serviceProShell .serviceProHero{padding:23px 19px 26px!important;border-radius:20px!important;}
+        .serviceProShell .serviceProHero:before{width:105px;height:105px;right:-8px;}
+        .serviceProShell .serviceProHero:after{font-size:120px;right:8px;}
+        .serviceProShell .serviceProHero h1{font-size:36px!important;}
+        .serviceProShell .serviceProGrid{grid-template-columns:1fr!important;padding:9px!important;}
+        .serviceProShell .serviceProGrid input.grow{grid-column:auto!important;}
+        .serviceProShell #servicegrid{grid-template-columns:1fr!important;gap:12px!important;}
+        .serviceProShell #servicegrid .serviceProCard{min-height:0!important;}
+        .serviceProShell #servicegrid .serviceProCard .thumb{height:155px!important;min-height:155px!important;}
+      }
+
       @keyframes hunarNodeFloat{0%,100%{translate:0 0}50%{translate:0 -6px}}
     `;
     document.head.appendChild(style);

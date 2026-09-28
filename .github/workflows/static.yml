@@ -38,7 +38,7 @@ jobs:
               marker='<script src="hunar-safety.js?v=1"></script>'
               if marker not in s: raise SystemExit('Missing HUNAR safety script insertion point')
               s=s.replace(marker,marker+'\n<script src="./hunar-session-policy.js?v=5"></script>',1)
-          live='<script src="./hunar-live-fixes.js?v=4"></script>'
+          live='<script src="./hunar-live-fixes.js?v=5"></script>'
           s=re.sub(r'<script src="\\./hunar-live-fixes\\.js(?:\\?v=\\d+)?"></script>', live, s, count=1)
           if live not in s:
               s=s.replace('</body>',live+'\n</body>',1)

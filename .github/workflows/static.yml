@@ -30,20 +30,40 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          # Cache-bust the session layer so phones cannot keep an older JS copy.
-          s=s.replace('hunar-safety.js?v=1','hunar-safety.js?v=2')
-          # Make browser persistence explicit; Supabase keeps the auth session in localStorage.
-          old='auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}'
-          new='auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}'
-          s=s.replace(old,new)
-          # Add the dedicated background/refresh recovery guard once.
-          tag='<script src="./hunar-session-guard.js?v=1"></script>'
-          if tag not in s:
-              s=s.replace('</body>',tag+'\n</body>',1)
-          p.write_text(s,encoding='utf-8')
-          print('HUNAR session/mobile preparation complete')
+
+          index=Path('index.html')
+          s=index.read_text(encoding='utf-8')
+
+          # IMPORTANT: HUNAR must remember a signed-in user across a normal
+          # page refresh, but must NOT automatically sign the user in again
+          # after the browser/tab session has ended.
+          s=s.replace('hunar-safety.js?v=1','hunar-safety.js?v=3')
+          s=s.replace('hunar-safety.js?v=2','hunar-safety.js?v=3')
+          s=s.replace('auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}',
+                      'auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.sessionStorage}')
+          s=s.replace('auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}',
+                      'auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.sessionStorage}')
+
+          # The old session guard intentionally restored a saved session on
+          # every page visit/background resume. That is automatic sign-in,
+          # which is NOT wanted. Refresh persistence is handled by Supabase's
+          # sessionStorage instead.
+          guard='<script src="./hunar-session-guard.js?v=1"></script>'
+          s=s.replace(guard,'')
+          index.write_text(s,encoding='utf-8')
+
+          # The safety file previously contained an additive auto-restore IIFE.
+          # Remove only that session-restoration block at deploy time. Keep
+          # the actual safety/rate-limit layer and all existing UI code.
+          safety=Path('hunar-safety.js')
+          ss=safety.read_text(encoding='utf-8')
+          marker='/* HUNAR session/mobile correction:'
+          if marker in ss:
+              ss=ss.split(marker,1)[0].rstrip()+"\n"
+              safety.write_text(ss,encoding='utf-8')
+
+          print('HUNAR auth mode: sessionStorage (refresh persists; new browser session does not auto-sign-in)')
+          print('HUNAR automatic session restore guard: disabled')
           PY
 
       - name: Setup Pages

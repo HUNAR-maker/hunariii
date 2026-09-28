@@ -2751,9 +2751,16 @@ async function bootProductionSession(){
       render('signin');
       return;
     }
-    // HUNAR intentionally does not auto-sign users in when the website is opened.
-    // Any old Supabase browser session is cleared on a normal fresh website open.
-    try{await supabaseClient.auth.signOut()}catch(e){console.warn('HUNAR startup sign-out:',e)}
+    // Preserve the authenticated Supabase session across normal page refreshes.
+    // A refresh must never sign the user out. Only the explicit Log Out action does that.
+    const {data:sessionData,error:sessionError}=await supabaseClient.auth.getSession();
+    if(sessionError)throw sessionError;
+    if(sessionData.session?.user){
+      productionUser=sessionData.session.user;window.productionUser=sessionData.session.user;
+      await finishAuthenticatedUser(sessionData.session.user,null,{sync:true,requireFreelancerProfile:false});
+      render(current||'home');
+      return;
+    }
     productionUser=null;window.productionUser=null;me=null;
     render(['home','signup','signin','forgot-password','reset-password'].includes(current)?current:'home');
   }catch(e){

@@ -117,7 +117,6 @@
         }
       }
 
-      
       /* Marketplace Back area ONLY — the whole strip uses the same dark board color. */
       #app.marketplace-active .backBar,
       #app.marketplace-active > .backBar,
@@ -209,16 +208,58 @@
     }
   }
 
+  /* HOMEPAGE ONLY: load real registered freelancers for the public people section on the first visit.
+     This does not sign anyone in, create users, or change auth/data flows. It only uses the existing
+     public freelancer service and fills the existing homepage cards once the public data is available. */
+  let publicPeopleLoading=false;
+  async function loadPublicHomepageFreelancers(){
+    const hash=(location.hash.slice(1)||'home').split('?')[0];
+    if(hash && hash!=='home') return;
+    const grid=document.querySelector('.hunarPeopleRebuild .hprPeopleGrid');
+    if(!grid || publicPeopleLoading) return;
+    if(Array.isArray(window.S?.profiles) && window.S.profiles.length) return;
+    if(!window.HunarData?.freelancers?.public || !window.supabaseClient) return;
+    publicPeopleLoading=true;
+    try{
+      const data=await window.HunarData.freelancers.public();
+      const accounts=Array.isArray(data?.accounts)?data.accounts:[];
+      const profiles=Array.isArray(data?.profiles)?data.profiles:[];
+      const byId=new Map(profiles.map(p=>[String(p.account_id),p]));
+      const people=accounts.filter(a=>a&&a.id&&a.role==='freelancer').map(a=>{
+        const fp=byId.get(String(a.id))||{};
+        return {
+          id:a.id,n:a.full_name||'Freelancer',t:fp.professional_title||fp.profession||'Freelancer',
+          profession:fp.profession||'Freelancer',l:a.city||'Ethiopia',r:a.region||'',city:a.city||'',
+          photo:a.photo_url||'',bio:a.bio||'',v:a.verification_status==='verified',rating:'New',completed:0,
+          price:Number(fp.starting_price_etb||0),cats:Array.isArray(fp.categories)?fp.categories:[],
+          skills:Array.isArray(fp.skills)?fp.skills:[],availability:fp.availability||'',experience:fp.experience||'',
+          languages:Array.isArray(fp.languages)?fp.languages:[],certificates:Array.isArray(fp.certificates)?fp.certificates:[]
+        };
+      });
+      if(!people.length) return;
+      window.S.profiles=people;
+      if(typeof window.devCard!=='function') return;
+      grid.innerHTML=people.slice(0,6).map(window.devCard).join('');
+      install();
+    }catch(error){
+      console.warn('HUNAR public homepage freelancer load skipped:',error?.message||error);
+    }finally{
+      publicPeopleLoading=false;
+    }
+  }
+
   ready(install);
   ready(function(){
     fixFindFreelancerCircles();
     fixMarketplaceAndBackButtons();
-    const observer=new MutationObserver(function(){fixFindFreelancerCircles();fixMarketplaceAndBackButtons();});
+    setTimeout(loadPublicHomepageFreelancers,120);
+    setTimeout(loadPublicHomepageFreelancers,600);
+    const observer=new MutationObserver(function(){fixFindFreelancerCircles();fixMarketplaceAndBackButtons();loadPublicHomepageFreelancers();});
     observer.observe(document.body,{childList:true,subtree:true});
     window.addEventListener('resize',fixFindFreelancerCircles,{passive:true});
     window.addEventListener('resize',fixMarketplaceAndBackButtons,{passive:true});
   });
   const oldRender=window.render;
-  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);setTimeout(fixFindFreelancerCircles,0);setTimeout(fixFindFreelancerCircles,120);setTimeout(fixMarketplaceAndBackButtons,0);setTimeout(fixMarketplaceAndBackButtons,120);return result;};
+  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);setTimeout(fixFindFreelancerCircles,0);setTimeout(fixFindFreelancerCircles,120);setTimeout(fixMarketplaceAndBackButtons,0);setTimeout(fixMarketplaceAndBackButtons,120);setTimeout(loadPublicHomepageFreelancers,180);return result;};
   window.addEventListener('resize',()=>{setTimeout(install,0);setTimeout(fixMarketplaceAndBackButtons,0);},{passive:true});
 })();

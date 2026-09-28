@@ -108,3 +108,102 @@
     let tries=0;const timer=setInterval(function(){if(install()||++tries>20)clearInterval(timer)},100);
   }
 })();
+
+/* HUNAR session/mobile correction: preserve an existing Supabase session on refresh,
+   restore the original route after startup, and keep the mobile profile menu accessible. */
+(function(){
+  'use strict';
+  const initialRoute=(location.hash.slice(1).split('?')[0]||'home');
+  const authRoutes=new Set(['signin','signup','register','forgot-password','reset-password','auth-callback','google-role']);
+  let savedSession=null;
+  let explicitLogout=false;
+  let restored=false;
+
+  function installStyles(){
+    if(document.getElementById('hunar-mobile-profile-fix'))return;
+    const style=document.createElement('style');
+    style.id='hunar-mobile-profile-fix';
+    style.textContent=`
+      @media(max-width:600px){
+        #right .profileTrigger{display:inline-flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;}
+        #right .profileMenu{right:0;min-width:215px;max-width:calc(100vw - 24px);}
+        #right .profileMenu button{white-space:nowrap!important;overflow:visible!important;line-height:1.25!important;}
+      }
+      @media(min-width:901px){
+        .dash .side .dashLink{white-space:nowrap!important;overflow:visible!important;line-height:1.25!important;min-height:42px!important;}
+        .dash .welcome h1,.dash .welcome p{color:#14221b!important;opacity:1!important;}
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function patchLogout(){
+    if(typeof window.logout!=='function'||window.logout.__hunarSessionPatched)return;
+    const original=window.logout;
+    const wrapped=function(...args){
+      explicitLogout=true;
+      savedSession=null;
+      try{sessionStorage.removeItem('hunar_refresh_session_backup');}catch(_e){}
+      return original.apply(this,args);
+    };
+    wrapped.__hunarSessionPatched=true;
+    window.logout=wrapped;
+  }
+
+  async function captureSession(){
+    if(!window.supabaseClient?.auth)return false;
+    try{
+      const {data}=await window.supabaseClient.auth.getSession();
+      if(data?.session?.access_token&&data?.session?.refresh_token&&!explicitLogout){
+        savedSession=data.session;
+        try{sessionStorage.setItem('hunar_refresh_session_backup',JSON.stringify({access_token:data.session.access_token,refresh_token:data.session.refresh_token}));}catch(_e){}
+      }
+      return true;
+    }catch(_e){return false;}
+  }
+
+  async function restoreSession(){
+    if(restored||explicitLogout||!window.supabaseClient?.auth)return false;
+    let backup=savedSession;
+    if(!backup){
+      try{backup=JSON.parse(sessionStorage.getItem('hunar_refresh_session_backup')||'null');}catch(_e){backup=null;}
+    }
+    if(!backup?.access_token||!backup?.refresh_token)return false;
+    try{
+      const current=await window.supabaseClient.auth.getSession();
+      if(current?.data?.session?.user)return false;
+      const result=await window.supabaseClient.auth.setSession({access_token:backup.access_token,refresh_token:backup.refresh_token});
+      if(result?.error||!result?.data?.session?.user)return false;
+      restored=true;
+      window.productionUser=result.data.session.user;
+      try{
+        if(window.HunarData?.accounts?.me){
+          const account=await window.HunarData.accounts.me();
+          window.me={id:account.id,role:account.role,email:account.email||result.data.session.user.email,phone:account.phone||'',emailVerified:!!(account.email_verified||result.data.session.user.email_confirmed_at),phoneVerified:!!account.phone_verified};
+        }
+      }catch(_e){
+        window.me={id:result.data.session.user.id,role:result.data.session.user.user_metadata?.role||'freelancer',email:result.data.session.user.email||''};
+      }
+      try{if(typeof window.syncProductionData==='function')await window.syncProductionData();}catch(_e){}
+      installStyles();
+      if(!authRoutes.has(initialRoute)&&typeof window.render==='function')window.render(initialRoute);
+      else if(typeof window.nav==='function')window.nav();
+      return true;
+    }catch(_e){return false;}
+  }
+
+  const timer=setInterval(async function(){
+    installStyles();
+    patchLogout();
+    if(!window.supabaseClient?.auth)return;
+    if(!savedSession&&!restored&&!explicitLogout){await captureSession();}
+    if(savedSession&&!restored&&!explicitLogout){
+      const routeNow=location.hash.slice(1).split('?')[0]||'home';
+      /* The legacy startup bootstrap signs out once on a normal page load. If that
+         happened, immediately restore the persisted session instead of logging out. */
+      if(routeNow!== 'auth-callback') await restoreSession();
+    }
+    if(restored||explicitLogout){clearInterval(timer);}
+  },250);
+  window.addEventListener('beforeunload',function(){try{if(!explicitLogout&&savedSession)sessionStorage.setItem('hunar_refresh_session_backup',JSON.stringify({access_token:savedSession.access_token,refresh_token:savedSession.refresh_token}));}catch(_e){}});
+})();

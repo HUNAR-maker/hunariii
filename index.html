@@ -2857,8 +2857,8 @@ function closeProfileMenu(){profileMenuOpen=false;nav()}
 function profileMenuHtml(){
   if(!me)return '';
   let u=S.users.find(x=>x.id===me.id)||{},d=currentProfile()||{};
-  return \`<div class="profileMenuWrap">
-    <button class="profileTrigger" aria-label="Open HUNAR profile menu" aria-expanded="${profileMenuOpen?'true':'false'}" title="Profile" type="button" onclick="event.stopPropagation();toggleProfileMenu()"><span class="headerAvatar">${d.photo?\`<img src="${esc(d.photo)}" alt="">\`:initials(d.n||u.n||u.email||'User')}</span></button>
+  return `<div class="profileMenuWrap">
+    <button class="profileTrigger" aria-label="Open HUNAR profile menu" aria-expanded="${profileMenuOpen?'true':'false'}" title="Profile" type="button" onclick="event.stopPropagation();toggleProfileMenu()"><span class="headerAvatar">${d.photo?`<img src="${esc(d.photo)}" alt="">`:initials(d.n||u.n||u.email||'User')}</span></button>
     <div class="profileMenu" role="menu" aria-label="HUNAR profile menu" style="display:${profileMenuOpen?'block':'none'}">
       <div class="profileMenuHead"><b>${esc(d.n||u.n||'Hunar member')}</b><small>${me.role==='freelancer'?'Freelancer':'Client'}</small></div>
       <button type="button" role="menuitem" onclick="profileMenuOpen=false;go('profile')">Profile</button>

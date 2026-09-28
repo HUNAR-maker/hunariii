@@ -272,14 +272,68 @@
     });
   }
 
+  function fixMarketplaceAndBackButtons(){
+    const styleId='hunar-marketplace-back-fix-style';
+    let style=document.getElementById(styleId);
+    if(!style){
+      style=document.createElement('style');
+      style.id=styleId;
+      document.head.appendChild(style);
+    }
+    style.textContent=`
+      /* MARKETPLACE ONLY — compact mobile 3D hero, preserving the same visual concept. */
+      .mkFuture .mkHero{min-height:0!important;height:auto!important;padding:0!important;}
+      .mkFuture .mkHeroInner{min-height:0!important;height:auto!important;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr)!important;}
+      .mkFuture .mkHeroScene{height:300px!important;min-height:300px!important;max-height:300px!important;overflow:hidden!important;}
+      .mkFuture .mkOrb{width:94px!important;height:94px!important;}
+      .mkFuture .mkOrbit.o1{width:160px!important;height:160px!important;}
+      .mkFuture .mkOrbit.o2{width:215px!important;height:108px!important;}
+      .mkFuture .mkOrbit.o3{width:270px!important;height:270px!important;}
+      .mkFuture .mkFloat{font-size:11px!important;padding:6px 8px!important;}
+      .mkFuture .mkBody{padding-bottom:35px!important;}
+      .mkFuture .mkHeroCopy{padding:30px 0!important;}
+      .backBar .btn{background:#111412!important;color:#c8ff3d!important;border-color:#111412!important;box-shadow:0 4px 0 rgba(0,0,0,.88),0 10px 22px rgba(17,20,18,.12)!important;}
+      .backBar .btn:hover{background:#171b18!important;color:#d7ff72!important;}
+      #app>.backBar~.backBar{display:none!important;}
+      #app .backBar .backBar{display:none!important;}
+      @media(max-width:800px){
+        .mkFuture .mkHeroInner{display:flex!important;flex-direction:column!important;min-height:0!important;gap:0!important;}
+        .mkFuture .mkHeroScene{order:-1!important;width:100%!important;height:220px!important;min-height:220px!important;max-height:220px!important;margin:0!important;}
+        .mkFuture .mkHeroCopy{padding:22px 0 26px!important;}
+        .mkFuture .mkHero h1{font-size:42px!important;letter-spacing:-2px!important;margin:12px 0 10px!important;}
+        .mkFuture .mkHero p{font-size:13px!important;line-height:1.5!important;}
+        .mkFuture .mkSearch{margin:17px 0 10px!important;}
+        .mkFuture .mkOrb{width:72px!important;height:72px!important;}
+        .mkFuture .mkOrb b{font-size:28px!important;}
+        .mkFuture .mkOrbit.o1{width:125px!important;height:125px!important;}
+        .mkFuture .mkOrbit.o2{width:170px!important;height:85px!important;}
+        .mkFuture .mkOrbit.o3{width:215px!important;height:215px!important;}
+        .mkFuture .mkParticle{width:4px!important;height:4px!important;}
+        .mkFuture .mkFloat{display:none!important;}
+      }
+      @media(max-width:470px){
+        .mkFuture .mkHeroScene{height:185px!important;min-height:185px!important;max-height:185px!important;}
+        .mkFuture .mkHeroCopy{padding:18px 0 22px!important;}
+        .mkFuture .mkHero h1{font-size:36px!important;}
+      }
+    `;
+    const app=document.getElementById('app');
+    if(app){
+      const bars=Array.from(app.children).filter(el=>el.classList&&el.classList.contains('backBar'));
+      bars.forEach((bar,index)=>{bar.style.display=index===0?'':'none';});
+    }
+  }
+
   ready(install);
   ready(function(){
     fixFindFreelancerCircles();
-    const observer=new MutationObserver(fixFindFreelancerCircles);
+    fixMarketplaceAndBackButtons();
+    const observer=new MutationObserver(function(){fixFindFreelancerCircles();fixMarketplaceAndBackButtons();});
     observer.observe(document.body,{childList:true,subtree:true});
     window.addEventListener('resize',fixFindFreelancerCircles,{passive:true});
+    window.addEventListener('resize',fixMarketplaceAndBackButtons,{passive:true});
   });
   const oldRender=window.render;
-  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);setTimeout(fixFindFreelancerCircles,0);setTimeout(fixFindFreelancerCircles,120);return result;};
-  window.addEventListener('resize',()=>setTimeout(install,0),{passive:true});
+  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);setTimeout(fixFindFreelancerCircles,0);setTimeout(fixFindFreelancerCircles,120);setTimeout(fixMarketplaceAndBackButtons,0);setTimeout(fixMarketplaceAndBackButtons,120);return result;};
+  window.addEventListener('resize',()=>{setTimeout(install,0);setTimeout(fixMarketplaceAndBackButtons,0);},{passive:true});
 })();

@@ -33,17 +33,17 @@ jobs:
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
           import re
-          s=re.sub(r'<script src="\./hunar-session-policy\.js\?v=\d+"></script>', '<script src="./hunar-session-policy.js?v=3"></script>', s, count=1)
-          if 'hunar-session-policy.js?v=3' not in s:
+          s=re.sub(r'<script src="\\./hunar-session-policy\\.js\\?v=\\d+"></script>', '<script src="./hunar-session-policy.js?v=4"></script>', s, count=1)
+          if 'hunar-session-policy.js?v=4' not in s:
               marker='<script src="hunar-safety.js?v=1"></script>'
               if marker not in s: raise SystemExit('Missing HUNAR safety script insertion point')
-              s=s.replace(marker,marker+'\n<script src="./hunar-session-policy.js?v=3"></script>',1)
-          live='<script src="./hunar-live-fixes.js?v=3"></script>'
-          s=re.sub(r'<script src="\./hunar-live-fixes\.js(?:\?v=\d+)?"></script>', live, s, count=1)
+              s=s.replace(marker,marker+'\n<script src="./hunar-session-policy.js?v=4"></script>',1)
+          live='<script src="./hunar-live-fixes.js?v=4"></script>'
+          s=re.sub(r'<script src="\\./hunar-live-fixes\\.js(?:\\?v=\\d+)?"></script>', live, s, count=1)
           if live not in s:
               s=s.replace('</body>',live+'\n</body>',1)
           p.write_text(s,encoding='utf-8')
-          print('HUNAR session policy v3 and mobile profile UI v3 injected.')
+          print('HUNAR session policy v4 and mobile profile UI v4 injected.')
           PY
 
       - name: Setup Pages

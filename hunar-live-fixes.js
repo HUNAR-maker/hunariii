@@ -34,13 +34,14 @@
       .hunarPeopleRebuild .hprNode:nth-of-type(4){transform:translateY(-2px) rotate(-1deg);}
       .hunar-drag-orb{touch-action:none!important;-webkit-user-select:none!important;user-select:none!important;}
 
-      /* TARGETED HOMEPAGE PEOPLE FIX ONLY: circular profile photos + horizontal rail + four real public profiles. */
-      .hunarPeopleRebuild .hprPeopleGrid{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:14px!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x!important;}
+      /* TARGETED HOMEPAGE PEOPLE ONLY: real registered freelancer profiles, circular avatars, and a polished horizontal slider. */
+      .hunarPeopleRebuild .hprPeopleGrid{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:16px!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x!important;padding:4px 2px 10px!important;}
       .hunarPeopleRebuild .hprPeopleGrid::-webkit-scrollbar{display:none!important;}
-      .hunarPeopleRebuild .hprPersonCard{flex:0 0 calc((100% - 28px)/3)!important;min-width:0!important;scroll-snap-align:start!important;}
-      .hunarPeopleRebuild .hprPersonAvatar{width:78px!important;height:78px!important;min-width:78px!important;max-width:78px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;}
+      .hunarPeopleRebuild .hprPersonCard{flex:0 0 calc((100% - 32px)/3)!important;min-width:0!important;scroll-snap-align:start!important;border-radius:22px!important;overflow:hidden!important;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease!important;}
+      .hunarPeopleRebuild .hprPersonCard:hover{transform:translateY(-3px)!important;box-shadow:0 14px 34px rgba(20,34,27,.09)!important;}
+      .hunarPeopleRebuild .hprPersonAvatar{width:82px!important;height:82px!important;min-width:82px!important;max-width:82px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 20px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;}
       .hunarPeopleRebuild .hprPersonAvatar img{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
-      @media(max-width:900px){.hunarPeopleRebuild .hprPersonCard{flex-basis:calc((100% - 14px)/2)!important;}}
+      @media(max-width:900px){.hunarPeopleRebuild .hprPersonCard{flex-basis:calc((100% - 16px)/2)!important;}}
       @media(max-width:600px){.hunarPeopleRebuild .hprPersonCard{flex-basis:88%!important;}}
 
       @media (max-width:900px){
@@ -68,15 +69,16 @@
     const rail=document.querySelector('.hunarPeopleRebuild .hprPeopleGrid');
     if(!rail) return;
     const cards=[...rail.querySelectorAll('.hprPersonCard')];
-    cards.slice(4).forEach(card=>card.remove());
+    cards.slice(3).forEach(card=>card.remove());
     rail.style.display='flex';
     rail.style.flexDirection='row';
     rail.style.flexWrap='nowrap';
     rail.style.overflowX='auto';
     rail.style.overflowY='hidden';
-    cards.slice(0,4).forEach(card=>{
+    rail.style.scrollSnapType='x mandatory';
+    cards.slice(0,3).forEach(card=>{
       const avatar=card.querySelector('.hprPersonAvatar');
-      if(avatar){avatar.style.width='78px';avatar.style.height='78px';avatar.style.minWidth='78px';avatar.style.maxWidth='78px';avatar.style.borderRadius='50%';avatar.style.overflow='hidden';}
+      if(avatar){avatar.style.width='82px';avatar.style.height='82px';avatar.style.minWidth='82px';avatar.style.maxWidth='82px';avatar.style.borderRadius='50%';avatar.style.overflow='hidden';}
       const img=avatar?.querySelector('img');
       if(img){img.style.width='100%';img.style.height='100%';img.style.objectFit='cover';img.style.borderRadius='50%';}
     });

@@ -1880,7 +1880,7 @@ button,input,textarea,select{font:inherit}.card,.stat,.contractCard,.application
     var h=location.hash||'';
     var oauth=/access_token=|refresh_token=|code=|type=recovery|auth-callback/i.test((location.search||'')+' '+h);
     if((host==='localhost'||host==='127.0.0.1'||host==='0.0.0.0') && oauth){
-      var target='https://hunar-maker.github.io/hunarii/'+(location.search||'')+(h||'');
+      var target='https://hunar-maker.github.io/hunariii/'+(location.search||'')+(h||'');
       location.replace(target);
     }
   }catch(e){}
@@ -2653,7 +2653,7 @@ function authRedirectUrl(){
   // Google OAuth must return to the published HUNAR website root.
   // Do not put a URL fragment in the OAuth redirect URI: OAuth providers
   // return the authorization response to the URL before the fragment.
-  return 'https://hunar-maker.github.io/hunarii/';
+  return 'https://hunar-maker.github.io/hunariii/';
 }
 async function startGoogle(role=null){if(!supabaseClient){alert('Hunar authentication is not configured correctly yet.');return}if(role){window.hunarGoogleRoleIntent=role;sessionStorage.setItem('hunar_google_role_intent',role)}else{window.hunarGoogleRoleIntent=null;sessionStorage.removeItem('hunar_google_role_intent')}const redirectTo=authRedirectUrl();console.info('HUNAR Google OAuth redirect:',redirectTo);const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo,queryParams:{prompt:'select_account'},skipBrowserRedirect:false}});if(error){console.error('HUNAR Google OAuth error:',error);alert(authMessage(error,'Google sign-in could not be completed. Please try again.'))}}
 async function handleAuthCallback(){

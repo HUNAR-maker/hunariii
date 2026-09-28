@@ -32,14 +32,16 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          tag='<script src="./hunar-session-policy.js?v=1"></script>'
+          import re
+          tag='<script src="./hunar-session-policy.js?v=2"></script>'
+          s=re.sub(r'<script src="\./hunar-session-policy\.js\?v=\d+"></script>', tag, s, count=1)
           if tag not in s:
               marker='<script src="hunar-safety.js?v=1"></script>'
               if marker not in s:
                   raise SystemExit('Could not find the Supabase/safety script insertion point in index.html')
               s=s.replace(marker,marker+'\n'+tag,1)
-              p.write_text(s,encoding='utf-8')
-          print('HUNAR tab-session policy injected after Supabase library and before the main app script.')
+          p.write_text(s,encoding='utf-8')
+          print('HUNAR tab-session policy v2 injected after Supabase library and before the main app script.')
           PY
 
       - name: Setup Pages

@@ -25,23 +25,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject HUNAR tab-session policy before app startup
+      - name: Inject HUNAR mobile profile menu
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          import re
-          tag='<script src="./hunar-session-policy.js?v=2"></script>'
-          s=re.sub(r'<script src="\./hunar-session-policy\.js\?v=\d+"></script>', tag, s, count=1)
+          tag='<script src="./hunar-mobile-profile-menu.js?v=1"></script>'
           if tag not in s:
-              marker='<script src="hunar-safety.js?v=1"></script>'
+              marker='<script src="./hunar-session-policy.js?v=2"></script>'
               if marker not in s:
-                  raise SystemExit('Could not find the Supabase/safety script insertion point in index.html')
+                  marker='<script src="hunar-safety.js?v=1"></script>'
+              if marker not in s:
+                  raise SystemExit('Could not find HUNAR script insertion point in index.html')
               s=s.replace(marker,marker+'\n'+tag,1)
           p.write_text(s,encoding='utf-8')
-          print('HUNAR tab-session policy v2 injected after Supabase library and before the main app script.')
+          print('HUNAR mobile profile menu injected.')
           PY
 
       - name: Setup Pages

@@ -24,6 +24,31 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Apply HUNAR session and mobile menu corrections
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          old = """    // HUNAR intentionally does not auto-sign users in when the website is opened.\n    // Any old Supabase browser session is cleared on a normal fresh website open.\n    try{await supabaseClient.auth.signOut()}catch(e){console.warn('HUNAR startup sign-out:',e)}\n    productionUser=null;window.productionUser=null;me=null;\n    render(['home','signup','signin','forgot-password','reset-password'].includes(current)?current:'home');"""
+
+          new = """    // IMPORTANT: a normal page refresh must NEVER sign the user out.\n    // Supabase persists the session in the browser; restore it and keep the\n    // user on the exact route that was refreshed. Only the explicit Log Out\n    // action is allowed to call auth.signOut().\n    const sessionResult=await supabaseClient.auth.getSession();\n    if(sessionResult.error)throw sessionResult.error;\n    const session=sessionResult.data?.session;\n    if(session?.user){\n      const user=session.user;\n      productionUser=user;window.productionUser=user;\n      try{\n        const state=await getHunarOnboardingState(user,null);\n        if(!state.complete){\n          const role=state.role||user.user_metadata?.hunar_signup_role||null;\n          const d=role?signupDraft(role):null;\n          if(role&&d){\n            d.email=normalizeEmail(user.email);\n            d.emailVerified=!!user.email_confirmed_at;\n            d.authCreated=true;\n            d.authEmail=normalizeEmail(user.email);\n            d.resumedExistingAuth=true;\n            saveSignupDraft(role,d);\n            go('register?role='+role+'&step='+(d.emailVerified?3:2));\n            return;\n          }\n        }else if(state.account){\n          const a=state.account;\n          me={id:a.id,role:a.role,email:a.email||user.email,phone:a.phone,emailVerified:!!(a.email_verified||user.email_confirmed_at),phoneVerified:a.phone_verified};\n          try{await syncProductionData()}catch(syncErr){console.warn('HUNAR refresh data sync skipped:',syncErr?.message||syncErr)}\n        }\n      }catch(sessionHydrateError){\n        // Never turn a temporary profile/data error into a logout.\n        console.warn('HUNAR session hydration skipped:',sessionHydrateError?.message||sessionHydrateError);\n      }\n      render(current||'home');\n      return;\n    }\n    productionUser=null;window.productionUser=null;me=null;\n    render(['home','signup','signin','forgot-password','reset-password'].includes(current)?current:'home');"""
+
+          if old not in s:
+              raise SystemExit('Expected HUNAR startup session block was not found; refusing to deploy an unsafe patch.')
+          s=s.replace(old,new,1)
+
+          # Make the requested mobile profile menu explicit and resilient.\n          mobile_css = """\n<style id=\"hunar-mobile-profile-menu-final\">\n@media(max-width:900px){\n  .profileMenuWrap{position:relative!important;display:flex!important;align-items:center!important;}\n  .profileTrigger{display:inline-flex!important;visibility:visible!important;opacity:1!important;}\n  .hunarMobileProfileMenu{position:fixed!important;right:10px!important;top:58px!important;width:min(280px,calc(100vw - 20px))!important;min-width:0!important;max-height:calc(100vh - 72px)!important;overflow-y:auto!important;z-index:999999!important;background:#fff!important;border:1px solid #dfe7e2!important;border-radius:14px!important;box-shadow:0 18px 55px rgba(20,34,27,.18)!important;padding:7px!important;}\n  .hunarMobileProfileMenu button{display:block!important;width:100%!important;min-height:44px!important;text-align:left!important;color:#111815!important;background:transparent!important;white-space:nowrap!important;}\n  .hunarMobileProfileMenu .logoutItem{color:#b54747!important;}\n}\n</style>\n"""
+          if 'hunar-mobile-profile-menu-final' not in s:
+              s=s.replace('</head>',mobile_css+'\n</head>',1)
+
+          p.write_text(s,encoding='utf-8')
+          print('HUNAR session/mobile correction applied')
+          PY
+
       - name: Inject HUNAR live UI fixes
         shell: bash
         run: |
@@ -41,6 +66,7 @@ jobs:
               p.write_text(s, encoding='utf-8')
           print('HUNAR live fixes injected:', tag in s)
           PY
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

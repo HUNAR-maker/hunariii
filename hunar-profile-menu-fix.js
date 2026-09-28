@@ -32,6 +32,25 @@
     m.style.top=top+'px';
   }
 
+  function accountInfo(){
+    var user=window.me||null;
+    var profile=null;
+    try{ if(typeof window.currentProfile==='function') profile=window.currentProfile()||null; }catch(e){}
+    try{
+      if(!profile && window.S && Array.isArray(window.S.profiles) && user){
+        profile=window.S.profiles.find(function(x){return String(x.id)===String(user.id)})||null;
+      }
+    }catch(e){}
+    try{
+      if(!profile && window.S && Array.isArray(window.S.users) && user){
+        profile=window.S.users.find(function(x){return String(x.id)===String(user.id)})||null;
+      }
+    }catch(e){}
+    var name=(profile&&(profile.n||profile.name||profile.full_name))||(user&&(user.n||user.name||user.full_name))||(user&&user.email)||'HUNAR Account';
+    var role=user&&user.role==='freelancer'?'Freelancer':user&&user.role==='client'?'Client':'';
+    return {name:String(name),role:role};
+  }
+
   function goRoute(route){
     closeMenu();
     if(typeof window.go==='function')window.go(route);
@@ -42,12 +61,13 @@
     closeMenu();
     var b=document.querySelector('.profileTrigger');
     if(!b)return;
+    var info=accountInfo();
 
     var m=document.createElement('div');
     m.id=MENU_ID;
     m.setAttribute('role','menu');
     m.setAttribute('aria-label','HUNAR profile menu');
-    m.innerHTML='<div class="hpm-head"><strong>My HUNAR</strong><span>Account menu</span></div>'+
+    m.innerHTML='<div class="hpm-head"><strong>'+escapeHtml(info.name)+'</strong>'+ (info.role?'<span>'+info.role+'</span>':'') +'</div>'+ 
       '<button type="button" data-route="profile">Profile</button>'+ 
       '<button type="button" data-route="performance">Performance</button>'+ 
       '<button type="button" data-route="identity-verification">Identity Verification</button>'+ 
@@ -69,6 +89,10 @@
     document.addEventListener('click',outside,true);
     window.addEventListener('resize',reposition);
     window.addEventListener('scroll',reposition,true);
+  }
+
+  function escapeHtml(value){
+    return String(value).replace(/[&<>'"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch];});
   }
 
   function install(){

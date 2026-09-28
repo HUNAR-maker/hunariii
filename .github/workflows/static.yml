@@ -1,4 +1,4 @@
-# Simple workflow for deploying static content to GitHub Pages
+# Simple workflow for deploying static content to Pages
 name: Deploy static content to Pages
 
 on:
@@ -25,14 +25,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject HUNAR session and mobile profile fixes
+      - name: Inject HUNAR session and profile UI fixes
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          import re
           s=re.sub(r'<script src="\\./hunar-session-policy\\.js\\?v=\\d+"></script>', '<script src="./hunar-session-policy.js?v=5"></script>', s, count=1)
           if 'hunar-session-policy.js?v=5' not in s:
               marker='<script src="hunar-safety.js?v=1"></script>'
@@ -42,8 +42,12 @@ jobs:
           s=re.sub(r'<script src="\\./hunar-live-fixes\\.js(?:\\?v=\\d+)?"></script>', live, s, count=1)
           if live not in s:
               s=s.replace('</body>',live+'\n</body>',1)
+          profile='<script src="./hunar-profile-menu-fix.js?v=1"></script>'
+          s=re.sub(r'<script src="\\./hunar-profile-menu-fix\\.js(?:\\?v=\\d+)?"></script>', profile, s, count=1)
+          if profile not in s:
+              s=s.replace('</body>',profile+'\n</body>',1)
           p.write_text(s,encoding='utf-8')
-          print('HUNAR session policy v4 and mobile profile UI v4 injected.')
+          print('HUNAR session policy, live fixes, and isolated profile menu fix injected.')
           PY
 
       - name: Setup Pages

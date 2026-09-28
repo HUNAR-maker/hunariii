@@ -89,6 +89,35 @@
       .mkFuture .mkBody{padding-bottom:28px!important;}
       .mkFuture .mkHeroCopy{padding:24px 0!important;}
 
+      /* Marketplace Back strip — target the actual bar before .mkFuture, even when the app state class is applied late. */
+      #app:has(.mkFuture) > .backBar,
+      #app:has(.mkFuture) .backBar{
+        width:100%!important;
+        max-width:none!important;
+        background:#0d1711!important;
+        background-color:#0d1711!important;
+        color:#fff!important;
+        border:0!important;
+        box-shadow:none!important;
+        margin:0!important;
+      }
+      #app:has(.mkFuture) > .backBar{
+        padding:10px 24px 12px!important;
+        min-height:76px!important;
+      }
+      #app:has(.mkFuture) > .backBar .btn{
+        background:#111412!important;
+        color:#c8ff3d!important;
+        border-color:#111412!important;
+      }
+      @media(max-width:800px){
+        #app:has(.mkFuture) > .backBar{
+          padding:8px 14px 9px!important;
+          min-height:62px!important;
+        }
+      }
+
+      
       /* Marketplace Back area ONLY — the whole strip uses the same dark board color. */
       #app.marketplace-active .backBar,
       #app.marketplace-active > .backBar,

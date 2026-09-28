@@ -2869,7 +2869,7 @@ function profileMenuHtml(){
       <button type="button" role="menuitem" onclick="profileMenuOpen=false;go('account')">Account</button>
       <button class="logoutItem" role="menuitem" type="button" onclick="logout()">Log Out</button>
     </div>
-  </div>\`;
+  </div>`;
 }
 function headerIcon(route,label,count){return `<button class="headerIcon" aria-label="${esc(label)}" title="${esc(label)}" onclick="go('${route}')"><span>${label==='Messages'?'✉':label==='Notifications'?'🔔':'☆'}</span>${count?`<em>${count>99?'99+':count}</em>`:''}</button>`}
 function hunarSearchTerms(){return ['Editor','Graphic Designer','SEO','Website Developer','Logo Designer','Video Editor','Social Media Manager','Copywriter','Photographer','Mobile App Developer','Translator','Data Analyst'];}

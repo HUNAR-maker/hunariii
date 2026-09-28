@@ -25,45 +25,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare HUNAR session and mobile profile fixes
+      - name: Inject HUNAR tab-session policy before app startup
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
-          index=Path('index.html')
-          s=index.read_text(encoding='utf-8')
-
-          # IMPORTANT: HUNAR must remember a signed-in user across a normal
-          # page refresh, but must NOT automatically sign the user in again
-          # after the browser/tab session has ended.
-          s=s.replace('hunar-safety.js?v=1','hunar-safety.js?v=3')
-          s=s.replace('hunar-safety.js?v=2','hunar-safety.js?v=3')
-          s=s.replace('auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}',
-                      'auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.sessionStorage}')
-          s=s.replace('auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}',
-                      'auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.sessionStorage}')
-
-          # The old session guard intentionally restored a saved session on
-          # every page visit/background resume. That is automatic sign-in,
-          # which is NOT wanted. Refresh persistence is handled by Supabase's
-          # sessionStorage instead.
-          guard='<script src="./hunar-session-guard.js?v=1"></script>'
-          s=s.replace(guard,'')
-          index.write_text(s,encoding='utf-8')
-
-          # The safety file previously contained an additive auto-restore IIFE.
-          # Remove only that session-restoration block at deploy time. Keep
-          # the actual safety/rate-limit layer and all existing UI code.
-          safety=Path('hunar-safety.js')
-          ss=safety.read_text(encoding='utf-8')
-          marker='/* HUNAR session/mobile correction:'
-          if marker in ss:
-              ss=ss.split(marker,1)[0].rstrip()+"\n"
-              safety.write_text(ss,encoding='utf-8')
-
-          print('HUNAR auth mode: sessionStorage (refresh persists; new browser session does not auto-sign-in)')
-          print('HUNAR automatic session restore guard: disabled')
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          tag='<script src="./hunar-session-policy.js?v=1"></script>'
+          if tag not in s:
+              marker='</head>'
+              if marker not in s:
+                  raise SystemExit('Could not find </head> in index.html')
+              s=s.replace(marker,tag+'\n'+marker,1)
+              p.write_text(s,encoding='utf-8')
+          print('HUNAR tab-session policy injected before the main app script.')
           PY
 
       - name: Setup Pages

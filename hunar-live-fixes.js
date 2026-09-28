@@ -44,6 +44,18 @@
       @media(max-width:900px){.hunarPeopleRebuild .hprPeopleGrid>.card{flex-basis:calc((100% - 16px)/2)!important;}}
       @media(max-width:600px){.hunarPeopleRebuild .hprPeopleGrid>.card{flex-basis:88%!important;}}
 
+      /* CLIENT FIND-FREELANCER ONLY: clean circular profile photos; remove the stretched/oval treatment. */
+      .hunarFindFreelancerPage .avatar,
+      .hunarFindFreelancerPage .freelancerAvatar,
+      .hunarFindFreelancerPage .freelancer-card .avatar,
+      .hunarFindFreelancerPage .freelancerCard .avatar,
+      .hunarFindFreelancerPage .profileAvatar,
+      .hunarFindFreelancerPage .profilePhoto{width:72px!important;height:72px!important;min-width:72px!important;max-width:72px!important;min-height:72px!important;max-height:72px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;flex:0 0 72px!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 22px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;}
+      .hunarFindFreelancerPage .avatar img,
+      .hunarFindFreelancerPage .freelancerAvatar img,
+      .hunarFindFreelancerPage .profileAvatar img,
+      .hunarFindFreelancerPage .profilePhoto img{width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
+
       @media (max-width:900px){
         .hunarProfileWrap,.hunarMobileProfileTrigger,.profileTrigger{display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;}
         .hunarMobileProfileTrigger{min-width:42px!important;min-height:42px!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;z-index:100000!important;}
@@ -85,14 +97,30 @@
     });
   }
 
+  function enforceFindFreelancerAvatars(){
+    const root=[...document.querySelectorAll('main,section,[role="main"],body')].find(el=>{
+      const t=(el.innerText||'').replace(/\s+/g,' ').toLowerCase();
+      return /find (a )?freelancers?|find freelancer/.test(t) && /(freelancer|talent|services)/.test(t);
+    });
+    if(!root) return;
+    root.classList.add('hunarFindFreelancerPage');
+    const candidates=root.querySelectorAll('.avatar,.freelancerAvatar,.profileAvatar,.profilePhoto');
+    candidates.forEach(el=>{
+      el.style.width='72px';el.style.height='72px';el.style.minWidth='72px';el.style.maxWidth='72px';el.style.minHeight='72px';el.style.maxHeight='72px';el.style.aspectRatio='1 / 1';el.style.borderRadius='50%';el.style.overflow='hidden';el.style.flex='0 0 72px';
+      const img=el.querySelector('img');
+      if(img){img.style.width='100%';img.style.height='100%';img.style.maxWidth='none';img.style.objectFit='cover';img.style.borderRadius='50%';img.style.display='block';}
+    });
+  }
+
   ready(install);
   ready(function(){
     enforceHomepagePeople();
-    const observer=new MutationObserver(function(){enforceHomepagePeople();});
+    enforceFindFreelancerAvatars();
+    const observer=new MutationObserver(function(){enforceHomepagePeople();enforceFindFreelancerAvatars();});
     observer.observe(document.body,{childList:true,subtree:true});
-    window.addEventListener('resize',enforceHomepagePeople,{passive:true});
+    window.addEventListener('resize',function(){enforceHomepagePeople();enforceFindFreelancerAvatars();},{passive:true});
   });
   const oldRender=window.render;
-  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);setTimeout(enforceHomepagePeople,0);setTimeout(enforceHomepagePeople,120);return result;};
+  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);setTimeout(enforceHomepagePeople,0);setTimeout(enforceHomepagePeople,120);setTimeout(enforceFindFreelancerAvatars,0);setTimeout(enforceFindFreelancerAvatars,120);return result;};
   window.addEventListener('resize',()=>setTimeout(install,0),{passive:true});
 })();

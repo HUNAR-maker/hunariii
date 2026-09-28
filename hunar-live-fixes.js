@@ -33,6 +33,16 @@
       .hunarPeopleRebuild .hprNode:nth-of-type(3){transform:translateY(2px) rotate(1deg);}
       .hunarPeopleRebuild .hprNode:nth-of-type(4){transform:translateY(-2px) rotate(-1deg);}
       .hunar-drag-orb{touch-action:none!important;-webkit-user-select:none!important;user-select:none!important;}
+
+      /* TARGETED HOMEPAGE PEOPLE FIX ONLY: circular profile photos + horizontal rail + four real public profiles. */
+      .hunarPeopleRebuild .hprPeopleGrid{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;gap:14px!important;overflow-x:auto!important;overflow-y:hidden!important;scroll-snap-type:x mandatory!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x!important;}
+      .hunarPeopleRebuild .hprPeopleGrid::-webkit-scrollbar{display:none!important;}
+      .hunarPeopleRebuild .hprPersonCard{flex:0 0 calc((100% - 28px)/3)!important;min-width:0!important;scroll-snap-align:start!important;}
+      .hunarPeopleRebuild .hprPersonAvatar{width:78px!important;height:78px!important;min-width:78px!important;max-width:78px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;}
+      .hunarPeopleRebuild .hprPersonAvatar img{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
+      @media(max-width:900px){.hunarPeopleRebuild .hprPersonCard{flex-basis:calc((100% - 14px)/2)!important;}}
+      @media(max-width:600px){.hunarPeopleRebuild .hprPersonCard{flex-basis:88%!important;}}
+
       @media (max-width:900px){
         .hunarProfileWrap,.hunarMobileProfileTrigger,.profileTrigger{display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;}
         .hunarMobileProfileTrigger{min-width:42px!important;min-height:42px!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;z-index:100000!important;}
@@ -53,8 +63,33 @@
     document.head.appendChild(style);
     if(typeof window.nav==='function') window.nav();
   }
+
+  function enforceHomepagePeople(){
+    const rail=document.querySelector('.hunarPeopleRebuild .hprPeopleGrid');
+    if(!rail) return;
+    const cards=[...rail.querySelectorAll('.hprPersonCard')];
+    cards.slice(4).forEach(card=>card.remove());
+    rail.style.display='flex';
+    rail.style.flexDirection='row';
+    rail.style.flexWrap='nowrap';
+    rail.style.overflowX='auto';
+    rail.style.overflowY='hidden';
+    cards.slice(0,4).forEach(card=>{
+      const avatar=card.querySelector('.hprPersonAvatar');
+      if(avatar){avatar.style.width='78px';avatar.style.height='78px';avatar.style.minWidth='78px';avatar.style.maxWidth='78px';avatar.style.borderRadius='50%';avatar.style.overflow='hidden';}
+      const img=avatar?.querySelector('img');
+      if(img){img.style.width='100%';img.style.height='100%';img.style.objectFit='cover';img.style.borderRadius='50%';}
+    });
+  }
+
   ready(install);
+  ready(function(){
+    enforceHomepagePeople();
+    const observer=new MutationObserver(function(){enforceHomepagePeople();});
+    observer.observe(document.body,{childList:true,subtree:true});
+    window.addEventListener('resize',enforceHomepagePeople,{passive:true});
+  });
   const oldRender=window.render;
-  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);return result;};
+  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);setTimeout(enforceHomepagePeople,0);setTimeout(enforceHomepagePeople,120);return result;};
   window.addEventListener('resize',()=>setTimeout(install,0),{passive:true});
 })();

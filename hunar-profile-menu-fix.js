@@ -114,3 +114,55 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);
   else install();
 })();
+
+/* Targeted marketplace/back-button visual correction only. */
+(function(){
+  'use strict';
+  var STYLE_ID='hunar-marketplace-back-fix-style';
+  function apply(){
+    var app=document.getElementById('app');
+    if(!app)return;
+    var bars=[].slice.call(app.querySelectorAll(':scope > .backBar'));
+    bars.slice(1).forEach(function(x){x.remove();});
+    var bar=bars[0]||app.querySelector(':scope > .backBar');
+    var page=bar&&bar.nextElementSibling;
+    if(bar){bar.classList.toggle('marketBackBar',!!(page&&page.classList.contains('marketPage')));}
+    var backs=[].slice.call(app.querySelectorAll('button')).filter(function(b){return String(b.textContent||'').trim()==='← Back';});
+    if(backs.length>1){
+      backs.slice(1).forEach(function(b){
+        var holder=b.closest('.backBar');
+        if(holder && holder!==bar) holder.remove(); else if(!holder)b.remove();
+      });
+    }
+  }
+  function install(){
+    if(!document.getElementById(STYLE_ID)){
+      var st=document.createElement('style');
+      st.id=STYLE_ID;
+      st.textContent=`
+        .marketBackBar{max-width:none!important;margin:0!important;padding:12px max(18px,calc((100vw - 1240px)/2 + 22px)) 12px!important;background:linear-gradient(135deg,#101510,#172019 58%,#202b21)!important;}
+        .marketBackBar .btn{background:#a6dc69!important;color:#172019!important;border-color:#a6dc69!important;box-shadow:0 5px 0 rgba(8,15,10,.55),0 12px 26px rgba(0,0,0,.18)!important;border-radius:12px!important;font-weight:900!important;}
+        .marketBackBar .btn:hover{background:#b8e982!important;border-color:#b8e982!important;color:#172019!important;}
+        @media(max-width:700px){
+          .marketBackBar{padding:9px 14px!important;}
+          .marketBackBar .btn{padding:9px 13px!important;font-size:13px!important;border-radius:10px!important;}
+          .mkHeroScene{height:172px!important;min-height:172px!important;margin:0 auto!important;transform:none!important;}
+          .mkOrb{width:74px!important;height:74px!important;box-shadow:inset -10px -12px 22px rgba(0,0,0,.38),0 16px 38px rgba(0,0,0,.28)!important;animation:mkFloat 4.5s ease-in-out infinite,marketOrbTilt 7s ease-in-out infinite!important;transform-style:preserve-3d!important;}
+          .mkOrb b{font-size:27px!important;}
+          .mkOrb:before{inset:9px!important;}
+          .mkOrb i{width:7px!important;height:7px!important;right:12px!important;top:12px!important;}
+          .mkOrbit.o1{width:122px!important;height:122px!important;animation-duration:10s!important;}
+          .mkOrbit.o2{width:156px!important;height:78px!important;animation-duration:13s!important;}
+          .mkOrbit.o3{width:190px!important;height:190px!important;opacity:.42!important;animation-duration:17s!important;}
+          .mkParticle{width:4px!important;height:4px!important;}
+          .mkParticle.p1{left:18%!important;top:29%!important}.mkParticle.p2{right:17%!important;top:31%!important}.mkParticle.p3{left:28%!important;bottom:19%!important}.mkParticle.p4{right:27%!important;bottom:18%!important}
+        }
+        @keyframes marketOrbTilt{0%,100%{transform:rotateX(8deg) rotateY(-8deg) translateY(0)}50%{transform:rotateX(-7deg) rotateY(10deg) translateY(-4px)}}
+      `;
+      document.head.appendChild(st);
+    }
+    apply();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+  var mo=new MutationObserver(apply);mo.observe(document.body,{childList:true,subtree:true});
+})();

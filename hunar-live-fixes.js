@@ -45,221 +45,112 @@
       @media(max-width:600px){.hunarPeopleRebuild .hprPeopleGrid>.card{flex-basis:88%!important;}}
 
       /* CLIENT FIND FREELANCER ONLY: the result-card profile avatar is always a real circle. */
-      #devgrid > .card .avatar,
-      #devgrid > .card .freelancerAvatar,
-      #devgrid > .card .profileAvatar,
-      #devgrid > .card .profilePhoto,
-      #devgrid .row > .avatar{width:76px!important;height:76px!important;min-width:76px!important;max-width:76px!important;min-height:76px!important;max-height:76px!important;flex:0 0 76px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 22px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;}
-      #devgrid > .card .avatar img,
-      #devgrid > .card .freelancerAvatar img,
-      #devgrid > .card .profileAvatar img,
-      #devgrid > .card .profilePhoto img,
-      #devgrid .row > .avatar img{width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;min-height:100%!important;max-height:none!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
-
-      @media (max-width:900px){
-        .hunarProfileWrap,.hunarMobileProfileTrigger,.profileTrigger{display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;}
-        .hunarMobileProfileTrigger{min-width:42px!important;min-height:42px!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;z-index:100000!important;}
-        .hunarMobileProfileMenu{position:fixed!important;right:10px!important;top:58px!important;width:min(280px,calc(100vw - 20px))!important;min-width:0!important;display:block!important;}
-        .hunarPeopleRebuild .hprOrbitOne{width:330px!important;height:135px!important;animation-duration:13s!important;}
-        .hunarPeopleRebuild .hprOrbitTwo{width:410px!important;height:170px!important;opacity:.10!important;animation-duration:18s!important;}
-        .hunarPeopleRebuild .hprCore{animation:hprFloat 3.6s ease-in-out infinite!important;}
-        .hunarPeopleRebuild .hprNode{animation:hunarNodeFloat 4.8s ease-in-out infinite!important;}
-        .hunarPeopleRebuild .hprNode:nth-of-type(2){animation-delay:-1.2s!important;}
-        .hunarPeopleRebuild .hprNode:nth-of-type(3){animation-delay:-2.4s!important;}
-        .hunarPeopleRebuild .hprNode:nth-of-type(4){animation-delay:-3.6s!important;}
-        .hunarPeopleRebuild .hprBeam{display:block!important;opacity:.35!important;}
-        .hunarServicesRebuild .hsrRing{animation-duration:8s!important;}
-        .hunarServicesRebuild .hsrDot{animation-duration:2.7s!important;}
-      }
-
-      /* CLIENT FIND FREELANCER — force the actual avatar slot to a professional circle.
-         Scoped only to the freelancer result cards. */
-      #devgrid > .card > .row:first-child > .row:first-child > div:first-child{
-        width:76px!important;height:76px!important;min-width:76px!important;max-width:76px!important;
-        min-height:76px!important;max-height:76px!important;flex:0 0 76px!important;
-        aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;
-        display:grid!important;place-items:center!important;
-        border:3px solid #fff!important;
-        box-shadow:0 0 0 1px #dce5de,0 10px 24px rgba(20,34,27,.12)!important;
-        background:linear-gradient(145deg,#edf5e9,#d8e89f)!important;
-      }
-      #devgrid > .card > .row:first-child > .row:first-child > div:first-child img{
-        width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;
-        min-height:100%!important;max-height:none!important;display:block!important;
-        object-fit:cover!important;border-radius:50%!important;
-      }
+      #devgrid > .card .avatar,#devgrid > .card .freelancerAvatar,#devgrid > .card .profileAvatar,#devgrid > .card .profilePhoto,#devgrid .row > .avatar{width:76px!important;height:76px!important;min-width:76px!important;max-width:76px!important;min-height:76px!important;max-height:76px!important;flex:0 0 76px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 22px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;}
+      #devgrid > .card .avatar img,#devgrid > .card .freelancerAvatar img,#devgrid > .card .profileAvatar img,#devgrid > .card .profilePhoto img,#devgrid .row > .avatar img{width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;min-height:100%!important;max-height:none!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
 
       /* SERVICES PAGE — visual presentation only. */
-      .serviceProShell{
-        background:linear-gradient(180deg,#f5f8f4 0%,#ffffff 34%,#f5f8f4 100%)!important;
-        padding-top:28px!important;padding-bottom:60px!important;
-      }
-      .serviceProShell .serviceProHero{
-        position:relative!important;overflow:hidden!important;
-        padding:30px 30px 32px!important;
-        border-radius:26px!important;
-        background:
-          radial-gradient(circle at 84% 18%,rgba(199,255,91,.22),transparent 24%),
-          radial-gradient(circle at 8% 120%,rgba(116,169,91,.16),transparent 30%),
-          linear-gradient(135deg,#13261a 0%,#1d3b25 55%,#29482c 100%)!important;
-        color:#fff!important;
-        border:1px solid rgba(255,255,255,.10)!important;
-        box-shadow:0 24px 60px rgba(20,50,28,.16)!important;
-      }
-      .serviceProShell .serviceProHero:before{
-        content:"";position:absolute;right:7%;top:50%;width:145px;height:145px;
-        transform:translateY(-50%);border-radius:50%;
-        border:1px solid rgba(220,255,150,.28);
-        box-shadow:0 0 0 18px rgba(220,255,150,.035),0 0 0 38px rgba(220,255,150,.025);
-        pointer-events:none;
-      }
-      .serviceProShell .serviceProHero:after{
-        content:"H";right:34px;bottom:-55px;font-size:190px;line-height:1;
-        font-weight:950;color:rgba(255,255,255,.055)!important;
-      }
-      .serviceProShell .serviceProHero .tag{
-        position:relative;z-index:2;
-        background:rgba(214,255,104,.15)!important;
-        color:#ddff91!important;
-        border:1px solid rgba(214,255,104,.25)!important;
-      }
-      .serviceProShell .serviceProHero h1{
-        position:relative;z-index:2;
-        color:#fff!important;
-        font-size:clamp(34px,5vw,58px)!important;
-        line-height:1!important;
-        margin:12px 0 8px!important;
-        letter-spacing:-.045em!important;
-      }
-      .serviceProShell .serviceProHero .sectionLead{
-        position:relative;z-index:2;
-        color:rgba(235,244,237,.78)!important;
-        font-size:15px!important;
-        max-width:600px!important;
-      }
-      .serviceProShell .serviceProGrid{
-        display:grid!important;
-        grid-template-columns:minmax(0,1.7fr) minmax(150px,.75fr) minmax(120px,.55fr) auto!important;
-        gap:9px!important;align-items:center!important;
-        padding:10px!important;margin:18px 0!important;
-        border-radius:18px!important;
-        background:rgba(255,255,255,.94)!important;
-        border:1px solid #dce5de!important;
-        box-shadow:0 12px 32px rgba(20,35,26,.055)!important;
-      }
-      .serviceProShell .serviceProGrid input:not([type="checkbox"]),
-      .serviceProShell .serviceProGrid select{
-        min-height:44px!important;
-        border:1px solid #d7e0da!important;
-        border-radius:12px!important;
-        background:#fbfdfb!important;
-        color:#18221b!important;
-        padding:10px 12px!important;
-        box-shadow:none!important;
-      }
-      .serviceProShell .serviceProGrid input:focus,
-      .serviceProShell .serviceProGrid select:focus{
-        border-color:#8ebc62!important;
-        box-shadow:0 0 0 3px rgba(142,188,98,.13)!important;
-        transform:none!important;
-      }
-      .serviceProShell .serviceProGrid .chip{
-        min-height:44px!important;margin:0!important;
-        padding:0 13px!important;border:1px solid #dce6d6!important;
-        background:#f1f8df!important;color:#35452d!important;
-        border-radius:12px!important;font-weight:800!important;
-        display:flex!important;align-items:center!important;justify-content:center!important;
-        gap:8px!important;white-space:nowrap!important;
-      }
-      .serviceProShell .serviceProGrid .chip input[type="checkbox"]{
-        width:18px!important;height:18px!important;margin:0!important;accent-color:#79a94a!important;
-      }
-      .serviceProShell #servicegrid{
-        display:grid!important;
-        grid-template-columns:repeat(3,minmax(0,1fr))!important;
-        gap:15px!important;
-        align-items:stretch!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard{
-        display:flex!important;flex-direction:column!important;
-        min-width:0!important;min-height:390px!important;
-        padding:14px!important;border-radius:20px!important;
-        border:1px solid #dce5de!important;
-        background:linear-gradient(145deg,#fff,#f7faf7)!important;
-        box-shadow:0 10px 28px rgba(20,35,26,.055)!important;
-        overflow:hidden!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard .thumb{
-        height:150px!important;min-height:150px!important;
-        margin:-14px -14px 13px!important;
-        border-radius:20px 20px 12px 12px!important;
-        background:linear-gradient(135deg,#eef5e9,#dce8d9)!important;
-        display:grid!important;place-items:center!important;
-        font-size:42px!important;font-weight:950!important;color:#557347!important;
-        overflow:hidden!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard p.muted{
-        margin:0 0 4px!important;color:#58705d!important;font-size:11px!important;font-weight:800!important;
-        text-transform:uppercase!important;letter-spacing:.07em!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard h3{
-        margin:3px 0 8px!important;font-size:19px!important;line-height:1.25!important;
-        letter-spacing:-.025em!important;color:#17231b!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard > p:not(.muted){
-        color:#5d6962!important;font-size:12px!important;line-height:1.55!important;
-        display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical!important;
-        overflow:hidden!important;min-height:56px!important;margin:0 0 12px!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard .row{
-        margin-top:auto!important;padding-top:11px!important;
-        border-top:1px solid #edf1ed!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard .row b{font-size:13px!important;color:#18231b!important}
-      .serviceProShell #servicegrid .serviceProCard .row span{font-size:11px!important;color:#68756e!important}
-      .serviceProShell #servicegrid .serviceProCard > p:last-of-type{
-        min-height:25px!important;margin:8px 0 0!important;color:#56655d!important;font-size:11px!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard .actions{
-        margin:10px 0 0!important;display:flex!important;gap:8px!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard .actions .btn{
-        width:100%!important;justify-content:center!important;
-      }
-      .serviceProShell #servicegrid .serviceProCard:hover{
-        transform:translateY(-5px)!important;
-        box-shadow:0 20px 42px rgba(20,35,26,.10)!important;
-      }
-      .serviceProShell #servicegrid > .card:not(.serviceProCard){
-        grid-column:1/-1!important;
-        min-height:150px!important;
-        display:grid!important;place-items:center!important;text-align:center!important;
-        border:1px dashed #cbd7cf!important;border-radius:20px!important;
-        background:rgba(255,255,255,.78)!important;color:#506057!important;
-        box-shadow:none!important;
-      }
-      @media(max-width:900px){
-        .serviceProShell .serviceProGrid{grid-template-columns:1fr 1fr!important;}
-        .serviceProShell .serviceProGrid input.grow{grid-column:1/-1!important;}
-        .serviceProShell #servicegrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-      }
-      @media(max-width:600px){
-        .serviceProShell{padding-top:18px!important;padding-bottom:42px!important;}
-        .serviceProShell .serviceProHero{padding:23px 19px 26px!important;border-radius:20px!important;}
-        .serviceProShell .serviceProHero:before{width:105px;height:105px;right:-8px;}
-        .serviceProShell .serviceProHero:after{font-size:120px;right:8px;}
-        .serviceProShell .serviceProHero h1{font-size:36px!important;}
-        .serviceProShell .serviceProGrid{grid-template-columns:1fr!important;padding:9px!important;}
-        .serviceProShell .serviceProGrid input.grow{grid-column:auto!important;}
-        .serviceProShell #servicegrid{grid-template-columns:1fr!important;gap:12px!important;}
-        .serviceProShell #servicegrid .serviceProCard{min-height:0!important;}
-        .serviceProShell #servicegrid .serviceProCard .thumb{height:155px!important;min-height:155px!important;}
-      }
+      .serviceProShell{background:linear-gradient(180deg,#f5f8f4 0%,#ffffff 34%,#f5f8f4 100%)!important;padding-top:28px!important;padding-bottom:60px!important;}
+      .serviceProShell .serviceProHero{position:relative!important;overflow:hidden!important;padding:30px 30px 32px!important;border-radius:26px!important;background:radial-gradient(circle at 84% 18%,rgba(199,255,91,.22),transparent 24%),radial-gradient(circle at 8% 120%,rgba(116,169,91,.16),transparent 30%),linear-gradient(135deg,#13261a 0%,#1d3b25 55%,#29482c 100%)!important;color:#fff!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 24px 60px rgba(20,50,28,.16)!important;}
+      .serviceProShell .serviceProHero:before{content:"";position:absolute;right:7%;top:50%;width:145px;height:145px;transform:translateY(-50%);border-radius:50%;border:1px solid rgba(220,255,150,.28);box-shadow:0 0 0 18px rgba(220,255,150,.035),0 0 0 38px rgba(220,255,150,.025);pointer-events:none;}
+      .serviceProShell .serviceProHero:after{content:"H";right:34px;bottom:-55px;font-size:190px;line-height:1;font-weight:950;color:rgba(255,255,255,.055)!important;}
+      .serviceProShell .serviceProHero .tag{position:relative;z-index:2;background:rgba(214,255,104,.15)!important;color:#ddff91!important;border:1px solid rgba(214,255,104,.25)!important;}
+      .serviceProShell .serviceProHero h1{position:relative;z-index:2;color:#fff!important;font-size:clamp(34px,5vw,58px)!important;line-height:1!important;margin:12px 0 8px!important;letter-spacing:-.045em!important;}
+      .serviceProShell .serviceProHero .sectionLead{position:relative;z-index:2;color:rgba(235,244,237,.78)!important;font-size:15px!important;max-width:600px!important;}
+      .serviceProShell .serviceProGrid{display:grid!important;grid-template-columns:minmax(0,1.7fr) minmax(150px,.75fr) minmax(120px,.55fr) auto!important;gap:9px!important;align-items:center!important;padding:10px!important;margin:18px 0!important;border-radius:18px!important;background:rgba(255,255,255,.94)!important;border:1px solid #dce5de!important;box-shadow:0 12px 32px rgba(20,35,26,.055)!important;}
+      .serviceProShell .serviceProGrid input:not([type="checkbox"]),.serviceProShell .serviceProGrid select{min-height:44px!important;border:1px solid #d7e0da!important;border-radius:12px!important;background:#fbfdfb!important;color:#18221b!important;padding:10px 12px!important;box-shadow:none!important;}
+      .serviceProShell .serviceProGrid input:focus,.serviceProShell .serviceProGrid select:focus{border-color:#8ebc62!important;box-shadow:0 0 0 3px rgba(142,188,98,.13)!important;transform:none!important;}
+      .serviceProShell .serviceProGrid .chip{min-height:44px!important;margin:0!important;padding:0 13px!important;border:1px solid #dce6d6!important;background:#f1f8df!important;color:#35452d!important;border-radius:12px!important;font-weight:800!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;white-space:nowrap!important;}
+      .serviceProShell .serviceProGrid .chip input[type="checkbox"]{width:18px!important;height:18px!important;margin:0!important;accent-color:#79a94a!important;}
+      .serviceProShell #servicegrid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:15px!important;align-items:stretch!important;}
+      .serviceProShell #servicegrid .serviceProCard{display:flex!important;flex-direction:column!important;min-width:0!important;min-height:390px!important;padding:14px!important;border-radius:20px!important;border:1px solid #dce5de!important;background:linear-gradient(145deg,#fff,#f7faf7)!important;box-shadow:0 10px 28px rgba(20,35,26,.055)!important;overflow:hidden!important;}
+      .serviceProShell #servicegrid .serviceProCard .thumb{height:150px!important;min-height:150px!important;margin:-14px -14px 13px!important;border-radius:20px 20px 12px 12px!important;background:linear-gradient(135deg,#eef5e9,#dce8d9)!important;display:grid!important;place-items:center!important;font-size:42px!important;font-weight:950!important;color:#557347!important;overflow:hidden!important;}
+      .serviceProShell #servicegrid .serviceProCard p.muted{margin:0 0 4px!important;color:#58705d!important;font-size:11px!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.07em!important;}
+      .serviceProShell #servicegrid .serviceProCard h3{margin:3px 0 8px!important;font-size:19px!important;line-height:1.25!important;letter-spacing:-.025em!important;color:#17231b!important;}
+      .serviceProShell #servicegrid .serviceProCard > p:not(.muted){color:#5d6962!important;font-size:12px!important;line-height:1.55!important;display:-webkit-box!important;-webkit-line-clamp:3!important;-webkit-box-orient:vertical!important;overflow:hidden!important;min-height:56px!important;margin:0 0 12px!important;}
+      .serviceProShell #servicegrid .serviceProCard .row{margin-top:auto!important;padding-top:11px!important;border-top:1px solid #edf1ed!important;}
+      .serviceProShell #servicegrid .serviceProCard .row b{font-size:13px!important;color:#18231b!important}.serviceProShell #servicegrid .serviceProCard .row span{font-size:11px!important;color:#68756e!important;}
+      .serviceProShell #servicegrid .serviceProCard > p:last-of-type{min-height:25px!important;margin:8px 0 0!important;color:#56655d!important;font-size:11px!important;}
+      .serviceProShell #servicegrid .serviceProCard .actions{margin:10px 0 0!important;display:flex!important;gap:8px!important;}
+      .serviceProShell #servicegrid .serviceProCard .actions .btn{width:100%!important;justify-content:center!important;}
+      .serviceProShell #servicegrid .serviceProCard:hover{transform:translateY(-5px)!important;box-shadow:0 20px 42px rgba(20,35,26,.10)!important;}
+      .serviceProShell #servicegrid > .card:not(.serviceProCard){grid-column:1/-1!important;min-height:150px!important;display:grid!important;place-items:center!important;text-align:center!important;border:1px dashed #cbd7cf!important;border-radius:20px!important;background:rgba(255,255,255,.78)!important;color:#506057!important;box-shadow:none!important;}
+      @media(max-width:900px){.serviceProShell .serviceProGrid{grid-template-columns:1fr 1fr!important;}.serviceProShell .serviceProGrid input.grow{grid-column:1/-1!important;}.serviceProShell #servicegrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+      @media(max-width:600px){.serviceProShell{padding-top:18px!important;padding-bottom:42px!important;}.serviceProShell .serviceProHero{padding:23px 19px 26px!important;border-radius:20px!important;}.serviceProShell .serviceProHero:before{width:105px;height:105px;right:-8px;}.serviceProShell .serviceProHero:after{font-size:120px;right:8px;}.serviceProShell .serviceProHero h1{font-size:36px!important;}.serviceProShell .serviceProGrid{grid-template-columns:1fr!important;padding:9px!important;}.serviceProShell .serviceProGrid input.grow{grid-column:auto!important;}.serviceProShell #servicegrid{grid-template-columns:1fr!important;gap:12px!important;}.serviceProShell #servicegrid .serviceProCard{min-height:0!important;}.serviceProShell #servicegrid .serviceProCard .thumb{height:155px!important;min-height:155px!important;}}
 
-      @keyframes hunarNodeFloat{0%,100%{translate:0 0}50%{translate:0 -6px}}
+      /* MARKETPLACE ONLY — make the 3D scene compact and remove the oversized mobile footprint. */
+      .mkFuture .mkHero{min-height:0!important;height:auto!important;padding:0!important;overflow:hidden!important;}
+      .mkFuture .mkHeroInner{min-height:0!important;height:auto!important;grid-template-columns:minmax(0,1.1fr) minmax(240px,.9fr)!important;}
+      .mkFuture .mkHeroScene{height:240px!important;min-height:240px!important;max-height:240px!important;overflow:hidden!important;position:relative!important;}
+      .mkFuture .mkOrb{width:82px!important;height:82px!important;}
+      .mkFuture .mkOrbit.o1{width:135px!important;height:135px!important;}
+      .mkFuture .mkOrbit.o2{width:180px!important;height:90px!important;}
+      .mkFuture .mkOrbit.o3{width:220px!important;height:220px!important;}
+      .mkFuture .mkFloat{font-size:10px!important;padding:5px 7px!important;}
+      .mkFuture .mkBody{padding-bottom:28px!important;}
+      .mkFuture .mkHeroCopy{padding:24px 0!important;}
+
+      /* Marketplace Back area ONLY — the whole strip uses the same dark board color. */
+      #app.marketplace-active .backBar,
+      #app.marketplace-active > .backBar,
+      #app.marketplace-active .backBar:first-child{
+        background:#0d1711!important;
+        background-color:#0d1711!important;
+        border:0!important;
+        box-shadow:none!important;
+        margin:0!important;
+        padding:10px 24px 12px!important;
+        min-height:76px!important;
+      }
+      #app.marketplace-active .backBar .btn{
+        background:#111412!important;
+        color:#c8ff3d!important;
+        border-color:#111412!important;
+        box-shadow:0 4px 0 rgba(0,0,0,.88),0 10px 22px rgba(17,20,18,.18)!important;
+      }
+      #app.marketplace-active .backBar .btn:hover{background:#171b18!important;color:#d7ff72!important;}
+      #app.marketplace-active .mkFuture{margin-top:0!important;border-top:0!important;}
+
+      /* Keep duplicate-back protection limited to the Marketplace state. */
+      #app.marketplace-active > .backBar~.backBar{display:none!important;}
+      #app.marketplace-active .backBar .backBar{display:none!important;}
+
+      @media(max-width:800px){
+        .mkFuture .mkHeroInner{display:flex!important;flex-direction:column!important;min-height:0!important;gap:0!important;}
+        .mkFuture .mkHeroScene{order:-1!important;width:100%!important;height:180px!important;min-height:180px!important;max-height:180px!important;margin:0!important;}
+        .mkFuture .mkHeroCopy{padding:18px 0 22px!important;}
+        .mkFuture .mkHero h1{font-size:40px!important;letter-spacing:-2px!important;margin:10px 0 9px!important;}
+        .mkFuture .mkHero p{font-size:13px!important;line-height:1.5!important;}
+        .mkFuture .mkSearch{margin:15px 0 9px!important;}
+        .mkFuture .mkOrb{width:64px!important;height:64px!important;}
+        .mkFuture .mkOrb b{font-size:25px!important;}
+        .mkFuture .mkOrbit.o1{width:108px!important;height:108px!important;}
+        .mkFuture .mkOrbit.o2{width:145px!important;height:72px!important;}
+        .mkFuture .mkOrbit.o3{width:175px!important;height:175px!important;}
+        .mkFuture .mkParticle{width:3px!important;height:3px!important;}
+        .mkFuture .mkFloat{display:none!important;}
+        #app.marketplace-active .backBar,
+        #app.marketplace-active > .backBar,
+        #app.marketplace-active .backBar:first-child{min-height:62px!important;padding:8px 14px 9px!important;background:#0d1711!important;}
+      }
+      @media(max-width:470px){
+        .mkFuture .mkHeroScene{height:150px!important;min-height:150px!important;max-height:150px!important;}
+        .mkFuture .mkHeroCopy{padding:16px 0 20px!important;}
+        .mkFuture .mkHero h1{font-size:35px!important;}
+        .mkFuture .mkOrb{width:58px!important;height:58px!important;}
+        .mkFuture .mkOrb b{font-size:22px!important;}
+        .mkFuture .mkOrbit.o1{width:96px!important;height:96px!important;}
+        .mkFuture .mkOrbit.o2{width:128px!important;height:64px!important;}
+        .mkFuture .mkOrbit.o3{width:154px!important;height:154px!important;}
+      }
     `;
     document.head.appendChild(style);
-    if(typeof window.nav==='function') window.nav();
+    const app=document.getElementById('app');
+    if(app){
+      const isMarketplace=!!app.querySelector('.mkFuture');
+      app.classList.toggle('marketplace-active',isMarketplace);
+      const bars=Array.from(app.children).filter(el=>el.classList&&el.classList.contains('backBar'));
+      bars.forEach((bar,index)=>{bar.style.display=isMarketplace?(index===0?'':'none'):'';});
+    }
   }
 
   function fixFindFreelancerCircles(){
@@ -280,47 +171,12 @@
       style.id=styleId;
       document.head.appendChild(style);
     }
-    style.textContent=`
-      /* MARKETPLACE ONLY — compact mobile 3D hero, preserving the same visual concept. */
-      .mkFuture .mkHero{min-height:0!important;height:auto!important;padding:0!important;}
-      .mkFuture .mkHeroInner{min-height:0!important;height:auto!important;grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr)!important;}
-      .mkFuture .mkHeroScene{height:300px!important;min-height:300px!important;max-height:300px!important;overflow:hidden!important;}
-      .mkFuture .mkOrb{width:94px!important;height:94px!important;}
-      .mkFuture .mkOrbit.o1{width:160px!important;height:160px!important;}
-      .mkFuture .mkOrbit.o2{width:215px!important;height:108px!important;}
-      .mkFuture .mkOrbit.o3{width:270px!important;height:270px!important;}
-      .mkFuture .mkFloat{font-size:11px!important;padding:6px 8px!important;}
-      .mkFuture .mkBody{padding-bottom:35px!important;}
-      .mkFuture .mkHeroCopy{padding:30px 0!important;}
-      .backBar .btn{background:#111412!important;color:#c8ff3d!important;border-color:#111412!important;box-shadow:0 4px 0 rgba(0,0,0,.88),0 10px 22px rgba(17,20,18,.12)!important;}
-      .backBar .btn:hover{background:#171b18!important;color:#d7ff72!important;}
-      #app>.backBar~.backBar{display:none!important;}
-      #app .backBar .backBar{display:none!important;}
-      @media(max-width:800px){
-        .mkFuture .mkHeroInner{display:flex!important;flex-direction:column!important;min-height:0!important;gap:0!important;}
-        .mkFuture .mkHeroScene{order:-1!important;width:100%!important;height:220px!important;min-height:220px!important;max-height:220px!important;margin:0!important;}
-        .mkFuture .mkHeroCopy{padding:22px 0 26px!important;}
-        .mkFuture .mkHero h1{font-size:42px!important;letter-spacing:-2px!important;margin:12px 0 10px!important;}
-        .mkFuture .mkHero p{font-size:13px!important;line-height:1.5!important;}
-        .mkFuture .mkSearch{margin:17px 0 10px!important;}
-        .mkFuture .mkOrb{width:72px!important;height:72px!important;}
-        .mkFuture .mkOrb b{font-size:28px!important;}
-        .mkFuture .mkOrbit.o1{width:125px!important;height:125px!important;}
-        .mkFuture .mkOrbit.o2{width:170px!important;height:85px!important;}
-        .mkFuture .mkOrbit.o3{width:215px!important;height:215px!important;}
-        .mkFuture .mkParticle{width:4px!important;height:4px!important;}
-        .mkFuture .mkFloat{display:none!important;}
-      }
-      @media(max-width:470px){
-        .mkFuture .mkHeroScene{height:185px!important;min-height:185px!important;max-height:185px!important;}
-        .mkFuture .mkHeroCopy{padding:18px 0 22px!important;}
-        .mkFuture .mkHero h1{font-size:36px!important;}
-      }
-    `;
     const app=document.getElementById('app');
     if(app){
+      const isMarketplace=!!app.querySelector('.mkFuture');
+      app.classList.toggle('marketplace-active',isMarketplace);
       const bars=Array.from(app.children).filter(el=>el.classList&&el.classList.contains('backBar'));
-      bars.forEach((bar,index)=>{bar.style.display=index===0?'':'none';});
+      bars.forEach((bar,index)=>{bar.style.display=isMarketplace?(index===0?'':'none'):'';});
     }
   }
 

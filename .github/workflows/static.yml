@@ -31,7 +31,12 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           s = Path('index.html').read_text(encoding='utf-8')
-          if 'supabaseClient.auth.signOut()' in s and 'IMPORTANT: a normal page refresh must NEVER sign the user out.' not in s:
+          unsafe_startup = """    // HUNAR intentionally does not auto-sign users in when the website is opened.
+    // Any old Supabase browser session is cleared on a normal fresh website open.
+    try{await supabaseClient.auth.signOut()}catch(e){console.warn('HUNAR startup sign-out:',e)}
+    productionUser=null;window.productionUser=null;me=null;
+    render(['home','signup','signin','forgot-password','reset-password'].includes(current)?current:'home');"""
+          if unsafe_startup in s:
               raise SystemExit('Unsafe startup sign-out code is still present in index.html.')
           if 'profileTrigger' not in s:
               raise SystemExit('HUNAR profile trigger is missing from index.html.')

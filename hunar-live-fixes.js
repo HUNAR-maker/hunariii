@@ -97,6 +97,12 @@
     });
   }
 
+  function makeCircle(el){
+    el.style.width='76px';el.style.height='76px';el.style.minWidth='76px';el.style.maxWidth='76px';el.style.minHeight='76px';el.style.maxHeight='76px';el.style.aspectRatio='1 / 1';el.style.borderRadius='50%';el.style.overflow='hidden';el.style.flex='0 0 76px';el.style.display='grid';el.style.placeItems='center';
+    const img=el.querySelector('img');
+    if(img){img.style.width='100%';img.style.height='100%';img.style.minWidth='100%';img.style.maxWidth='none';img.style.objectFit='cover';img.style.borderRadius='50%';img.style.display='block';}
+  }
+
   function enforceFindFreelancerAvatars(){
     const root=[...document.querySelectorAll('main,section,[role="main"],body')].find(el=>{
       const t=(el.innerText||'').replace(/\s+/g,' ').toLowerCase();
@@ -104,11 +110,21 @@
     });
     if(!root) return;
     root.classList.add('hunarFindFreelancerPage');
-    const candidates=root.querySelectorAll('.avatar,.freelancerAvatar,.profileAvatar,.profilePhoto');
-    candidates.forEach(el=>{
-      el.style.width='72px';el.style.height='72px';el.style.minWidth='72px';el.style.maxWidth='72px';el.style.minHeight='72px';el.style.maxHeight='72px';el.style.aspectRatio='1 / 1';el.style.borderRadius='50%';el.style.overflow='hidden';el.style.flex='0 0 72px';
-      const img=el.querySelector('img');
-      if(img){img.style.width='100%';img.style.height='100%';img.style.maxWidth='none';img.style.objectFit='cover';img.style.borderRadius='50%';img.style.display='block';}
+    root.querySelectorAll('.avatar,.freelancerAvatar,.profileAvatar,.profilePhoto').forEach(makeCircle);
+
+    /* Some Find Freelancer cards render the initials in an unclassified wide element.
+       Only correct wide, short initials inside this page, leaving all other UI untouched. */
+    root.querySelectorAll('*').forEach(node=>{
+      if(node.children.length!==0) return;
+      const txt=(node.textContent||'').trim();
+      if(!/^[A-Za-z]{1,3}$/.test(txt)) return;
+      const rect=node.getBoundingClientRect();
+      if(rect.height<40 || rect.height>220 || rect.width<rect.height*1.35) return;
+      const parent=node.parentElement;
+      if(!parent) return;
+      const pr=parent.getBoundingClientRect();
+      if(pr.height<40 || pr.height>240 || pr.width<pr.height*1.35) return;
+      makeCircle(parent);
     });
   }
 

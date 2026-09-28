@@ -42,7 +42,7 @@ jobs:
           s=re.sub(r'<script src="\\./hunar-live-fixes\\.js(?:\\?v=\\d+)?"></script>', live, s, count=1)
           if live not in s:
               s=s.replace('</body>',live+'\n</body>',1)
-          profile='<script src="./hunar-profile-menu-fix.js?v=1"></script>'
+          profile='<script src="./hunar-profile-menu-fix.js?v=2"></script>'
           s=re.sub(r'<script src="\\./hunar-profile-menu-fix\\.js(?:\\?v=\\d+)?"></script>', profile, s, count=1)
           if profile not in s:
               s=s.replace('</body>',profile+'\n</body>',1)

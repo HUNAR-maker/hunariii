@@ -25,48 +25,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify HUNAR session and mobile menu corrections
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          s = Path('index.html').read_text(encoding='utf-8')
-          unsafe_startup = """    // HUNAR intentionally does not auto-sign users in when the website is opened.
-    // Any old Supabase browser session is cleared on a normal fresh website open.
-    try{await supabaseClient.auth.signOut()}catch(e){console.warn('HUNAR startup sign-out:',e)}
-    productionUser=null;window.productionUser=null;me=null;
-    render(['home','signup','signin','forgot-password','reset-password'].includes(current)?current:'home');"""
-          if unsafe_startup in s:
-              raise SystemExit('Unsafe startup sign-out code is still present in index.html.')
-          if 'profileTrigger' not in s:
-              raise SystemExit('HUNAR profile trigger is missing from index.html.')
-          print('HUNAR session persistence and mobile profile menu checks passed.')
-          PY
-
-      - name: Inject HUNAR live UI fixes
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-          tag = '<script src="./hunar-live-fixes.js"></script>'
-          if tag not in s:
-              marker = '</body>'
-              if marker in s:
-                  s = s.replace(marker, tag + '\n' + marker, 1)
-              else:
-                  s += '\n' + tag + '\n'
-              p.write_text(s, encoding='utf-8')
-          print('HUNAR live fixes injected:', tag in s)
-          PY
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

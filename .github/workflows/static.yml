@@ -25,23 +25,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject HUNAR mobile profile menu
+      - name: Inject HUNAR session and mobile profile fixes
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          tag='<script src="./hunar-mobile-profile-menu.js?v=1"></script>'
-          if tag not in s:
-              marker='<script src="./hunar-session-policy.js?v=2"></script>'
-              if marker not in s:
-                  marker='<script src="hunar-safety.js?v=1"></script>'
-              if marker not in s:
-                  raise SystemExit('Could not find HUNAR script insertion point in index.html')
-              s=s.replace(marker,marker+'\n'+tag,1)
+          import re
+          s=re.sub(r'<script src="\./hunar-session-policy\.js\?v=\d+"></script>', '<script src="./hunar-session-policy.js?v=3"></script>', s, count=1)
+          if 'hunar-session-policy.js?v=3' not in s:
+              marker='<script src="hunar-safety.js?v=1"></script>'
+              if marker not in s: raise SystemExit('Missing HUNAR safety script insertion point')
+              s=s.replace(marker,marker+'\n<script src="./hunar-session-policy.js?v=3"></script>',1)
+          live='<script src="./hunar-live-fixes.js?v=3"></script>'
+          s=re.sub(r'<script src="\./hunar-live-fixes\.js(?:\?v=\d+)?"></script>', live, s, count=1)
+          if live not in s:
+              s=s.replace('</body>',live+'\n</body>',1)
           p.write_text(s,encoding='utf-8')
-          print('HUNAR mobile profile menu injected.')
+          print('HUNAR session policy v3 and mobile profile UI v3 injected.')
           PY
 
       - name: Setup Pages

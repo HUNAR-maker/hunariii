@@ -39,20 +39,22 @@
       .hunarPeopleRebuild .hprPeopleGrid::-webkit-scrollbar{display:none!important;}
       .hunarPeopleRebuild .hprPeopleGrid>.card{flex:0 0 calc((100% - 32px)/3)!important;min-width:0!important;scroll-snap-align:start!important;border-radius:22px!important;overflow:hidden!important;transition:transform .25s ease,box-shadow .25s ease!important;}
       .hunarPeopleRebuild .hprPeopleGrid>.card:hover{transform:translateY(-3px)!important;box-shadow:0 14px 34px rgba(20,34,27,.09)!important;}
-      .hunarPeopleRebuild .hprPeopleGrid>.card .avatar{width:82px!important;height:82px!important;min-width:82px!important;max-width:82px!important;min-height:82px!important;max-height:82px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 20px rgba(20,34,27,.10)!important;}
+      .hunarPeopleRebuild .hprPeopleGrid>.card .avatar{width:82px!important;height:82px!important;min-width:82px!important;max-width:82px!important;min-height:82px!important;max-height:82px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 20px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;}
       .hunarPeopleRebuild .hprPeopleGrid>.card .avatar img{width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
       @media(max-width:900px){.hunarPeopleRebuild .hprPeopleGrid>.card{flex-basis:calc((100% - 16px)/2)!important;}}
       @media(max-width:600px){.hunarPeopleRebuild .hprPeopleGrid>.card{flex-basis:88%!important;}}
 
-      /* CLIENT FIND FREELANCER ONLY: force the existing result-card avatar to a true circle. */
+      /* CLIENT FIND FREELANCER ONLY: the result-card profile avatar is always a real circle. */
       #devgrid > .card .avatar,
       #devgrid > .card .freelancerAvatar,
       #devgrid > .card .profileAvatar,
-      #devgrid > .card .profilePhoto{width:76px!important;height:76px!important;min-width:76px!important;max-width:76px!important;min-height:76px!important;max-height:76px!important;flex:0 0 76px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 22px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;}
+      #devgrid > .card .profilePhoto,
+      #devgrid .row > .avatar{width:76px!important;height:76px!important;min-width:76px!important;max-width:76px!important;min-height:76px!important;max-height:76px!important;flex:0 0 76px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 22px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;}
       #devgrid > .card .avatar img,
       #devgrid > .card .freelancerAvatar img,
       #devgrid > .card .profileAvatar img,
-      #devgrid > .card .profilePhoto img{width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
+      #devgrid > .card .profilePhoto img,
+      #devgrid .row > .avatar img{width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;min-height:100%!important;max-height:none!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
 
       @media (max-width:900px){
         .hunarProfileWrap,.hunarMobileProfileTrigger,.profileTrigger{display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;}
@@ -79,26 +81,9 @@
     const rail=document.getElementById('devgrid');
     if(!rail) return;
     rail.querySelectorAll(':scope > .card .avatar, :scope > .card .freelancerAvatar, :scope > .card .profileAvatar, :scope > .card .profilePhoto').forEach(el=>{
-      el.style.width='76px';
-      el.style.height='76px';
-      el.style.minWidth='76px';
-      el.style.maxWidth='76px';
-      el.style.minHeight='76px';
-      el.style.maxHeight='76px';
-      el.style.flex='0 0 76px';
-      el.style.aspectRatio='1 / 1';
-      el.style.borderRadius='50%';
-      el.style.overflow='hidden';
+      el.style.cssText += ';width:76px!important;height:76px!important;min-width:76px!important;max-width:76px!important;min-height:76px!important;max-height:76px!important;flex:0 0 76px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 22px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;';
       const img=el.querySelector('img');
-      if(img){
-        img.style.width='100%';
-        img.style.height='100%';
-        img.style.minWidth='100%';
-        img.style.maxWidth='none';
-        img.style.objectFit='cover';
-        img.style.borderRadius='50%';
-        img.style.display='block';
-      }
+      if(img) img.style.cssText += ';width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;min-height:100%!important;max-height:none!important;object-fit:cover!important;border-radius:50%!important;display:block!important;';
     });
   }
 

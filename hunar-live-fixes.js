@@ -44,6 +44,16 @@
       @media(max-width:900px){.hunarPeopleRebuild .hprPeopleGrid>.card{flex-basis:calc((100% - 16px)/2)!important;}}
       @media(max-width:600px){.hunarPeopleRebuild .hprPeopleGrid>.card{flex-basis:88%!important;}}
 
+      /* CLIENT FIND FREELANCER ONLY: force the existing result-card avatar to a true circle. */
+      #devgrid > .card .avatar,
+      #devgrid > .card .freelancerAvatar,
+      #devgrid > .card .profileAvatar,
+      #devgrid > .card .profilePhoto{width:76px!important;height:76px!important;min-width:76px!important;max-width:76px!important;min-height:76px!important;max-height:76px!important;flex:0 0 76px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:grid!important;place-items:center!important;border:3px solid #fff!important;box-shadow:0 0 0 1px #dfe7e2,0 8px 22px rgba(20,34,27,.10)!important;background:linear-gradient(145deg,#d9eee4,#bcdaca)!important;}
+      #devgrid > .card .avatar img,
+      #devgrid > .card .freelancerAvatar img,
+      #devgrid > .card .profileAvatar img,
+      #devgrid > .card .profilePhoto img{width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;object-fit:cover!important;border-radius:50%!important;display:block!important;}
+
       @media (max-width:900px){
         .hunarProfileWrap,.hunarMobileProfileTrigger,.profileTrigger{display:inline-flex!important;visibility:visible!important;opacity:1!important;position:relative!important;}
         .hunarMobileProfileTrigger{min-width:42px!important;min-height:42px!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;z-index:100000!important;}
@@ -64,8 +74,42 @@
     document.head.appendChild(style);
     if(typeof window.nav==='function') window.nav();
   }
+
+  function fixFindFreelancerCircles(){
+    const rail=document.getElementById('devgrid');
+    if(!rail) return;
+    rail.querySelectorAll(':scope > .card .avatar, :scope > .card .freelancerAvatar, :scope > .card .profileAvatar, :scope > .card .profilePhoto').forEach(el=>{
+      el.style.width='76px';
+      el.style.height='76px';
+      el.style.minWidth='76px';
+      el.style.maxWidth='76px';
+      el.style.minHeight='76px';
+      el.style.maxHeight='76px';
+      el.style.flex='0 0 76px';
+      el.style.aspectRatio='1 / 1';
+      el.style.borderRadius='50%';
+      el.style.overflow='hidden';
+      const img=el.querySelector('img');
+      if(img){
+        img.style.width='100%';
+        img.style.height='100%';
+        img.style.minWidth='100%';
+        img.style.maxWidth='none';
+        img.style.objectFit='cover';
+        img.style.borderRadius='50%';
+        img.style.display='block';
+      }
+    });
+  }
+
   ready(install);
+  ready(function(){
+    fixFindFreelancerCircles();
+    const observer=new MutationObserver(fixFindFreelancerCircles);
+    observer.observe(document.body,{childList:true,subtree:true});
+    window.addEventListener('resize',fixFindFreelancerCircles,{passive:true});
+  });
   const oldRender=window.render;
-  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);return result;};
+  if(typeof oldRender==='function') window.render=function(){const result=oldRender.apply(this,arguments);setTimeout(install,0);setTimeout(install,80);setTimeout(fixFindFreelancerCircles,0);setTimeout(fixFindFreelancerCircles,120);return result;};
   window.addEventListener('resize',()=>setTimeout(install,0),{passive:true});
 })();

@@ -25,6 +25,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare HUNAR session and mobile profile fixes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          # Cache-bust the session layer so phones cannot keep an older JS copy.
+          s=s.replace('hunar-safety.js?v=1','hunar-safety.js?v=2')
+          # Make browser persistence explicit; Supabase keeps the auth session in localStorage.
+          old='auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}'
+          new='auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage}'
+          s=s.replace(old,new)
+          # Add the dedicated background/refresh recovery guard once.
+          tag='<script src="./hunar-session-guard.js?v=1"></script>'
+          if tag not in s:
+              s=s.replace('</body>',tag+'\n</body>',1)
+          p.write_text(s,encoding='utf-8')
+          print('HUNAR session/mobile preparation complete')
+          PY
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

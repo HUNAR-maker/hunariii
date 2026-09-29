@@ -1,3 +1,19 @@
+/* HUNAR targeted payment-return fix: if the payment provider sends a contract return to the local development origin, move it to the published HUNAR app. */
+(function(){
+  'use strict';
+  try{
+    var host=location.hostname||'';
+    var hash=location.hash||'';
+    var localHost=host==='localhost'||host==='127.0.0.1'||host==='0.0.0.0';
+    var contractReturn=/^#contract\/[^?]+\?[^#]*\bpayment=return\b/i.test(hash);
+    if(localHost&&contractReturn){
+      var target='https://hunar-maker.github.io/hunariii/'+hash;
+      if(location.href!==target) location.replace(target);
+      return;
+    }
+  }catch(e){console.warn('HUNAR payment return redirect:',e&&e.message||e);}
+})();
+
 /* HUNAR homepage-only fix: show existing registered freelancer profiles on first public visit. */
 (function(){
   'use strict';

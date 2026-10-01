@@ -53,6 +53,36 @@
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
   window.addEventListener('hashchange',function(){done=false;setTimeout(load,80);});
 
+  /* HUNAR withdrawal-status fix: whenever the wallet page reads withdrawals,
+     verify any processing payout with Chapa and refresh the final status. */
+  function installWithdrawalStatusFix(){
+    try{
+      if(!window.HunarData||!window.HunarData.wallet||typeof window.HunarData.wallet.withdrawals!=='function') return false;
+      if(window.HunarData.wallet.__withdrawalStatusFixInstalled) return true;
+      var original=window.HunarData.wallet.withdrawals.bind(window.HunarData.wallet);
+      var checking=false;
+      window.HunarData.wallet.withdrawals=async function(limit,offset){
+        var rows=await original(limit,offset);
+        if(checking||!Array.isArray(rows)||!rows.length||!window.supabaseClient) return rows;
+        var processing=rows.filter(function(r){return String(r&&r.status||'').toLowerCase()==='processing'&&r&&r.id;});
+        if(!processing.length||!window.supabaseClient.functions) return rows;
+        checking=true;
+        try{
+          await Promise.all(processing.map(async function(row){
+            try{
+              await window.supabaseClient.functions.invoke('hunar-chapa-payments',{body:{action:'verify_withdrawal',withdrawal_id:row.id}});
+            }catch(e){console.warn('HUNAR withdrawal status check:',e&&e.message||e);}
+          }));
+          return await original(limit,offset);
+        }finally{checking=false;}
+      };
+      window.HunarData.wallet.__withdrawalStatusFixInstalled=true;
+      return true;
+    }catch(e){console.warn('HUNAR withdrawal status fix install:',e&&e.message||e);return false;}
+  }
+  var installTimer=setInterval(function(){if(installWithdrawalStatusFix()){clearInterval(installTimer);}},300);
+  setTimeout(installWithdrawalStatusFix,100);
+
   /* Preserve all existing HUNAR UI fixes by loading the previous live-fixes file. */
   var s=document.createElement('script');
   s.src='./hunar-live-fixes-base.js?v=1';

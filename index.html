@@ -2765,7 +2765,11 @@ async function bootProductionSession(){
     }
     // A normal refresh must never sign the user out. Supabase persists the
     // authenticated session in the browser; restore it and keep the exact route.
-    const sessionResult=await supabaseClient.auth.getSession();
+    let sessionResult=await supabaseClient.auth.getSession();
+    if(!sessionResult.data?.session&&/^contract\\//i.test(current)){
+      const restoredSession=await restoreChapaReturnSession();
+      if(restoredSession)sessionResult={data:{session:restoredSession},error:null};
+    }
     if(sessionResult.error) throw sessionResult.error;
     const session=sessionResult.data?.session;
     if(session?.user){
@@ -3620,6 +3624,47 @@ async function startContractForConversationProject(projectId,otherId){
     await syncProductionData();go('contract/'+encodeURIComponent(id));
   }catch(err){console.error('HUNAR start contract from conversation:',err);alert(err?.message||'The contract could not be started.');}
 }
+function saveChapaReturnSession(){
+  try{
+    if(!supabaseClient)return;
+    const sessionResult=supabaseClient.auth.getSession();
+    sessionResult.then(({data})=>{
+      const session=data?.session;
+      if(!session?.access_token||!session?.refresh_token)return;
+      localStorage.setItem('hunar_chapa_return_session',JSON.stringify({
+        access_token:session.access_token,
+        refresh_token:session.refresh_token,
+        saved_at:Date.now()
+      }));
+    }).catch(()=>{});
+  }catch(_e){}
+}
+async function restoreChapaReturnSession(){
+  try{
+    if(!supabaseClient)return null;
+    const current=await supabaseClient.auth.getSession();
+    if(current?.data?.session?.user)return current.data.session;
+    const raw=localStorage.getItem('hunar_chapa_return_session');
+    if(!raw)return null;
+    const saved=JSON.parse(raw);
+    if(!saved?.access_token||!saved?.refresh_token||Date.now()-Number(saved.saved_at||0)>2*60*60*1000){
+      localStorage.removeItem('hunar_chapa_return_session');
+      return null;
+    }
+    const restored=await supabaseClient.auth.setSession({
+      access_token:String(saved.access_token),
+      refresh_token:String(saved.refresh_token)
+    });
+    if(restored.error)throw restored.error;
+    localStorage.removeItem('hunar_chapa_return_session');
+    return restored.data?.session||null;
+  }catch(e){
+    console.warn('HUNAR Chapa return session restore skipped:',e?.message||e);
+    try{localStorage.removeItem('hunar_chapa_return_session')}catch(_e){}
+    return null;
+  }
+}
+
 async function fundHunarContract(contractId){
   if(!me||me.role!=='client'){go('signin?role=client');return}
   const btns=[...document.querySelectorAll('button')].filter(b=>/Fund Contract/i.test(b.textContent));
@@ -3628,7 +3673,7 @@ async function fundHunarContract(contractId){
     const result=(window.HunarData?.contracts?.fundContract)
       ? await HunarData.contracts.fundContract(contractId)
       : (await supabaseClient.functions.invoke('hunar-chapa-payments',{body:{action:'initialize_contract_payment',contract_id:contractId}})).data;
-    if(result?.checkout_url){window.location.href=result.checkout_url;return;}
+    if(result?.checkout_url){saveChapaReturnSession();window.location.href=result.checkout_url;return;}
     if(result?.already_paid){await syncProductionData();go('contract/'+encodeURIComponent(contractId));return;}
     throw new Error(result?.message||'Payment could not be started.');
   }catch(err){

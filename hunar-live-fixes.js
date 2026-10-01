@@ -1,15 +1,20 @@
-/* HUNAR targeted payment-return fix: if the payment provider sends a contract return to the local development origin, move it to the published HUNAR app. */
+/* HUNAR targeted payment-return fix: Chapa must never leave a contract payment return on localhost. */
 (function(){
   'use strict';
   try{
     var host=location.hostname||'';
     var hash=location.hash||'';
     var localHost=host==='localhost'||host==='127.0.0.1'||host==='0.0.0.0';
-    var contractReturn=/^#contract\/[^?]+\?[^#]*\bpayment=return\b/i.test(hash);
-    if(localHost&&contractReturn){
-      var target='https://hunar-maker.github.io/hunariii/'+hash;
-      if(location.href!==target) location.replace(target);
-      return;
+    var contractMatch=hash.match(/^#contract\/([^?]+)(?:\?(.*))?$/i);
+    if(localHost&&contractMatch){
+      var query=contractMatch[2]||'';
+      var params=new URLSearchParams(query);
+      var paymentReturn=params.has('payment')||params.has('tx_ref')||params.has('trx_ref')||params.has('ref_id')||params.has('status');
+      if(paymentReturn){
+        var target='https://hunar-maker.github.io/hunariii/'+hash;
+        if(location.href!==target) location.replace(target);
+        return;
+      }
     }
   }catch(e){console.warn('HUNAR payment return redirect:',e&&e.message||e);}
 })();

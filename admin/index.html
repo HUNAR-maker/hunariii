@@ -499,7 +499,7 @@ async function submitPlatformWithdrawal(){
  const bank=document.getElementById("peBank")?.value;
  const name=document.getElementById("peAccountName")?.value.trim();
  const number=document.getElementById("peAccountNumber")?.value.trim();
- const available=Number(document.querySelector(".peAmount:last-of-type")?.textContent?.replace(/[^0-9.]/g,"")||0);
+ const available=Number(document.getElementById("peAmount")?.max||0);
  if(!Number.isFinite(amount)||amount<=0){platformMsg("Enter a valid withdrawal amount.","error");return}
  if(amount>available+0.000001){platformMsg("The withdrawal amount is greater than the available platform balance.","error");return}
  if(!name||!number){platformMsg("Account name and account number are required.","error");return}

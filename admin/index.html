@@ -54,6 +54,18 @@ body{background:linear-gradient(180deg,#f8f9fc 0%,#f3f5fa 100%);color:var(--pro-
 .modalactions{display:flex;justify-content:flex-end;gap:9px;margin:0!important}.modalFooter{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:15px 26px 18px;border-top:1px solid #edf0f5;background:#fbfcfe}.modalTip{font-size:11px;color:#8a93a3}.detailList{gap:9px!important;max-height:none!important}.detailRow{grid-template-columns:minmax(150px,210px) 1fr!important;padding:13px 15px!important;border:1px solid #edf0f5!important;background:#fbfcfe!important;border-radius:12px!important}.detailRow span{font-size:11px!important;font-weight:800!important;text-transform:uppercase;letter-spacing:.035em;color:#7b8495}.detailRow b{font-size:13px;color:#253044;word-break:break-word}.editForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 16px}.editForm .field{margin:7px 0 11px}.editForm .field input,.editForm .field select,.editForm .field textarea{background:#fff;border-color:#dfe5ee;box-shadow:0 2px 7px rgba(15,23,42,.025)}.editForm .field input:focus,.editForm .field select:focus,.editForm .field textarea:focus{outline:none;border-color:#8176e8;box-shadow:0 0 0 3px rgba(129,118,232,.12)}.notice{border-radius:12px!important}.verificationDetail{margin-top:16px}.docRow{border:1px solid #e9edf4!important;background:#fff!important;box-shadow:0 5px 18px rgba(15,23,42,.04)}
 @keyframes modalFade{from{opacity:0}to{opacity:1}}@keyframes modalUp{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
 @media(max-width:700px){.main{padding:18px 14px 32px}.top{padding:17px}.modal{padding:10px}.modalTop{padding:19px}.modalBody{padding:17px;max-height:62vh}.modalFooter{padding:13px 17px;align-items:flex-end}.modalTip{display:none}.editForm{grid-template-columns:1fr}.detailRow{grid-template-columns:1fr!important;gap:5px}.modalbox{border-radius:18px!important}}
+/* PLATFORM EARNINGS - dedicated admin money dashboard */
+.peHero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:26px;border-radius:22px;background:linear-gradient(135deg,#171b3a 0%,#343b8f 58%,#5b5bd6 100%);color:#fff;box-shadow:0 18px 45px rgba(48,53,135,.22)}
+.peHero h2{margin:0;font-size:25px;letter-spacing:-.5px}.peHero p{margin:8px 0 0;color:rgba(255,255,255,.76);font-size:13px;line-height:1.55;max-width:620px}
+.peBadge{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);font-size:11px;font-weight:850;margin-bottom:13px}
+.peDot{width:7px;height:7px;border-radius:50%;background:#8ef0bd;box-shadow:0 0 0 4px rgba(142,240,189,.12)}
+.peCards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}.peCard{position:relative;overflow:hidden;background:#fff;border:1px solid #e8ecf3;border-radius:18px;padding:20px;box-shadow:0 10px 30px rgba(15,23,42,.055)}.peCard:after{content:"";position:absolute;right:-25px;top:-30px;width:90px;height:90px;border-radius:50%;background:#f2f1ff}.peLabel{font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:850;color:#7a8291}.peAmount{font-size:30px;font-weight:900;margin-top:8px;letter-spacing:-.5px}.peHint{font-size:12px;color:#8a93a3;margin-top:5px}
+.peGrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:18px;margin-top:18px}.pePanel{background:#fff;border:1px solid #e8ecf3;border-radius:20px;box-shadow:0 10px 30px rgba(15,23,42,.055);overflow:hidden}.peHead{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:19px 21px;border-bottom:1px solid #edf0f5}.peHead h3{margin:0;font-size:16px}.peHead span{font-size:11px;color:#8a93a3}.peBody{padding:21px}
+.peForm{display:grid;grid-template-columns:1fr 1fr;gap:14px}.peField{display:grid;gap:7px}.peField.full{grid-column:1/-1}.peField label{font-size:11px;font-weight:850;color:#5e6879;text-transform:uppercase;letter-spacing:.045em}.peField input,.peField select{width:100%;height:46px;border:1px solid #dfe5ee;border-radius:12px;padding:0 13px;font:inherit;background:#fbfcfe;color:#172033;outline:none;transition:.18s}.peField input:focus,.peField select:focus{border-color:#7c70e8;box-shadow:0 0 0 4px rgba(124,112,232,.10);background:#fff}.peWithdraw{width:100%;height:48px;border:0;border-radius:13px;background:linear-gradient(135deg,#5b5bd6,#7c5cff);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 22px rgba(91,91,214,.22);transition:.18s}.peWithdraw:hover{transform:translateY(-1px);box-shadow:0 13px 27px rgba(91,91,214,.27)}.peWithdraw:disabled{opacity:.65;cursor:wait;transform:none}.peSecure{display:flex;gap:9px;align-items:flex-start;padding:12px 13px;border-radius:12px;background:#f7f8fc;border:1px solid #edf0f5;color:#6b7280;font-size:11px;line-height:1.5}.peSecure b{color:#334155}.peMsg{display:none;margin-bottom:14px;padding:12px 13px;border-radius:12px;font-size:12px;font-weight:700}.peMsg.show{display:block}.peMsg.success{background:#ecfdf5;color:#047857;border:1px solid #b7efd7}.peMsg.error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.peHistory{width:100%;border-collapse:collapse}.peHistory th{padding:11px 12px;text-align:left;background:#f8fafc;color:#7a8291;font-size:10px;text-transform:uppercase;letter-spacing:.06em}.peHistory td{padding:13px 12px;border-top:1px solid #edf0f5;font-size:12px;color:#334155}.peHistory tr:hover td{background:#fbfcff}.peStatus{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:900;text-transform:capitalize}.peStatus.processing{background:#fff7ed;color:#c2410c}.peStatus.completed{background:#ecfdf5;color:#047857}.peStatus.failed{background:#fef2f2;color:#b91c1c}.peAction{border:1px solid #e1e6ef;background:#fff;border-radius:9px;padding:7px 9px;font-size:11px;font-weight:800;cursor:pointer}.peAction:hover{background:#f8f8ff;border-color:#cfc9fb}.peEmpty{padding:35px 15px;text-align:center;color:#8a93a3;font-size:12px}.peMini{display:grid;gap:11px}.peMiniRow{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #edf0f5;font-size:12px}.peMiniRow:last-child{border-bottom:0}.peMiniRow span{color:#7a8291}.peMiniRow b{color:#253044}.peRefresh{border:1px solid #e1e6ef;background:#fff;border-radius:9px;padding:8px 10px;font-weight:800;cursor:pointer}.peRefresh:hover{background:#f8fafc}
+@media(max-width:900px){.peGrid{grid-template-columns:1fr}.peHero{flex-direction:column}.peCards{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.peCards{grid-template-columns:1fr}.peForm{grid-template-columns:1fr}.peField.full{grid-column:auto}.peHead{align-items:flex-start;flex-direction:column}.peHistory{min-width:720px}}
+
 </style>
 </head>
 <body>
@@ -90,7 +102,7 @@ body{background:linear-gradient(180deg,#f8f9fc 0%,#f3f5fa 100%);color:var(--pro-
   <button data-page="contracts" onclick="showPage('contracts')">◈ &nbsp; Contracts</button><button data-page="contract_milestones" onclick="showPage('contract_milestones')">◉ &nbsp; Milestones</button><button data-page="contract_submissions" onclick="showPage('contract_submissions')">⇧ &nbsp; Submissions</button><button data-page="contract_submission_files" onclick="showPage('contract_submission_files')">▣ &nbsp; Submission Files</button><button data-page="contract_transactions" onclick="showPage('contract_transactions')">⇄ &nbsp; Contract Transactions</button><button data-page="milestones" onclick="showPage('milestones')">◉ &nbsp; Milestones (Legacy)</button>
  </div>
  <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">Money</div><div class="nav">
-  <button data-page="wallet_ledger_entries" onclick="showPage('wallet_ledger_entries')">▣ &nbsp; Wallet Ledger</button><button data-page="wallet_withdrawals" onclick="showPage('wallet_withdrawals')">↗ &nbsp; Wallet Withdrawals</button><button data-page="payment_orders" onclick="showPage('payment_orders')">₿ &nbsp; Payment Orders</button><button data-page="payment_transactions" onclick="showPage('payment_transactions')">⇄ &nbsp; Payment Transactions</button><button data-page="escrow_transactions" onclick="showPage('escrow_transactions')">▣ &nbsp; Escrow</button><button data-page="platform_fees" onclick="showPage('platform_fees')">% &nbsp; Platform Fees</button><button data-page="payouts" onclick="showPage('payouts')">↗ &nbsp; Payouts</button><button data-page="refunds" onclick="showPage('refunds')">↩ &nbsp; Refunds</button><button data-page="payment_webhooks" onclick="showPage('payment_webhooks')">⚡ &nbsp; Payment Webhooks</button>
+  <button data-page="wallet_ledger_entries" onclick="showPage('wallet_ledger_entries')">▣ &nbsp; Wallet Ledger</button><button data-page="wallet_withdrawals" onclick="showPage('wallet_withdrawals')">↗ &nbsp; Wallet Withdrawals</button><button data-page="payment_orders" onclick="showPage('payment_orders')">₿ &nbsp; Payment Orders</button><button data-page="payment_transactions" onclick="showPage('payment_transactions')">⇄ &nbsp; Payment Transactions</button><button data-page="escrow_transactions" onclick="showPage('escrow_transactions')">▣ &nbsp; Escrow</button><button data-page="platform_fees" onclick="showPage('platform_fees')">% &nbsp; Platform Earnings</button><button data-page="payouts" onclick="showPage('payouts')">↗ &nbsp; Payouts</button><button data-page="refunds" onclick="showPage('refunds')">↩ &nbsp; Refunds</button><button data-page="payment_webhooks" onclick="showPage('payment_webhooks')">⚡ &nbsp; Payment Webhooks</button>
  </div>
  <div style="font-size:10px;color:#94a3b8;padding:14px 12px 6px;text-transform:uppercase">Trust & Safety</div><div class="nav">
   <button data-page="verification_requests" onclick="showPage('verification_requests')">✓ &nbsp; Identity Verification</button><button data-page="verification_documents" onclick="showPage('verification_documents')">▤ &nbsp; Verification Documents</button><button data-page="verification_events" onclick="showPage('verification_events')">◷ &nbsp; Verification History</button><button data-page="reports" onclick="showPage('reports')">⚠ &nbsp; Reports</button><button data-page="moderation_actions" onclick="showPage('moderation_actions')">♢ &nbsp; Moderation</button>
@@ -405,6 +417,105 @@ async function virtualPage(page){
   }
 }
 
+
+async function platformCommissionCall(action,body={}){
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session) throw new Error("Your admin session has expired. Please sign in again.");
+ const response=await fetch(SUPABASE_URL+"/functions/v1/hunar-platform-commission",{method:"POST",headers:{Authorization:"Bearer "+session.access_token,"Content-Type":"application/json"},body:JSON.stringify({action,...body})});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok||data.ok===false) throw new Error(data.message||"Platform commission request failed.");
+ return data;
+}
+function platformMoney(v){return Number(v||0).toFixed(2)+" ETB"}
+function platformEsc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function platformMsg(text,type){
+ const el=document.getElementById("peMsg"); if(!el)return;
+ el.className="peMsg show "+(type||""); el.textContent=text;
+}
+function platformBankOptions(){
+ return '<option value="cbe">Commercial Bank of Ethiopia (CBE)</option><option value="awash">Awash Bank</option><option value="dashen">Dashen Bank</option><option value="boa">Bank of Abyssinia</option><option value="hibret">PRIDE / Hibret Bank</option><option value="coop">Cooperative Bank of Oromia</option>';
+}
+async function loadPlatformEarnings(){
+ const content=document.getElementById("content");
+ if(!content)return;
+ content.innerHTML='<div class="empty">Loading platform earnings…</div>';
+ try{
+  const d=await platformCommissionCall("summary");
+  content.innerHTML=`
+   <div class="peHero">
+    <div><div class="peBadge"><span class="peDot"></span> Platform money · Admin only</div><h2>HUNAR Platform Earnings</h2><p>Manage the 10% commission collected from completed contract releases. This balance is separate from every freelancer wallet and is withdrawable only by an authorized HUNAR admin.</p></div>
+    <button class="btn" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:#fff" onclick="loadPlatformEarnings()">↻ Refresh</button>
+   </div>
+   <div class="peCards">
+    <div class="peCard"><div class="peLabel">Total commission</div><div class="peAmount">${platformMoney(d.total_commission_etb)}</div><div class="peHint">10% of eligible contract releases</div></div>
+    <div class="peCard"><div class="peLabel">Reserved / withdrawn</div><div class="peAmount">${platformMoney(d.reserved_etb)}</div><div class="peHint">Processing + completed payouts</div></div>
+    <div class="peCard"><div class="peLabel">Available now</div><div class="peAmount">${platformMoney(d.available_etb)}</div><div class="peHint">Ready for platform withdrawal</div></div>
+   </div>
+   <div class="peGrid">
+    <section class="pePanel">
+     <div class="peHead"><div><h3>Withdraw platform earnings</h3><span>Send your available HUNAR commission to a bank account</span></div></div>
+     <div class="peBody">
+      <div id="peMsg" class="peMsg"></div>
+      <div class="peForm">
+       <div class="peField"><label>Amount</label><input id="peAmount" type="number" min="1" max="${Math.max(0,Number(d.available_etb||0))}" step="0.01" placeholder="${Number(d.available_etb||0).toFixed(2)}"></div>
+       <div class="peField"><label>Bank</label><select id="peBank">${platformBankOptions()}</select></div>
+       <div class="peField"><label>Account name</label><input id="peAccountName" autocomplete="off" placeholder="HUNAR business account name"></div>
+       <div class="peField"><label>Account number</label><input id="peAccountNumber" inputmode="numeric" autocomplete="off" placeholder="Bank account number"></div>
+       <div class="peField full"><button id="peWithdraw" class="peWithdraw" onclick="submitPlatformWithdrawal()">Withdraw ${platformMoney(d.available_etb)} →</button></div>
+       <div class="peField full"><div class="peSecure">🔒 <span><b>Protected payout</b><br>Only the authenticated HUNAR admin can initiate this transfer. Provider confirmation is required before a payout is considered completed.</span></div></div>
+      </div>
+     </div>
+    </section>
+    <aside class="pePanel">
+     <div class="peHead"><div><h3>Commission summary</h3><span>Current platform balance</span></div></div>
+     <div class="peBody"><div class="peMini">
+      <div class="peMiniRow"><span>Commission rate</span><b>10%</b></div>
+      <div class="peMiniRow"><span>Total earned</span><b>${platformMoney(d.total_commission_etb)}</b></div>
+      <div class="peMiniRow"><span>Already reserved</span><b>${platformMoney(d.reserved_etb)}</b></div>
+      <div class="peMiniRow"><span>Available</span><b>${platformMoney(d.available_etb)}</b></div>
+     </div></div>
+    </aside>
+   </div>
+   <section class="pePanel" style="margin-top:18px">
+    <div class="peHead"><div><h3>Platform withdrawal history</h3><span>Every payout remains auditable</span></div><button class="peRefresh" onclick="loadPlatformEarnings()">Refresh</button></div>
+    <div style="overflow:auto"><table class="peHistory"><thead><tr><th>Date</th><th>Amount</th><th>Bank</th><th>Destination</th><th>Status</th><th>Action</th></tr></thead><tbody id="peHistory"></tbody></table></div>
+   </section>`;
+  renderPlatformHistory(d.withdrawals||[]);
+ }catch(e){
+  content.innerHTML='<div class="pePanel"><div class="peBody"><div class="error">'+platformEsc(e.message||e)+'</div><button class="btn primary" onclick="loadPlatformEarnings()">Try again</button></div></div>';
+ }
+}
+function renderPlatformHistory(rows){
+ const body=document.getElementById("peHistory");if(!body)return;
+ if(!rows.length){body.innerHTML='<tr><td colspan="6" class="peEmpty">No platform withdrawals yet. Your available commission is ready above.</td></tr>';return}
+ body.innerHTML=rows.map(r=>{
+  const status=String(r.status||"processing").toLowerCase();
+  const action=status==="processing"?'<button class="peAction" onclick="verifyPlatformWithdrawal(\''+platformEsc(r.id)+'\')">Check status</button>':'—';
+  return '<tr><td>'+platformEsc(new Date(r.created_at).toLocaleString())+'</td><td><b>'+platformMoney(r.amount_etb)+'</b></td><td>'+platformEsc(r.bank_slug||"—")+'</td><td>'+platformEsc(r.destination_masked||"—")+'</td><td><span class="peStatus '+platformEsc(status)+'">'+platformEsc(status)+'</span></td><td>'+action+'</td></tr>';
+ }).join("");
+}
+async function submitPlatformWithdrawal(){
+ const amount=Number(document.getElementById("peAmount")?.value);
+ const bank=document.getElementById("peBank")?.value;
+ const name=document.getElementById("peAccountName")?.value.trim();
+ const number=document.getElementById("peAccountNumber")?.value.trim();
+ const available=Number(document.querySelector(".peAmount:last-of-type")?.textContent?.replace(/[^0-9.]/g,"")||0);
+ if(!Number.isFinite(amount)||amount<=0){platformMsg("Enter a valid withdrawal amount.","error");return}
+ if(amount>available+0.000001){platformMsg("The withdrawal amount is greater than the available platform balance.","error");return}
+ if(!name||!number){platformMsg("Account name and account number are required.","error");return}
+ if(!confirm("Withdraw "+amount.toFixed(2)+" ETB from HUNAR platform commission to the selected bank account?"))return;
+ const btn=document.getElementById("peWithdraw");btn.disabled=true;btn.textContent="Processing secure payout…";
+ try{
+  const d=await platformCommissionCall("request_withdrawal",{amount_etb:amount,bank_slug:bank,account_name:name,account_number:number,idempotency_key:crypto.randomUUID()});
+  platformMsg("Payout created successfully. Status: "+String(d.status||"processing")+".","success");
+  await loadPlatformEarnings();
+ }catch(e){platformMsg(e.message||e,"error");}
+ finally{const b=document.getElementById("peWithdraw");if(b){b.disabled=false;b.textContent="Withdraw platform earnings →"}}
+}
+async function verifyPlatformWithdrawal(id){
+ try{const d=await platformCommissionCall("verify_withdrawal",{withdrawal_id:id});platformMsg("Provider status: "+String(d.provider_status||d.status||"processing")+".","success");await loadPlatformEarnings()}catch(e){platformMsg(e.message||e,"error")}
+}
+
 async function showPage(page){
  currentPage=page;
  document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
@@ -412,6 +523,7 @@ async function showPage(page){
    if(await extraControlPage(page)) return;
    await virtualPage(page); return;
  }
+ if(page==="platform_fees"){document.getElementById("title").textContent="Platform Earnings";document.getElementById("subtitle").textContent="Your 10% HUNAR commission balance and secure withdrawals";await loadPlatformEarnings();return}
  if(page==="dashboard"){document.getElementById("title").textContent="Dashboard";document.getElementById("subtitle").textContent="HUNAR platform overview";await dashboard();return}
  const t=tables[page];
  if(!t){document.getElementById("content").innerHTML='<div class="error">This Admin section is not configured.</div>';return}

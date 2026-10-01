@@ -2781,6 +2781,17 @@ async function bootProductionSession(){
       }catch(sessionError){
         console.warn('HUNAR refresh session hydration skipped:',sessionError?.message||sessionError);
       }
+      // Chapa returns clients directly to the contract hash. If the Supabase
+      // session is already present, restore the HUNAR account for that route
+      // even if optional onboarding/profile hydration has a transient issue.
+      if(!me&&session?.user&&/^contract\\//i.test(current)){
+        try{
+          const a=await getExistingHunarAccount(session.user.id);
+          if(a)me={id:a.id,role:a.role,email:a.email||session.user.email,phone:a.phone,emailVerified:!!(a.email_verified||session.user.email_confirmed_at),phoneVerified:a.phone_verified};
+        }catch(returnHydrationError){
+          console.warn('HUNAR contract return hydration skipped:',returnHydrationError?.message||returnHydrationError);
+        }
+      }
       render(current||'home');
       return;
     }

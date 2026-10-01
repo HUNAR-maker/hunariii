@@ -4738,7 +4738,7 @@ async function loadPublicHomeStats(){
   if(!window.supabaseClient||!window.HunarData?.freelancers?.public)return;
   const [data,publicProjects,statsResult]=await Promise.all([
    HunarData.freelancers.public(),
-   HunarData.projects?.list?.().catch(()=>[]),
+   HunarData.projects?.list ? HunarData.projects.list().catch(()=>[]) : Promise.resolve([]),
    supabaseClient.rpc('hunar_public_marketplace_stats')
   ]);
   const accounts=Array.isArray(data?.accounts)?data.accounts:[];

@@ -3624,19 +3624,17 @@ async function startContractForConversationProject(projectId,otherId){
     await syncProductionData();go('contract/'+encodeURIComponent(id));
   }catch(err){console.error('HUNAR start contract from conversation:',err);alert(err?.message||'The contract could not be started.');}
 }
-function saveChapaReturnSession(){
+async function saveChapaReturnSession(){
   try{
     if(!supabaseClient)return;
-    const sessionResult=supabaseClient.auth.getSession();
-    sessionResult.then(({data})=>{
-      const session=data?.session;
-      if(!session?.access_token||!session?.refresh_token)return;
-      localStorage.setItem('hunar_chapa_return_session',JSON.stringify({
-        access_token:session.access_token,
-        refresh_token:session.refresh_token,
-        saved_at:Date.now()
-      }));
-    }).catch(()=>{});
+    const {data}=await supabaseClient.auth.getSession();
+    const session=data?.session;
+    if(!session?.access_token||!session?.refresh_token)return;
+    localStorage.setItem('hunar_chapa_return_session',JSON.stringify({
+      access_token:session.access_token,
+      refresh_token:session.refresh_token,
+      saved_at:Date.now()
+    }));
   }catch(_e){}
 }
 async function restoreChapaReturnSession(){
@@ -3673,7 +3671,7 @@ async function fundHunarContract(contractId){
     const result=(window.HunarData?.contracts?.fundContract)
       ? await HunarData.contracts.fundContract(contractId)
       : (await supabaseClient.functions.invoke('hunar-chapa-payments',{body:{action:'initialize_contract_payment',contract_id:contractId}})).data;
-    if(result?.checkout_url){saveChapaReturnSession();window.location.href=result.checkout_url;return;}
+    if(result?.checkout_url){await saveChapaReturnSession();window.location.href=result.checkout_url;return;}
     if(result?.already_paid){await syncProductionData();go('contract/'+encodeURIComponent(contractId));return;}
     throw new Error(result?.message||'Payment could not be started.');
   }catch(err){

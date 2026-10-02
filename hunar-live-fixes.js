@@ -114,7 +114,9 @@
   }
   function mapProjects(rows){
     return (Array.isArray(rows)?rows:[]).map(function(row){
-      return {id:row.id,title:row.title,description:row.description,text:row.description,category:row.category,client:row.client_id,developer:row.hired_freelancer_id||null,budget:row.budget_min_etb&&row.budget_max_etb?money(row.budget_min_etb)+' – '+money(row.budget_max_etb):money(row.budget_max_etb||row.budget_min_etb||0),budgetMin:Number(row.budget_min_etb||0),budgetMax:Number(row.budget_max_etb||0),deadline:row.deadline,skills:Array.isArray(row.skills)?row.skills:[],status:row.status,workType:row.work_type||row.workType||'Remote',requirements:row.requirements||'',deliverables:row.deliverables||''};
+      var rawStatus=String(row.status||'').toLowerCase();
+      var marketplaceStatus=(rawStatus==='posted'||rawStatus==='application')?'Posted':row.status;
+      return {id:row.id,title:row.title,description:row.description,text:row.description,category:row.category,client:row.client_id,developer:row.hired_freelancer_id||null,budget:row.budget_min_etb&&row.budget_max_etb?money(row.budget_min_etb)+' – '+money(row.budget_max_etb):money(row.budget_max_etb||row.budget_min_etb||0),budgetMin:Number(row.budget_min_etb||0),budgetMax:Number(row.budget_max_etb||0),deadline:row.deadline,skills:Array.isArray(row.skills)?row.skills:[],status:marketplaceStatus,workType:row.work_type||row.workType||'Remote',requirements:row.requirements||'',deliverables:row.deliverables||''};
     });
   }
   async function refreshRealData(){

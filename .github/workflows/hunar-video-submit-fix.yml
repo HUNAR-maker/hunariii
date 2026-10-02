@@ -17,20 +17,32 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
+          import re
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          replacements = [
-              ("'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(selectedFile.type)", "'application/vnd.openxmlformats-officedocument.wordprocessingml.document','video/mp4','video/webm','video/quicktime','video/x-msvideo','video/mpeg'].includes(selectedFile.type)"),
-              ("Please upload a PDF, ZIP, image, TXT, DOC, or DOCX file.", "Please upload a PDF, ZIP, image, TXT, DOC, DOCX, or video file."),
-              ("accept=\".pdf,.zip,.txt,.jpg,.jpeg,.png,.webp,.doc,.docx\"", "accept=\".pdf,.zip,.txt,.jpg,.jpeg,.png,.webp,.doc,.docx,.mp4,.webm,.mov,.avi,.mpeg,.mpg\""),
-              ("Optional · PDF, ZIP, image, TXT, DOC or DOCX · up to 50 MB", "Optional · PDF, ZIP, image, TXT, DOC, DOCX or video · up to 50 MB"),
-          ]
-          for old, new in replacements:
-              if old not in s:
-                  raise SystemExit(f'Expected exact text not found: {old}')
-              if s.count(old) != 1:
-                  raise SystemExit(f'Expected exactly one occurrence, found {s.count(old)}: {old}')
-              s = s.replace(old, new, 1)
+
+          validation = re.compile(r"if\(selectedFile&&!\[([^\]]*application/vnd\\.openxmlformats-officedocument\\.wordprocessingml\\.document[^\]]*)\]\.includes\(selectedFile\.type\)\)\{alert\('([^']*)'\);return;\}")
+          m = validation.search(s)
+          if not m:
+              raise SystemExit('The exact freelancer delivery-file validation block was not found.')
+          if 'video/mp4' in m.group(1):
+              raise SystemExit('Video MIME types are already enabled in the validation block; refusing unrelated changes.')
+          new_mimes = m.group(1) + ",'video/mp4','video/webm','video/quicktime','video/x-msvideo','video/mpeg'"
+          new_alert = 'Please upload a PDF, ZIP, image, TXT, DOC, DOCX, or video file.'
+          s = s[:m.start()] + "if(selectedFile&&!['" + new_mimes.replace("'", "", 1) + "']" + ".includes(selectedFile.type)){alert('" + new_alert + "');return;}" + s[m.end():]
+
+          accept = re.compile(r'accept=\\"([^\\"]*\\.docx[^\\"]*)\\"')
+          matches = list(accept.finditer(s))
+          delivery = [x for x in matches if '.pdf' in x.group(1) and '.docx' in x.group(1)]
+          if len(delivery) != 1:
+              raise SystemExit(f'Expected exactly one freelancer delivery accept attribute, found {len(delivery)}.')
+          old = delivery[0].group(1)
+          if '.mp4' not in old:
+              new = old + ',.mp4,.webm,.mov,.avi,.mpeg,.mpg'
+              start, end = delivery[0].span(1)
+              s = s[:start] + new + s[end:]
+
+          s = s.replace('Optional · PDF, ZIP, image, TXT, DOC or DOCX · up to 50 MB', 'Optional · PDF, ZIP, image, TXT, DOC, DOCX or video · up to 50 MB', 1)
           p.write_text(s, encoding='utf-8')
       - name: Commit only the requested correction
         run: |

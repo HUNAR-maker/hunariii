@@ -40,3 +40,5 @@ jobs:
           git diff --cached --exit-code && exit 0
           git commit -m 'Allow video files in freelancer work submissions'
           git push
+
+# Triggered only to apply the single requested video-upload correction.

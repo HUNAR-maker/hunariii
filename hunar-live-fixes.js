@@ -121,10 +121,7 @@
     if(refreshing||!window.supabaseClient||!window.HunarData||!window.HunarData.freelancers||typeof window.HunarData.freelancers.public!=='function'||!window.HunarData.projects||typeof window.HunarData.projects.list!=='function') return false;
     refreshing=true;
     try{
-      var results=await Promise.all([
-        window.HunarData.freelancers.public(),
-        window.HunarData.projects.list()
-      ]);
+      var results=await Promise.all([window.HunarData.freelancers.public(),window.HunarData.projects.list()]);
       var publicData=results[0]||{};
       var projects=mapProjects(results[1]);
       if(!window.S) return false;
@@ -145,15 +142,14 @@
     }catch(e){console.warn('HUNAR real marketplace data refresh:',e&&e.message||e);return false;}
     finally{refreshing=false;}
   }
-  /* Replace the demo/example project provider with real open marketplace records only. */
   window.projectExamples=function(){return (window.S&&Array.isArray(window.S.projects)?window.S.projects:[]).filter(realProject).slice(0,6);};
   function boot(){
-    refreshRealData();
     var tries=0;
     var timer=setInterval(function(){
       tries++;
-      if(refreshRealData()||tries>=20)clearInterval(timer);
+      refreshRealData().then(function(ok){if(ok||tries>=20)clearInterval(timer);});
     },500);
+    refreshRealData();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else setTimeout(boot,0);
   window.addEventListener('hashchange',function(){setTimeout(function(){refreshRealData();},120);});

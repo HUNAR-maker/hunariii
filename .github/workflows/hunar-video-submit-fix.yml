@@ -21,25 +21,25 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          validation = re.compile(r"if\(selectedFile&&!\[([^\]]*application/vnd\\.openxmlformats-officedocument\\.wordprocessingml\\.document[^\]]*)\]\.includes\(selectedFile\.type\)\)\{alert\('([^']*)'\);return;\}")
+          validation = re.compile(r"if\(selectedFile&&!(\[[^\n]*?\])\.includes\(selectedFile\.type\)\)\{alert\('([^']*)'\);return;\}")
           m = validation.search(s)
           if not m:
-              raise SystemExit('The exact freelancer delivery-file validation block was not found.')
+              raise SystemExit('The freelancer delivery-file validation block was not found.')
           if 'video/mp4' in m.group(1):
-              raise SystemExit('Video MIME types are already enabled in the validation block; refusing unrelated changes.')
-          new_mimes = m.group(1) + ",'video/mp4','video/webm','video/quicktime','video/x-msvideo','video/mpeg'"
-          new_alert = 'Please upload a PDF, ZIP, image, TXT, DOC, DOCX, or video file.'
-          s = s[:m.start()] + "if(selectedFile&&!['" + new_mimes.replace("'", "", 1) + "']" + ".includes(selectedFile.type)){alert('" + new_alert + "');return;}" + s[m.end():]
+              raise SystemExit('Video MIME types are already enabled; refusing unrelated changes.')
+          array_text = m.group(1)
+          new_array = array_text[:-1] + ",'video/mp4','video/webm','video/quicktime','video/x-msvideo','video/mpeg']"
+          replacement = "if(selectedFile&&!" + new_array + ".includes(selectedFile.type)){alert('Please upload a PDF, ZIP, image, TXT, DOC, DOCX, or video file.');return;}"
+          s = s[:m.start()] + replacement + s[m.end():]
 
-          accept = re.compile(r'accept=\\"([^\\"]*\\.docx[^\\"]*)\\"')
-          matches = list(accept.finditer(s))
-          delivery = [x for x in matches if '.pdf' in x.group(1) and '.docx' in x.group(1)]
-          if len(delivery) != 1:
-              raise SystemExit(f'Expected exactly one freelancer delivery accept attribute, found {len(delivery)}.')
-          old = delivery[0].group(1)
+          accept = re.compile(r'accept="([^"]*\.docx[^"]*)"')
+          matches = [x for x in accept.finditer(s) if '.pdf' in x.group(1) and '.docx' in x.group(1)]
+          if len(matches) != 1:
+              raise SystemExit(f'Expected exactly one freelancer delivery accept attribute, found {len(matches)}.')
+          old = matches[0].group(1)
           if '.mp4' not in old:
               new = old + ',.mp4,.webm,.mov,.avi,.mpeg,.mpg'
-              start, end = delivery[0].span(1)
+              start, end = matches[0].span(1)
               s = s[:start] + new + s[end:]
 
           s = s.replace('Optional · PDF, ZIP, image, TXT, DOC or DOCX · up to 50 MB', 'Optional · PDF, ZIP, image, TXT, DOC, DOCX or video · up to 50 MB', 1)

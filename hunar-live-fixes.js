@@ -157,3 +157,23 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else setTimeout(boot,0);
   window.addEventListener('hashchange',function(){setTimeout(function(){refreshRealData();},120);});
 })();
+/* HUNAR homepage service/project presentation animation — visual only. */
+(function(){
+  'use strict';
+  try{
+    if(document.getElementById('hunar-home-market-animation')) return;
+    var style=document.createElement('style');
+    style.id='hunar-home-market-animation';
+    style.textContent=[
+      '@keyframes hunarHomeCardIn{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}',
+      '.hunarServicesRebuild .hsrCard{animation:hunarHomeCardIn .65s cubic-bezier(.2,.7,.2,1) both}',
+      '.hunarServicesRebuild .hsrCard:nth-child(2){animation-delay:.08s}',
+      '.hunarServicesRebuild .hsrCard:nth-child(3){animation-delay:.16s}',
+      '.hunarActivityRebuild .harItem{animation:hunarHomeCardIn .55s cubic-bezier(.2,.7,.2,1) both}',
+      '.hunarActivityRebuild .harColumn:last-child .harItem:nth-of-type(2){animation-delay:.08s}',
+      '.hunarActivityRebuild .harColumn:last-child .harItem:nth-of-type(3){animation-delay:.16s}',
+      '@media(prefers-reduced-motion:reduce){.hunarServicesRebuild .hsrCard,.hunarActivityRebuild .harItem{animation:none}}'
+    ].join('');
+    document.head.appendChild(style);
+  }catch(e){console.warn('HUNAR homepage animation style skipped:',e&&e.message||e);}
+})();

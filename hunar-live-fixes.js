@@ -126,7 +126,8 @@
       var results=await Promise.all([window.HunarData.freelancers.public(),window.HunarData.projects.list()]);
       var publicData=results[0]||{};
       var projects=mapProjects(results[1]);
-      if(!window.S) return false;
+      if(typeof S==='undefined') return false;
+      window.S=S;
       S.profiles=mapPeople(publicData);
       S.services=Array.isArray(publicData.services)?publicData.services.filter(function(s){return s&&s.published!==false;}):[];
       S.projects=projects;

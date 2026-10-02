@@ -1,0 +1,42 @@
+name: HUNAR video submission fix
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply only video submission correction
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          replacements = [
+              ("'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(selectedFile.type)", "'application/vnd.openxmlformats-officedocument.wordprocessingml.document','video/mp4','video/webm','video/quicktime','video/x-msvideo','video/mpeg'].includes(selectedFile.type)"),
+              ("Please upload a PDF, ZIP, image, TXT, DOC, or DOCX file.", "Please upload a PDF, ZIP, image, TXT, DOC, DOCX, or video file."),
+              ("accept=\".pdf,.zip,.txt,.jpg,.jpeg,.png,.webp,.doc,.docx\"", "accept=\".pdf,.zip,.txt,.jpg,.jpeg,.png,.webp,.doc,.docx,.mp4,.webm,.mov,.avi,.mpeg,.mpg\""),
+              ("Optional · PDF, ZIP, image, TXT, DOC or DOCX · up to 50 MB", "Optional · PDF, ZIP, image, TXT, DOC, DOCX or video · up to 50 MB"),
+          ]
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit(f'Expected exact text not found: {old}')
+              if s.count(old) != 1:
+                  raise SystemExit(f'Expected exactly one occurrence, found {s.count(old)}: {old}')
+              s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+      - name: Commit only the requested correction
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --exit-code && exit 0
+          git commit -m 'Allow video files in freelancer work submissions'
+          git push

@@ -3745,7 +3745,7 @@ async function submitWorkForm(e,contractId,milestoneId){
   const btn=form.querySelector('button[type="submit"]');
   if(!note){alert('Please add a short delivery note so the client knows what you completed.');return;}
   if(selectedFile&&selectedFile.size>50*1024*1024){alert('The delivery file must be 50 MB or smaller.');return;}
-  if(selectedFile&&!['application/pdf','application/zip','text/plain','image/jpeg','image/png','image/webp','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(selectedFile.type)){alert('Please upload a PDF, ZIP, image, TXT, DOC, or DOCX file.');return;}
+  if(selectedFile&&!['application/pdf','application/zip','text/plain','image/jpeg','image/png','image/webp','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','video/mp4','video/webm','video/quicktime','video/x-msvideo','video/mpeg'].includes(selectedFile.type)){alert('Please upload a PDF, ZIP, image, TXT, DOC, DOCX, or video file.');return;}
   // Refresh live milestone state before every submission. This avoids a stale browser copy
   // producing the misleading "milestone is not ready" message.
   try{await loadContractDetails(contractId);}catch(_e){}
@@ -3888,7 +3888,7 @@ function contractSubmissionRoute(contractId,milestoneId){
       <div class="submissionFormHead"><div><span class="eyebrowSmall">MILESTONE DELIVERY</span><h2>${esc(m.title||'Project milestone')}</h2><small class="muted">Submission ${submissionCount+1}</small></div><span class="contractPill">${money(Number(m.amount_etb||0))}</span></div>
       <div class="deliveryBrief"><b>What you're delivering</b><p>${esc(m.description||'Complete the agreed work for this milestone and explain what you are delivering below.')}</p></div>
       <div class="field"><label>Delivery message <span>Required</span></label><textarea name="note" rows="7" required placeholder="Tell the client what you completed, what is included, and anything they should review…"></textarea><small>Keep it clear and professional. This message will be saved with your submission.</small></div>
-      <label class="uploadBox"><input type="file" name="deliveryFile" accept=".pdf,.zip,.txt,.jpg,.jpeg,.png,.webp,.doc,.docx"><span class="uploadIcon">↑</span><b>Attach your finished work</b><small>Optional · PDF, ZIP, image, TXT, DOC or DOCX · up to 50 MB</small><em class="selectedFile">No file selected</em></label>
+      <label class="uploadBox"><input type="file" name="deliveryFile" accept=".pdf,.zip,.txt,.jpg,.jpeg,.png,.webp,.doc,.docx,.mp4,.webm,.mov,.avi,.mpeg,.mpg"><span class="uploadIcon">↑</span><b>Attach your finished work</b><small>Optional · PDF, ZIP, image, TXT, DOC, DOCX or video · up to 50 MB</small><em class="selectedFile">No file selected</em></label>
       <div class="submissionSafety"><span>🔒</span><div><b>Your delivery stays inside HUNAR</b><small>Only the client and freelancer on this contract can access the submission and its attached file.</small></div></div>
       <div class="actions"><button class="btn primary" type="submit" ${submissionLimitReached?'disabled':''}>${submissionLimitReached?'Submission limit reached':'Submit Work →'}</button><button class="btn outline" type="button" onclick="go('contract/${esc(contractId)}')">Save & Go Back</button></div>
     </form>`}</main><aside>

@@ -5040,6 +5040,108 @@ html,body,#app{max-width:100%;}
   .categoryChoices .chip input[type="checkbox"]{display:inline-block!important;flex:0 0 18px;width:18px!important;min-width:18px;height:18px;margin:0!important;padding:0!important;}
 }
 </style>
+
+<style id="hunar-homepage-editorial-refresh">
+/* HUNAR homepage refresh — presentation only. Existing routes, handlers, data and integrations remain unchanged. */
+:root{
+  --green:#16724f;--green2:#0e5b3e;--ink:#111412;--muted:#626b65;
+  --bg:#fff;--paper:#fff;--line:#e6eae7;--soft:#f3f7f4;--soft2:#f7f9f7;
+  --h-lime:#16724f;--hunar-lime:#16724f;--h3d-accent:#16724f;--h3d-accent2:#16724f;
+}
+html{scroll-behavior:auto!important}
+body{background:#fff!important;color:#111412!important}
+#app{background:#fff}
+#app .hero{
+  background:#fff!important;color:#111412!important;
+  min-height:0!important;padding:76px 0 72px!important;
+  border-bottom:1px solid #edf0ed;
+}
+#app .hero h1{
+  color:#111412!important;
+  font-family:"Plus Jakarta Sans","Noto Sans Ethiopic",sans-serif!important;
+  font-size:clamp(44px,6.1vw,78px)!important;
+  font-weight:800!important;line-height:1.02!important;
+  letter-spacing:-.065em!important;text-shadow:none!important;
+  max-width:760px!important;white-space:normal!important;
+  position:static!important;transform:none!important;
+  animation:none!important;transition:none!important;
+}
+#app .hero h1 *{animation:none!important;transform:none!important}
+#app .hero p{color:#626b65!important;max-width:620px;line-height:1.75}
+#app .hero .btn.primary{background:#16724f!important;color:#fff!important;border-color:#111412!important;box-shadow:0 3px 0 #111412!important}
+#app .hero .btn.primary:hover{background:#0e5b3e!important;color:#fff!important}
+#app .hero .btn.outline{background:#fff!important;color:#111412!important;border:1px solid #111412!important}
+#app .hero:after{background:rgba(22,114,79,.08)!important}
+#app .scene{
+  background:linear-gradient(145deg,#fff 0%,#f5f8f6 100%)!important;
+  border:1px solid #e3eae5!important;
+  box-shadow:0 24px 65px rgba(17,20,18,.08),inset 0 1px 0 #fff!important;
+}
+#app .scene:after{border-color:rgba(22,114,79,.16)!important;box-shadow:0 0 0 22px rgba(22,114,79,.035),0 0 0 44px rgba(22,114,79,.025)!important;animation:none!important}
+#app .h3d-orb{background:radial-gradient(circle at 30% 25%,#fff 0 8%,#78b99a 18%,#16724f 42%,rgba(22,114,79,.12) 68%,transparent 74%)!important;box-shadow:0 0 60px rgba(22,114,79,.18)!important}
+#app .h3d-ring,#app .h3d-ring:after{border-color:rgba(22,114,79,.3)!important;box-shadow:none!important}
+#app .h3d-cube{background:linear-gradient(135deg,#fff,rgba(22,114,79,.12))!important;border-color:rgba(22,114,79,.18)!important}
+#app .h3d-label{background:#f1f7f3!important;color:#16724f!important;border-color:#dce9e0!important}
+#app .float{background:rgba(255,255,255,.96)!important;color:#111412!important;border-color:#e3e9e5!important;box-shadow:0 16px 38px rgba(17,20,18,.09)!important}
+#app .ethiopiaHeroIdentity{animation:none!important;background:#f4f8f5!important;border-color:#dce9e0!important;box-shadow:none!important}
+#app .ethiopiaIdentityGlow{display:none!important}
+#app .ethiopiaHeroIdentity b{color:#16724f!important}
+#app .hunarPublicMetrics,#app .path,#app .section,#app .hunarShowcase,#app .hunarPeopleRebuild,#app .hunarServicesRebuild,#app .hunarHowRebuild,#app .hunarEthiopiaRebuild,#app .hunarActivityRebuild,#app .cta{
+  background:#fff!important;color:#111412!important;
+}
+#app .path{border-top:1px solid #edf0ed!important;border-bottom:1px solid #edf0ed!important}
+#app .pathCard,#app .hunarMetric,#app .hprNode,#app .hsrCard,#app .hhrFlow article,#app .harColumn{
+  background:#fff!important;color:#111412!important;border-color:#e5eae6!important;
+  box-shadow:0 10px 30px rgba(17,20,18,.045)!important;
+}
+#app .pathCard:after{background:radial-gradient(circle,rgba(22,114,79,.12),transparent 70%)!important}
+#app .section h2,#app .pathCard h3,#app .hprCopy h2,#app .hsrHead h2,#app .hhrHead h2,#app .herCopy h2,#app .harHead h2,#app .cta h2{
+  color:#111412!important;letter-spacing:-.045em!important;
+}
+#app .sectionLead,#app .pathCard p,#app .hprCopy p,#app .hsrHead p,#app .hhrHead p,#app .herCopy p,#app .harHead p{
+  color:#626b65!important;
+}
+#app .eyebrowSmall,#app .hprKicker,#app .hsrKicker,#app .hhrKicker,#app .herKicker,#app .harKicker,
+#app .hunarMetricLabel,#app .hunarMetricNote{color:#16724f!important}
+#app .hunarMetricValue,#app .hprNode i,#app .hprNode b,#app .hsrCardTop em,#app .hhrNo,#app .hhrIcon{color:#16724f!important}
+#app .hprCore,#app .hsr3dCore,#app .showcaseCore,#app .harCenterCore{background:#111412!important;color:#fff!important;box-shadow:0 16px 38px rgba(17,20,18,.14)!important}
+#app .hprCore span,#app .hsr3dCore span,#app .showcaseCore strong,#app .harCenterCore strong{color:#fff!important}
+#app .hprOrbit,#app .hprBeam,#app .hsr3dOrbit,#app .showcaseOrbit,#app .showcaseVerticalRing{border-color:rgba(22,114,79,.22)!important}
+#app .hprStage,#app .showcaseStage,#app .hsrVisualPro,#app .herMap,#app .harCenter{
+  background:linear-gradient(145deg,#fff,#f5f8f6)!important;border-color:#e4eae5!important;
+}
+#app .hprStageGlow,#app .hsr3dAura,#app .showcaseGlow{background:radial-gradient(circle,rgba(22,114,79,.12),transparent 70%)!important}
+#app .hsr3dGrid{background-image:linear-gradient(rgba(22,114,79,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(22,114,79,.07) 1px,transparent 1px)!important}
+#app .hsr3dNode,#app .showcaseCard,#app .harItem{background:#fff!important;color:#111412!important;border-color:#e2e9e4!important}
+#app .hsr3dNode b,#app .showcaseNo,#app .harColumnHead span{color:#16724f!important}
+#app .hsr3dSpark{background:#16724f!important;box-shadow:0 0 0 6px rgba(22,114,79,.10)!important}
+#app .herMapCore{background:#16724f!important;color:#fff!important}
+#app .herPin{background:#fff!important;color:#16724f!important;border-color:#dce9e0!important}
+#app .hunarFutureCard,#app .homeServiceCard{background:#fff!important;border-color:#e5eae6!important}
+#app .homeServiceCat,#app .homeServiceVerified{color:#16724f!important}
+#app .homeServiceVisual{background:#f2f7f3!important}
+#app .homeServiceVisual span{color:#16724f!important}
+#app .homeSkillChip,#app .hsrCategoryRail button{background:#fff!important;color:#111412!important;border-color:#e2e9e4!important}
+#app .homeSkillChip span,#app .hsrCategoryRail button span{background:#16724f!important}
+#app .homeSkillCore{background:#16724f!important;color:#fff!important}
+#app .showcaseRail>div span{color:#16724f!important}
+#app .hunarShowcase .showcaseMark{background:#f1f7f3!important;color:#16724f!important}
+#app .cta{border:1px solid #e5eae6!important;box-shadow:0 14px 40px rgba(17,20,18,.045)!important}
+#app .cta .btn.primary{background:#16724f!important;color:#fff!important}
+#app .cta .btn.outline{background:#111412!important;color:#fff!important}
+#app .hunarMetric{border-radius:16px!important}
+@media(max-width:800px){
+  #app .hero{padding:52px 0 48px!important}
+  #app .hero h1{font-size:clamp(39px,10vw,58px)!important;line-height:1.04!important;letter-spacing:-.055em!important}
+  #app .heroVisual{min-height:390px!important}
+  #app .section{padding:48px 0!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #app .hero h1,#app .hero h1 *{animation:none!important;transition:none!important}
+  #app .scene:after,#app .ethiopiaHeroIdentity,#app .ethiopiaIdentityGlow{animation:none!important}
+}
+</style>
+
 </body>
 </html>
 
